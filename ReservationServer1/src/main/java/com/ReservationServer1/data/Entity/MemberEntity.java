@@ -1,10 +1,10 @@
-package com.ReservationServer1.DAO.JPAImpl.Entity;
+package com.ReservationServer1.data.Entity;
 
 import java.time.LocalDate;
 
 import org.springframework.beans.BeanUtils;
 
-import com.ReservationServer1.data.Member;
+import com.ReservationServer1.data.DTO.MemberDTO;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -33,14 +33,15 @@ public class MemberEntity {
 	
 	
 	// DTO를 Entity로 변환
-	public MemberEntity(Member member) {
+	public MemberEntity(MemberDTO member) {
 		// DTO의 프로퍼티들을 Entity의 프로퍼티들로 매핑
 		BeanUtils.copyProperties(member, this);
+		this.foundationTime = LocalDate.now();
 	}
 	
 	// Entity를 다시 DTO로 변환 
-	public Member toDomain() {
-		Member member = new Member(this.userId, this.userPwd, this.userName, this.userNumber, this.userAddress, this.userEmail);
+	public MemberDTO toDomain() {
+		MemberDTO member = new MemberDTO(this.userId, this.userPwd, this.userName, this.userNumber, this.userAddress, this.userEmail);
 		return member;
 	}
 }

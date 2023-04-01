@@ -16,7 +16,7 @@
 	
 	<groupId>com.Reservation</groupId>
 	<artifactId>ReservationServer1</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>ReservationServer1</name>
 	<description>ReservationServer1</description>
 	
@@ -31,17 +31,24 @@
 	<dependencies>
 		
 		<!-- starter -->
-		<!-- DI 기능 -->
+		<!-- DI 기능, RestAPI, LogBack-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		
+		<!-- Validation -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
 
 		<!-- test -->
+		<!-- Junit, Mockito -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			<scope>test</scope> <!-- test 시에만 사용 -->
 		</dependency>
 		
 		<!-- tomcat server -->
@@ -77,6 +84,14 @@
 		    <groupId>com.google.code.gson</groupId>
 		    <artifactId>gson</artifactId>
 		</dependency>
+		
+		<!-- Swagger -->
+		<!-- API 문서화 -->
+		 <dependency>
+	      	<groupId>org.springdoc</groupId>
+	      	<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+	      	<version>2.0.2</version>
+	   	 </dependency>
 		
 	</dependencies>
 

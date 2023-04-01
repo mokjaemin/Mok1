@@ -1,38 +1,44 @@
-package com.ReservationServer1.data;
+package com.ReservationServer1.data.DTO;
 
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
 
-@Getter
-@Setter
-public class Member implements Serializable { 
+@Data
+public class MemberDTO implements Serializable { 
 	
-	
+	@NotNull
 	private String userId;
+	
+	@NotNull
 	private String userPwd;
+	
+	@NotNull
 	private String userName;
+	
+	@NotNull
 	private String userNumber;
+	
+	@NotNull
 	private String userAddress;
+	
+	@NotNull
 	private String userEmail;
-	private LocalDate foundationTime;
 	
 	
-	public Member(String userId, String userPwd, String userName, String userNumber, String userAddress, String userEmail) {
+	public MemberDTO(String userId, String userPwd, String userName, String userNumber, String userAddress, String userEmail) {
 		this.userId = userId;
 		this.userPwd = userPwd;
 		this.userName = userName;
 		this.userNumber = userNumber;
 		this.userAddress = userAddress;
 		this.userEmail = userEmail;
-		this.foundationTime = LocalDate.now();
-	}
+	} 
 	
-	public static Member sample() {
+	public static MemberDTO sample() {
 		
 		String userId = "testId";
 		String userPwd = "testPwd";
@@ -40,8 +46,7 @@ public class Member implements Serializable {
 		String userNumber = "testNumber";
 		String userAddress = "testAddress";
 		String userEmail = "testEmail";
-
-		return new Member(userId, userPwd, userName, userNumber, userAddress, userEmail);
+		return new MemberDTO(userId, userPwd, userName, userNumber, userAddress, userEmail);
 	}
 
 	
