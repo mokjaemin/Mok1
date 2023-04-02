@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ReservationServer1.data.DTO.LoginDTO;
 import com.ReservationServer1.data.DTO.MemberDTO;
+import com.ReservationServer1.data.Entity.MemberEntity;
 import com.ReservationServer1.service.MemberService;
 
 import io.swagger.v3.oas.annotations.Operation;

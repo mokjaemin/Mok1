@@ -7,14 +7,13 @@ import org.springframework.stereotype.Repository;
 import com.ReservationServer1.DAO.MemberDAO;
 import com.ReservationServer1.DAO.JPAImpl.Repository.MemberRepository;
 import com.ReservationServer1.data.Entity.MemberEntity;
-import com.ReservationServer1.service.MemberService;
 
 
 
 @Repository("MemberDAO") 
 public class MemberDAOImpl implements MemberDAO{
 
-	private final Logger Logger = LoggerFactory.getLogger(MemberService.class);
+	private final Logger Logger = LoggerFactory.getLogger(MemberDAO.class);
 	
 	private MemberRepository memberRepository;
 	

@@ -24,14 +24,13 @@ import com.google.gson.Gson;
 
 
 @WebMvcTest(MemberController.class)
-//@AutoConfigureWebMvc // 이 어노테이션을 통해 MockMvc를 Builder 없이 주입받을 수 있음
-public class MemberControllerTest {
+public class MemberControllerUnitTest {
 
   @Autowired
   private MockMvc mockMvc;
 
   @MockBean
-  MemberServiceImpl memberServiceImpl;
+  MemberServiceImpl memberService;
 
 
   @Test
@@ -39,30 +38,30 @@ public class MemberControllerTest {
   void getProductTest() throws Exception {
 
 	  
-    // given
-	MemberDTO sample = MemberDTO.sample();	
-    given(memberServiceImpl.registerMember(sample)).willReturn(sample);
-    Gson gson = new Gson();
-    String content = gson.toJson(sample);
-
-    
-    // when
-    ResultActions actions = mockMvc.perform(post("/member")
-			.content(content)
-			.contentType(MediaType.APPLICATION_JSON)
-			.accept(MediaType.APPLICATION_JSON));
-			
-    
-    // then
-    ResultActions realResult = actions.andExpect(status().isOk())
-			.andExpect(jsonPath("$.userId").exists())
-			.andExpect(jsonPath("$.userPwd").exists())
-			.andExpect(jsonPath("$.userName").exists())
-			.andExpect(jsonPath("$.userNumber").exists())
-			.andExpect(jsonPath("$.userAddress").exists())
-			.andExpect(jsonPath("$.userEmail").exists())
-			.andDo(print());
-    verify(memberServiceImpl).registerMember(sample);
+	    // given
+		MemberDTO sample = MemberDTO.sample();	
+	    given(memberService.registerMember(sample)).willReturn(sample);
+	    Gson gson = new Gson();
+	    String content = gson.toJson(sample);
+	
+	    
+	    // when
+	    ResultActions actions = mockMvc.perform(post("/member")
+				.content(content)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON));
+				
+	    
+	    // then
+	    ResultActions realResult = actions.andExpect(status().isOk())
+				.andExpect(jsonPath("$.userId").exists())
+				.andExpect(jsonPath("$.userPwd").exists())
+				.andExpect(jsonPath("$.userName").exists())
+				.andExpect(jsonPath("$.userNumber").exists())
+				.andExpect(jsonPath("$.userAddress").exists())
+				.andExpect(jsonPath("$.userEmail").exists())
+				.andDo(print());
+	    verify(memberService).registerMember(sample);
   }
 
 }
