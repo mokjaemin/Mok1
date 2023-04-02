@@ -27,12 +27,12 @@ public class ErrorHandler {
         responseHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
 
-        LOGGER.error("ExceptionHandler 호출, {}, {}", e.getCause(), e.getMessage());
+        LOGGER.error("GeneralException, 원인 : {}, {}", e.getCause(), e.getMessage());
 
         Map<String, String> map = new HashMap<>();
         map.put("error type", httpStatus.getReasonPhrase());
         map.put("code", "400");
-        map.put("message", e.getMessage());
+        map.put("message", "오류발생");
 
         return new ResponseEntity<>(map, responseHeaders, httpStatus);
     }

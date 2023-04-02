@@ -2,18 +2,16 @@ package com.ReservationServer1.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.ReservationServer1.data.DTO.LoginDTO;
 import com.ReservationServer1.data.DTO.MemberDTO;
-import com.ReservationServer1.data.Entity.MemberEntity;
 import com.ReservationServer1.service.MemberService;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,13 +26,8 @@ public class MemberController {
 	
 	private final Logger Logger = LoggerFactory.getLogger(MemberController.class);
 	
+	@Autowired
 	private MemberService memberService;
-	
-	
-	
-	public MemberController(MemberService memberService){
-		this.memberService = memberService;
-	}
 	
 
 	@PostMapping

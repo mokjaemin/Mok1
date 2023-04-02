@@ -2,8 +2,8 @@ package com.ReservationServer1.DAO.JPAImpl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 import com.ReservationServer1.DAO.MemberDAO;
 import com.ReservationServer1.DAO.JPAImpl.Repository.MemberRepository;
 import com.ReservationServer1.data.Entity.MemberEntity;
@@ -15,11 +15,8 @@ public class MemberDAOImpl implements MemberDAO{
 
 	private final Logger Logger = LoggerFactory.getLogger(MemberDAO.class);
 	
+	@Autowired
 	private MemberRepository memberRepository;
-	
-	public MemberDAOImpl(MemberRepository memberRepository) {
-		this.memberRepository = memberRepository;
-	}
 	
 	
 	// 회원등록
