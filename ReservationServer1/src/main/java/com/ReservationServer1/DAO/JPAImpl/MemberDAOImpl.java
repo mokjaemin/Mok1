@@ -12,6 +12,7 @@ import com.ReservationServer1.data.Entity.MemberEntity;
 
 @Repository("MemberDAO") 
 public class MemberDAOImpl implements MemberDAO{
+  
 
 	private final Logger Logger = LoggerFactory.getLogger(MemberDAO.class);
 	
@@ -23,8 +24,7 @@ public class MemberDAOImpl implements MemberDAO{
 	@Override
 	public MemberEntity create(MemberEntity memberEntity){
 		Logger.info("[MemberDAO] create(회원가입) 호출");
-		memberRepository.save(memberEntity);
-		return memberEntity;
+		return memberRepository.save(memberEntity);
 	}
 	
 	// 아이디 존재 확인

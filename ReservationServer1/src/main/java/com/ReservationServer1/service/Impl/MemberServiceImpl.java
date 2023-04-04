@@ -29,6 +29,7 @@ public class MemberServiceImpl implements MemberService{
 			throw new MemberException("Already exsisted : " + member.getUserId());
 		}
 		MemberEntity result = memberDAO.create(new MemberEntity(member));
+		System.out.println(result.toString());
 		return member;
 	}
 	
