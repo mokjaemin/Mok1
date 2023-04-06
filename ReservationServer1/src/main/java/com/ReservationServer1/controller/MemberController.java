@@ -2,7 +2,6 @@ package com.ReservationServer1.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,10 +23,13 @@ import jakarta.validation.Valid;
 @RequestMapping("/member")
 public class MemberController {
 	
-	private final Logger Logger = LoggerFactory.getLogger(MemberController.class);
-	
-	@Autowired
-	private MemberService memberService;
+    private final Logger logger = LoggerFactory.getLogger(MemberController.class);
+  
+    private final MemberService memberService;
+  
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
+    }
 	
 
 	@PostMapping
@@ -39,7 +41,7 @@ public class MemberController {
         @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
     })
 	public ResponseEntity<MemberDTO> register(@Valid @RequestBody MemberDTO member){
-		Logger.info("[MemberController] register(회원가입) 호출");
+	    logger.info("[MemberController] register(회원가입) 호출");
 		MemberDTO response = memberService.registerMember(member);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
@@ -54,7 +56,7 @@ public class MemberController {
         @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
     })
 	public ResponseEntity<MemberDTO> login(@RequestBody LoginDTO loginDTO){
-		Logger.info("[MemberController] register(회원가입) 호출");
+		logger.info("[MemberController] register(회원가입) 호출");
 		MemberDTO response = memberService.loginMember(loginDTO.getUserId(), loginDTO.getUserPwd());
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
