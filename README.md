@@ -21,5 +21,14 @@ Coming Soon : Other Functions !
 - IDE : STS4
 - BUILD TOOLS : MAVEN
 - FRAMEWORK : SPRING BOOT
+- SERVER : TOMCAT
 - LANGUAGE : JAVA
-- 
+- CLIENT : HTTP Requests/Response
+- CLIENT API : Restful API
+- CLIENT TESTING : Insomnia, SWAGGER
+- BASIC : MVC-Singleton Pattern, AOP, Interceptor, Exception Handler, Validation
+- SEQURITY : JASYPT Library
+- DATA API : Spring DATA JPA, Query Method, @Query, Cache
+- DATA BASE : MYSQL with AWS(Main DB), Redis(Cache)
+- TESTING : JUNIT, Mockito
+- TEST COVERAGE : JACOCO
