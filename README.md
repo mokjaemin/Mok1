@@ -20,7 +20,7 @@ https://www.figma.com/proto/p667iVrA2n38Qvr8l64xaQ/Graduation-Project?node-id=6-
 
 Coming Soon : Other Functions !
 
-# Skills
+# Skills AND Env
 - IDE : STS4
 - BUILD TOOLS : MAVEN
 - FRAMEWORK : SPRING BOOT
