@@ -3,7 +3,7 @@
 # Description
 - This is a server application for Making resercation of some restaurants
 
-#PROTOTYPE
+# PROTOTYPE
 https://www.figma.com/proto/p667iVrA2n38Qvr8l64xaQ/Graduation-Project?node-id=6-49&scaling=scale-down&page-id=0%3A1&starting-point-node-id=6%3A15
 
 # Functions
