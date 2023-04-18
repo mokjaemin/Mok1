@@ -2,42 +2,54 @@ package com.ReservationServer1.DAO.JPAImpl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.ReservationServer1.DAO.MemberDAO;
 import com.ReservationServer1.DAO.JPAImpl.Repository.MemberRepository;
+import com.ReservationServer1.data.DTO.LoginDTO;
 import com.ReservationServer1.data.Entity.MemberEntity;
+import com.ReservationServer1.exception.MemberException;
+import jakarta.transaction.Transactional;
 
 
 
-@Repository("MemberDAO") 
-public class MemberDAOImpl implements MemberDAO{
-  
+@Repository("MemberDAO")
+@Transactional
+public class MemberDAOImpl implements MemberDAO {
 
-	private final Logger Logger = LoggerFactory.getLogger(MemberDAO.class);
-	
-	@Autowired
-	private MemberRepository memberRepository;
-	
-	
-	// 회원등록
-	@Override
-	public MemberEntity create(MemberEntity memberEntity){
-		Logger.info("[MemberDAO] create(회원가입) 호출");
-		return memberRepository.save(memberEntity);
-	}
-	
-	// 아이디 존재 확인
-	public Boolean existsById(String userId){
-		Logger.info("[MemberDAO] existsById(아이디 존재여부) 호출");
-		return memberRepository.existsById(userId);
-	}
 
-	// 아이디에 맞는 정보 반환
-	@Override
-	public MemberEntity infoById(String userId){
-		Logger.info("[MemberDAO] infoById(아이디에 맞는 회원정보 반환) 호출");
-		MemberEntity result = memberRepository.findAllByUserId(userId);
-		return result;
-	}
+  private final Logger Logger = LoggerFactory.getLogger(MemberDAO.class);
+
+  private MemberRepository memberRepository;
+
+  public MemberDAOImpl(MemberRepository memberRepository) {
+    this.memberRepository = memberRepository;
+  }
+
+
+  // 회원등록
+  @Override
+  public MemberEntity create(MemberEntity memberEntity) {
+    Logger.info("[MemberDAO] create(회원가입) 호출");
+    if (memberRepository.existsByUserId(memberEntity.getUserId())) {
+      throw new MemberException("이미 존재하는 ID입니다: " + memberEntity.getUserId());
+    }
+    return memberRepository.save(memberEntity);
+  }
+
+  // 로그인
+  public MemberEntity login(LoginDTO loginDTO) {
+    Logger.info("[MemberDAO] login(로그인) 호출");
+    if (!memberRepository.existsByUserId(loginDTO.getUserId())) {
+      throw new MemberException("존재하지 않는 ID입니다. : " + loginDTO.getUserId());
+    }
+    MemberEntity memberEntity = memberRepository.findByUserId(loginDTO.getUserId());
+    if (!memberEntity.getUserPwd().equals(loginDTO.getUserPwd())) {
+      System.out.println(memberEntity.getUserPwd());
+      System.out.println(loginDTO.getUserPwd());
+      throw new MemberException("비밀번호가 일치하지 않습니다. : ");
+    }
+    return memberEntity;
+  }
+
+
 }

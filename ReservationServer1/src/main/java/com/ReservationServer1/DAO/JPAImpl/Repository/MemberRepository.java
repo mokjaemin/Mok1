@@ -6,5 +6,6 @@ import com.ReservationServer1.data.Entity.MemberEntity;
 
 
 public interface MemberRepository extends JpaRepository<MemberEntity, String>{
-	MemberEntity findAllByUserId(String userId);
+	Boolean existsByUserId(String userId);
+	MemberEntity findByUserId(String userId);
 }

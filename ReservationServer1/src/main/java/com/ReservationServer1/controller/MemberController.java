@@ -25,8 +25,10 @@ public class MemberController {
 	
     private final Logger logger = LoggerFactory.getLogger(MemberController.class);
   
+    
     private final MemberService memberService;
   
+    
     public MemberController(MemberService memberService) {
         this.memberService = memberService;
     }
