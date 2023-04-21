@@ -3,9 +3,9 @@ package com.ReservationServer1.config;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 
 
@@ -27,4 +27,5 @@ public class swaggerConfig {
                         .description("Reservation 프로젝트 API 명세서입니다.")
                         .version("v0.0.1"));
     }
+
 }

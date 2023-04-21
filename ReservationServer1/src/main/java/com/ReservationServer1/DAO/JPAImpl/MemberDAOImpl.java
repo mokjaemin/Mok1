@@ -2,6 +2,8 @@ package com.ReservationServer1.DAO.JPAImpl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import com.ReservationServer1.DAO.MemberDAO;
 import com.ReservationServer1.DAO.JPAImpl.Repository.MemberRepository;
@@ -16,11 +18,10 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class MemberDAOImpl implements MemberDAO {
 
-
+  @Autowired
+  private BCryptPasswordEncoder passwordEncoder;
   private final Logger Logger = LoggerFactory.getLogger(MemberDAO.class);
-
   private MemberRepository memberRepository;
-
   public MemberDAOImpl(MemberRepository memberRepository) {
     this.memberRepository = memberRepository;
   }
@@ -33,9 +34,12 @@ public class MemberDAOImpl implements MemberDAO {
     if (memberRepository.existsByUserId(memberEntity.getUserId())) {
       throw new MemberException("이미 존재하는 ID입니다: " + memberEntity.getUserId());
     }
+    memberEntity.setUserPwd(passwordEncoder.encode(memberEntity.getUserPwd()));
     return memberRepository.save(memberEntity);
   }
 
+  
+  
   // 로그인
   public MemberEntity login(LoginDTO loginDTO) {
     Logger.info("[MemberDAO] login(로그인) 호출");
@@ -43,10 +47,8 @@ public class MemberDAOImpl implements MemberDAO {
       throw new MemberException("존재하지 않는 ID입니다. : " + loginDTO.getUserId());
     }
     MemberEntity memberEntity = memberRepository.findByUserId(loginDTO.getUserId());
-    if (!memberEntity.getUserPwd().equals(loginDTO.getUserPwd())) {
-      System.out.println(memberEntity.getUserPwd());
-      System.out.println(loginDTO.getUserPwd());
-      throw new MemberException("비밀번호가 일치하지 않습니다. : ");
+    if (!passwordEncoder.matches(loginDTO.getUserPwd(), memberEntity.getUserPwd())) {
+      throw new MemberException("비밀번호가 일치하지 않습니다.");
     }
     return memberEntity;
   }
