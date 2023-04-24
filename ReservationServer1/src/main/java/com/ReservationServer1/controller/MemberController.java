@@ -6,9 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.ReservationServer1.data.DTO.FindPwdDTO;
 import com.ReservationServer1.data.DTO.LoginDTO;
 import com.ReservationServer1.data.DTO.MemberDTO;
 import com.ReservationServer1.service.MemberService;
@@ -39,10 +41,10 @@ public class MemberController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<MemberDTO> register(@Valid @RequestBody MemberDTO member) {
+  public ResponseEntity<String> register(@Valid @RequestBody MemberDTO member) {
     logger.info("[MemberController] register(회원가입) 호출");
-    MemberDTO response = memberService.registerMember(member);
-    return ResponseEntity.status(HttpStatus.OK).body(response);
+    memberService.registerMember(member);
+    return ResponseEntity.status(HttpStatus.OK).body("success");
   }
 
 
@@ -59,6 +61,35 @@ public class MemberController {
   }
 
 
+  @PostMapping("/pwd")
+  @Operation(summary = "비밀번호 찾기 요청", description = "비밀번호 찾기를 요청합니다.", tags = {"Member Controller"})
+  @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
+      @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+      @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
+  public ResponseEntity<String> findPwd(@RequestBody FindPwdDTO findPwdDTO) {
+    logger.info("[MemberController] findPwd(비밀번호 찾기) 호출");
+    String response = memberService.findPwdMember(findPwdDTO.getUserId(), findPwdDTO.getUserEmail());
+    return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+  
+  
+  
+  @PutMapping("/pwd")
+  @Operation(summary = "비밀번호 수정 요청", description = "비밀번호 수정을 요청합니다.", tags = {"Member Controller"})
+  @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
+      @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+      @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
+  public ResponseEntity<String> modifyPwd(@RequestBody String userPwd, Authentication authentication){
+    logger.info("[MemberController] modPwd(비밀번호 수정) 호출");
+    String response = memberService.modPwdMember(authentication.getName(), userPwd);
+    return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+  
+  
+  
+  
   @PostMapping("/test")
   public ResponseEntity<String> test(Authentication authentication) {
     System.out.println("Hello world");

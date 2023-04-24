@@ -1,7 +1,6 @@
 package com.ReservationServer1.data.DTO;
 
 
-import java.io.Serializable;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +8,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class MemberDTO implements Serializable { 
+public class MemberDTO{ 
 	
 	@NotNull
 	private String userId;

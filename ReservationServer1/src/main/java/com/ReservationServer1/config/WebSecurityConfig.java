@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import com.ReservationServer1.service.MemberService;
+//import com.ReservationServer1.service.MemberService;
 import lombok.RequiredArgsConstructor;
 
 
@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class WebSecurityConfig {
 
   
-  private final MemberService memberService;
+//  private final MemberService memberService;
 
   @Value("${jwt.secret}")
   private String secretKey;
@@ -28,13 +28,15 @@ public class WebSecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    return http.httpBasic().disable().csrf().disable().cors().and().authorizeHttpRequests()
-        .requestMatchers("/member/login", "/member").permitAll()
+    return http.httpBasic().disable()
+        .csrf().disable().cors().and().authorizeHttpRequests()
+        .requestMatchers("/member/login", "/member", "/member/pwd").permitAll()
         .requestMatchers(HttpMethod.POST, "/member/test").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.PUT, "/member/pwd").hasAuthority("ROLE_PWD")
         .and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
-        .addFilterBefore(new JwtFilter(memberService, secretKey), UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(new JwtFilter(secretKey), UsernamePasswordAuthenticationFilter.class)
         .build();
   }
 }

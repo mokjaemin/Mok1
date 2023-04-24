@@ -26,7 +26,7 @@ public class JWTutil {
   }
 
   public static String createJWT(String userId, String role, String secretKey, long expireMs) {
-    Claims claims = Jwts.claims(); // 일종의 MAP
+    Claims claims = Jwts.claims();
     claims.put("userId", userId);
     claims.put("userRole", role);
     

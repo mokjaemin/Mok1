@@ -8,7 +8,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
-import com.ReservationServer1.service.MemberService;
 import com.ReservationServer1.utils.JWTutil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -21,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class JwtFilter extends OncePerRequestFilter {
   
   
-  private final MemberService memberService;
+//  private final MemberService memberService;
   private final String secretKey;
   
   
@@ -32,7 +31,6 @@ public class JwtFilter extends OncePerRequestFilter {
     final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
     
     if (authorization == null) {
-      System.out.println("잘못된 토큰");
       filterChain.doFilter(request, response);
       return;
     }
@@ -43,7 +41,6 @@ public class JwtFilter extends OncePerRequestFilter {
     
     // Expired Check
     if (JWTutil.isExpired(token, secretKey)) {
-      System.out.println("만료된 토큰");
       filterChain.doFilter(request, response);
       return;
     };

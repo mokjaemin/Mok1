@@ -7,4 +7,6 @@ public interface MemberDAO {
 
 	MemberEntity create(MemberEntity memberEntity);
 	MemberEntity login(LoginDTO loginDTO);
+	MemberEntity findPwd(String userName, String userEmail);
+	void modPwd(String userId, String userPwd);
 }

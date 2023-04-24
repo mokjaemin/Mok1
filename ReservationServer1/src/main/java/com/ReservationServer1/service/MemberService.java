@@ -6,7 +6,9 @@ import com.ReservationServer1.data.Entity.MemberEntity;
 
 public interface MemberService {
 
-	MemberDTO registerMember(MemberDTO member);
+	void registerMember(MemberDTO member);
 	String loginMember(String userId, String userPwd);
+	String findPwdMember(String userName, String userEmail);
+	String modPwdMember(String userId, String userPwd);
 }
 

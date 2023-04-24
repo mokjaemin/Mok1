@@ -3,6 +3,7 @@ package com.ReservationServer1.config;
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,11 +12,13 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class JasyptConfig {
-
-
+  
+  @Value("${jasypt.pwd}")
+  private String password;
+  
+  
   @Bean(name = "jasyptStringEncryptor")
   public StringEncryptor stringEncryptor() {
-    String password = "ReservationServer1"; // jar 배포시 @Value로 변경
     PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
     SimpleStringPBEConfig config = new SimpleStringPBEConfig();
     config.setPassword(password); // 암호화할 때 사용하는 키
