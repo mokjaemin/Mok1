@@ -49,7 +49,8 @@ public class MemberServiceImpl implements MemberService {
     logger.info("[MemberService] loginMember(로그인) 호출");
     LoginDTO loginDTO = new LoginDTO(userId, userPwd);
     memberDAO.login(loginDTO);
-    return JWTutil.createJWT(userId, "USER", secretKey, expiredLoginMs);
+    String token = JWTutil.createJWT(userId, "USER", secretKey, expiredLoginMs);
+    return token;
   }
   
   @Override

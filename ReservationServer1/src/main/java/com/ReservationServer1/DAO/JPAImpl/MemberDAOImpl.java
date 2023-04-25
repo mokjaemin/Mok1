@@ -55,7 +55,7 @@ public class MemberDAOImpl implements MemberDAO {
   }
 
 
-  // 아이디 찾기
+  // 비밀번호 찾기
   public MemberEntity findPwd(String userId, String userEmail) {
     Logger.info("[MemberDAO] findId(비밀번호 찾기) 호출");
     MemberEntity memberEntity = memberRepository.findByUserId(userId);
