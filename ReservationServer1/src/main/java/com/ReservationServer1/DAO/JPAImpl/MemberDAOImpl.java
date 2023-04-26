@@ -5,12 +5,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import com.ReservationServer1.DAO.MemberDAO;
 import com.ReservationServer1.DAO.JPAImpl.Repository.MemberRepository;
 import com.ReservationServer1.data.DTO.LoginDTO;
+import com.ReservationServer1.data.DTO.ModifyMemberDTO;
 import com.ReservationServer1.data.Entity.MemberEntity;
 import com.ReservationServer1.exception.MemberException;
-import jakarta.transaction.Transactional;
+
 
 
 
@@ -71,7 +73,6 @@ public class MemberDAOImpl implements MemberDAO {
 
   // 비밀번호 수정
   @Override
-  @Transactional
   public void modPwd(String userId, String userPwd) {
     Logger.info("[MemberDAO] modPwd(비밀번호 수정) 호출");
     String encoded_pwd = passwordEncoder.encode(userPwd);
@@ -80,6 +81,23 @@ public class MemberDAOImpl implements MemberDAO {
       throw new MemberException("아이디 오류 발생");
     }
     memberEntity.setUserPwd(encoded_pwd);
+  }
+
+
+  // 회원정보 수정
+  @Override
+  public void modInfo(String userId, ModifyMemberDTO modifyMemberDTO) {
+    Logger.info("[MemberDAO] modInfo(회원정보 수정) 호출");
+    String encoded_pwd = passwordEncoder.encode(modifyMemberDTO.getUserPwd());
+    MemberEntity memberEntity = memberRepository.findByUserId(userId);
+    if (memberEntity == null) {
+      throw new MemberException("아이디 오류 발생");
+    }
+    memberEntity.setUserPwd(encoded_pwd);
+    memberEntity.setUserName(modifyMemberDTO.getUserName());
+    memberEntity.setUserEmail(modifyMemberDTO.getUserEmail());
+    memberEntity.setUserAddress(modifyMemberDTO.getUserAddress());
+    memberEntity.setUserNumber(modifyMemberDTO.getUserNumber());
   }
 
 

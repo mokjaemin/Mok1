@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.ReservationServer1.DAO.MemberDAO;
 import com.ReservationServer1.data.DTO.LoginDTO;
 import com.ReservationServer1.data.DTO.MemberDTO;
+import com.ReservationServer1.data.DTO.ModifyMemberDTO;
 import com.ReservationServer1.data.Entity.MemberEntity;
 import com.ReservationServer1.service.MemberService;
 import com.ReservationServer1.utils.JWTutil;
@@ -74,6 +75,13 @@ public class MemberServiceImpl implements MemberService {
   public String modPwdMember(String userId, String userPwd) {
     logger.info("[MemberService] modPwdMember(비밀번호 수정) 호출");
     memberDAO.modPwd(userId, userPwd);
+    return "success";
+  }
+  
+  @Override
+  public String modInfoMember(String userId, ModifyMemberDTO modifyMemberDTO) {
+    logger.info("[MemberService] modInfoMember(회원정보 수정) 호출");
+    memberDAO.modInfo(userId, modifyMemberDTO);
     return "success";
   }
 

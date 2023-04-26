@@ -30,9 +30,10 @@ public class WebSecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http.httpBasic().disable()
         .csrf().disable().cors().and().authorizeHttpRequests()
-        .requestMatchers("/member/login", "/member", "/member/pwd").permitAll()
-        .requestMatchers(HttpMethod.POST, "/member/test").hasAuthority("ROLE_USER")
-        .requestMatchers(HttpMethod.PUT, "/member/pwd").hasAuthority("ROLE_PWD")
+        .requestMatchers("/member/login", "/member", "/member/auth/pwd").permitAll()
+        .requestMatchers(HttpMethod.POST, "/member/info").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.POST, "/member/pwd").hasAuthority("ROLE_PWD")
+        .requestMatchers(HttpMethod.POST, "/store").hasAuthority("ROLE_USER")
         .and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
