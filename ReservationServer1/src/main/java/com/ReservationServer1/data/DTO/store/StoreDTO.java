@@ -1,4 +1,4 @@
-package com.ReservationServer1.data.DTO;
+package com.ReservationServer1.data.DTO.store;
 
 import com.ReservationServer1.data.Identification;
 import jakarta.validation.constraints.NotNull;

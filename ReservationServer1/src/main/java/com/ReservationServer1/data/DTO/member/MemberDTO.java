@@ -1,4 +1,4 @@
-package com.ReservationServer1.data.DTO;
+package com.ReservationServer1.data.DTO.member;
 
 
 import jakarta.validation.constraints.NotNull;

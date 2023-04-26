@@ -34,6 +34,7 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.POST, "/member/info").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.POST, "/member/pwd").hasAuthority("ROLE_PWD")
         .requestMatchers(HttpMethod.POST, "/store").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.DELETE, "/member").hasAuthority("ROLE_USER")
         .and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()

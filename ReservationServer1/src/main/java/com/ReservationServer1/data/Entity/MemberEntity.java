@@ -1,7 +1,7 @@
 package com.ReservationServer1.data.Entity;
 
 import org.springframework.beans.BeanUtils;
-import com.ReservationServer1.data.DTO.MemberDTO;
+import com.ReservationServer1.data.DTO.member.MemberDTO;
 import com.ReservationServer1.data.Listener.CustomListener;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;

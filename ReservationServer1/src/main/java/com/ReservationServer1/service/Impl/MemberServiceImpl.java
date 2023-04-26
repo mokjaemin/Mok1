@@ -8,9 +8,9 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import com.ReservationServer1.DAO.MemberDAO;
-import com.ReservationServer1.data.DTO.LoginDTO;
-import com.ReservationServer1.data.DTO.MemberDTO;
-import com.ReservationServer1.data.DTO.ModifyMemberDTO;
+import com.ReservationServer1.data.DTO.member.LoginDTO;
+import com.ReservationServer1.data.DTO.member.MemberDTO;
+import com.ReservationServer1.data.DTO.member.ModifyMemberDTO;
 import com.ReservationServer1.data.Entity.MemberEntity;
 import com.ReservationServer1.service.MemberService;
 import com.ReservationServer1.utils.JWTutil;
@@ -82,6 +82,13 @@ public class MemberServiceImpl implements MemberService {
   public String modInfoMember(String userId, ModifyMemberDTO modifyMemberDTO) {
     logger.info("[MemberService] modInfoMember(회원정보 수정) 호출");
     memberDAO.modInfo(userId, modifyMemberDTO);
+    return "success";
+  }
+  
+  @Override
+  public String delMember(String userId, String userPwd) {
+    logger.info("[MemberService] delMember(회원정보 삭제) 호출");
+    memberDAO.delMember(userId, userPwd);
     return "success";
   }
 

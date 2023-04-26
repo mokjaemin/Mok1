@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import com.ReservationServer1.DAO.StoreDAO;
-import com.ReservationServer1.data.DTO.StoreDTO;
+import com.ReservationServer1.data.DTO.store.StoreDTO;
 import com.ReservationServer1.data.Entity.StoreEntity;
 import com.ReservationServer1.service.StoreService;
 

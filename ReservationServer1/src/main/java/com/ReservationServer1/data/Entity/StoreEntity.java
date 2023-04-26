@@ -1,7 +1,7 @@
 package com.ReservationServer1.data.Entity;
 
 import org.springframework.beans.BeanUtils;
-import com.ReservationServer1.data.DTO.StoreDTO;
+import com.ReservationServer1.data.DTO.store.StoreDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;

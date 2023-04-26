@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.ReservationServer1.DAO.JPAImpl.Repository.MemberRepository;
-import com.ReservationServer1.data.DTO.MemberDTO;
+import com.ReservationServer1.data.DTO.member.MemberDTO;
 import com.ReservationServer1.data.Entity.MemberEntity;
 
 @SpringBootTest

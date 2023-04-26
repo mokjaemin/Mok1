@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import com.ReservationServer1.DAO.MemberDAO;
 import com.ReservationServer1.DAO.JPAImpl.Repository.MemberRepository;
-import com.ReservationServer1.data.DTO.LoginDTO;
-import com.ReservationServer1.data.DTO.ModifyMemberDTO;
+import com.ReservationServer1.data.DTO.member.LoginDTO;
+import com.ReservationServer1.data.DTO.member.ModifyMemberDTO;
 import com.ReservationServer1.data.Entity.MemberEntity;
 import com.ReservationServer1.exception.MemberException;
 
@@ -98,6 +98,19 @@ public class MemberDAOImpl implements MemberDAO {
     memberEntity.setUserEmail(modifyMemberDTO.getUserEmail());
     memberEntity.setUserAddress(modifyMemberDTO.getUserAddress());
     memberEntity.setUserNumber(modifyMemberDTO.getUserNumber());
+  }
+  
+  
+  @Override
+  public void delMember(String userId, String userPwd) {
+    Logger.info("[MemberDAO] delMember(회원정보 삭제) 호출");
+    System.out.println(userId);
+    System.out.println(userPwd);
+    MemberEntity memberEntity = memberRepository.findByUserId(userId);
+    if (!passwordEncoder.matches(userPwd, memberEntity.getUserPwd())) {
+      throw new MemberException("비밀번호가 일치하지 않습니다.");
+    }
+    memberRepository.deleteById(userId);
   }
 
 
