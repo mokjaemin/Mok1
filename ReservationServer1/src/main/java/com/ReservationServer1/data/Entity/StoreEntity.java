@@ -26,7 +26,10 @@ public class StoreEntity extends BaseEntity{
   private String storeId;
   private String storeName;
   private String ownerId;
-  private String storeAddress;
+  private String country;
+  private String city;
+  private String dong;
+  private String type;
   private String couponInfo;
   
   //DTO를 Entity로 변환
@@ -37,7 +40,9 @@ public class StoreEntity extends BaseEntity{
   
   // Entity를 다시 DTO로 변환 
   public StoreDTO toDomain() {
-      StoreDTO storeDTO = new StoreDTO(this.storeName, this.storeAddress, this.couponInfo);
+      StoreDTO storeDTO = new StoreDTO(this.storeName, this.country, this.city, this.dong, this.type, this.couponInfo);
+      storeDTO.setId(this.storeId);
+      storeDTO.setOwnerId(this.ownerId);
       return storeDTO;
   }
 }

@@ -1,5 +1,6 @@
 package com.ReservationServer1.service.Impl;
 
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,12 @@ public class StoreServiceImpl implements StoreService{
     storeEntity.setStoreId(storeDTO.getId());
     storeDAO.registerStore(storeEntity);
     return "success";
+  }
+
+  @Override
+  public List<String> printStore(String country, String city, String dong, String type, int page, int size) {
+    List<String> storeList = storeDAO.printStore(country, city, dong, type, page, size);
+    return storeList;
   }
 
 }

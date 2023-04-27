@@ -30,11 +30,14 @@ public class WebSecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http.httpBasic().disable()
         .csrf().disable().cors().and().authorizeHttpRequests()
-        .requestMatchers("/member/login", "/member", "/member/auth/pwd").permitAll()
+        
+        .requestMatchers("/member/login", "/member", "/member/auth/pwd", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
         .requestMatchers(HttpMethod.POST, "/member/info").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.POST, "/member/pwd").hasAuthority("ROLE_PWD")
-        .requestMatchers(HttpMethod.POST, "/store").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.DELETE, "/member").hasAuthority("ROLE_USER")
+        
+        .requestMatchers(HttpMethod.POST, "/store").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.GET, "/store/list").hasAuthority("ROLE_USER")
         .and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()

@@ -18,23 +18,39 @@ public class StoreDTO extends Identification{
   @NotNull
   private String storeName;
   
+  
   private String ownerId;
   
   @NotNull
-  private String storeAddress;
+  private String country;
+  
+  @NotNull
+  private String city;
+  
+  @NotNull
+  private String dong;
+  
+  @NotNull
+  private String type;
   
   @NotNull
   private String couponInfo;
   
   
-  public StoreDTO(String storeName, String storeAddress, String couponInfo) {
+  
+  public StoreDTO(String storeName, String country, String city, String dong, String type, String couponInfo) {
     super();
     this.storeName = storeName;
-    this.storeAddress = storeAddress;
+    this.country = country;
+    this.city = city;
+    this.dong = dong;
+    this.type = type;
     this.couponInfo = couponInfo;
   }
   
   public static StoreDTO sample() {
-    return new StoreDTO("storeName", "storeAddress", "couponInfo");
+    StoreDTO sample = new StoreDTO("name", "country", "city", "dong", "type", "couponInfo");
+    sample.setOwnerId("ownerId");
+    return sample;
   }
 }
