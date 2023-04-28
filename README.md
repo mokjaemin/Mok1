@@ -36,7 +36,7 @@ Coming Soon : Other Functions !
 - CLIENT API : Restful API
 - CLIENT TESTING : Insomnia, SWAGGER
 - BASIC : MVC-Singleton Pattern, AOP, Interceptor, Exception Handler, Validation
-- SEQURITY : JASYPT Library
+- SEQURITY : JASYPT Library, Spring Security(MAIN)
 - DATA API : Spring DATA JPA, Query Method, @Query, Cache
 - DATA BASE : MYSQL with AWS(Main DB), Redis(Cache)
 - TESTING : JUNIT, Mockito
