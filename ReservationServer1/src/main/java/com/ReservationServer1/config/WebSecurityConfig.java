@@ -32,12 +32,18 @@ public class WebSecurityConfig {
         .csrf().disable().cors().and().authorizeHttpRequests()
         
         .requestMatchers("/member/login", "/member", "/member/auth/pwd", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-        .requestMatchers(HttpMethod.POST, "/member/info").hasAuthority("ROLE_USER")
+        
         .requestMatchers(HttpMethod.POST, "/member/pwd").hasAuthority("ROLE_PWD")
-        .requestMatchers(HttpMethod.DELETE, "/member").hasAuthority("ROLE_USER")
+        
+        .requestMatchers(HttpMethod.POST, "/member/info").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.DELETE, "/member").hasAnyAuthority("ROLE_USER")
         
         .requestMatchers(HttpMethod.POST, "/store").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.GET, "/store").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.GET, "/store/list").hasAuthority("ROLE_USER")
+        
+        // Owner API : ROLE_OWNER 필요
+        
         .and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()

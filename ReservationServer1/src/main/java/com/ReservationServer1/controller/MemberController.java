@@ -54,7 +54,8 @@ public class MemberController {
 
   @PostMapping("/login")
   @Operation(summary = "로그인 요청", description = "로그인을 요청합니다.", tags = {"Member Controller"})
-  @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
+  @ApiResponses({@ApiResponse(responseCode = "200", description = "OK",
+      content = @Content(schema = @Schema(implementation = LoginDTO.class))),
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
@@ -67,7 +68,8 @@ public class MemberController {
 
   @PostMapping("/auth/pwd")
   @Operation(summary = "비밀번호 찾기 요청", description = "비밀번호 찾기를 요청합니다.", tags = {"Member Controller"})
-  @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
+  @ApiResponses({@ApiResponse(responseCode = "200", description = "OK",
+      content = @Content(schema = @Schema(implementation = FindPwdDTO.class))),
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
@@ -94,7 +96,8 @@ public class MemberController {
   
   @PostMapping("/info")
   @Operation(summary = "회원정보 수정 요청", description = "회원정보 수정을 요청합니다.", tags = {"Member Controller"})
-  @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
+  @ApiResponses({@ApiResponse(responseCode = "200", description = "OK",
+      content = @Content(schema = @Schema(implementation = ModifyMemberDTO.class))),
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})

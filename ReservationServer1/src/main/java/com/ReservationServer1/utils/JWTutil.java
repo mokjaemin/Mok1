@@ -18,6 +18,7 @@ public class JWTutil {
     return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
         .getBody().get("userRole", String.class);
   }
+
   
   
   public static boolean isExpired(String token, String secretKey) {

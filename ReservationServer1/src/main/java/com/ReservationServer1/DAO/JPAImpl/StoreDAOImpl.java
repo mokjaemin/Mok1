@@ -15,8 +15,8 @@ import com.ReservationServer1.data.Entity.StoreEntity;
 
 @Repository("StoreDAO")
 @Transactional
-public class StoreDAOImpl implements StoreDAO{
-  
+public class StoreDAOImpl implements StoreDAO {
+
   private final Logger logger = LoggerFactory.getLogger(StoreDAO.class);
   private StoreRepository storeRepository;
 
@@ -31,15 +31,24 @@ public class StoreDAOImpl implements StoreDAO{
   }
 
   @Override
-  public List<String> printStore(String country, String city, String dong, String type, int page, int size) {
+  public List<String> printStore(String country, String city, String dong, String type, int page,
+      int size) {
     logger.info("[StoreDAO] printStore(가게 목록 출력) 호출");
     Pageable pageable = PageRequest.of(page, size);
-    List<StoreEntity> storeEntityList = storeRepository.findByCountryAndCityAndDongAndType(country, city, dong, type, pageable);
+    List<StoreEntity> storeEntityList =
+        storeRepository.findByCountryAndCityAndDongAndType(country, city, dong, type, pageable);
     List<String> result = new ArrayList<>();
-    for(StoreEntity entity : storeEntityList) {
+    for (StoreEntity entity : storeEntityList) {
       result.add(entity.getStoreName());
     }
     return result;
+  }
+
+  @Override
+  public String loginStore(String storeName) {
+    logger.info("[StoreDAO] loginStore(가게 권한 반환) 호출");
+    StoreEntity store = storeRepository.findByStoreName(storeName);
+    return store.getOwnerId();
   }
 
 }

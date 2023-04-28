@@ -7,5 +7,7 @@ import com.ReservationServer1.data.Entity.StoreEntity;
 
 public interface StoreRepository extends JpaRepository<StoreEntity, String>{
 
+  
   List<StoreEntity> findByCountryAndCityAndDongAndType(String country, String city, String dong, String type, Pageable pageable);
+  StoreEntity findByStoreName(String storeName);
 }

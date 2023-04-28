@@ -4,6 +4,7 @@ import org.springframework.beans.BeanUtils;
 import com.ReservationServer1.data.DTO.store.StoreDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +20,10 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="Store")
+@Table(name = "Store", indexes = {
+    @Index(name = "idx_city", columnList = "city"),
+    @Index(name = "idx_dong", columnList = "dong")
+})
 public class StoreEntity extends BaseEntity{
   
   @Id
