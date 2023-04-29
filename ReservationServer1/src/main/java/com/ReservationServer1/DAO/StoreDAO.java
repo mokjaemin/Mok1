@@ -1,7 +1,7 @@
 package com.ReservationServer1.DAO;
 
 import java.util.List;
-import com.ReservationServer1.data.Entity.StoreEntity;
+import com.ReservationServer1.data.Entity.store.StoreEntity;
 
 public interface StoreDAO {
   void registerStore(StoreEntity storeEntity);

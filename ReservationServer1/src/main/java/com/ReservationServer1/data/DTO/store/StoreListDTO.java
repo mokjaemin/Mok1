@@ -18,8 +18,6 @@ import lombok.ToString;
 @RedisHash(value = "storeList", timeToLive = 60*10) // 10분
 public class StoreListDTO implements Serializable {
 
-    private static final long serialVersionUID = -214490344996507077L;
-
     @Id
     private String Address;
 

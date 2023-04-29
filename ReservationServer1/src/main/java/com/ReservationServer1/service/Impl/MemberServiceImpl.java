@@ -11,7 +11,7 @@ import com.ReservationServer1.DAO.MemberDAO;
 import com.ReservationServer1.data.DTO.member.LoginDTO;
 import com.ReservationServer1.data.DTO.member.MemberDTO;
 import com.ReservationServer1.data.DTO.member.ModifyMemberDTO;
-import com.ReservationServer1.data.Entity.MemberEntity;
+import com.ReservationServer1.data.Entity.member.MemberEntity;
 import com.ReservationServer1.service.MemberService;
 import com.ReservationServer1.utils.JWTutil;
 

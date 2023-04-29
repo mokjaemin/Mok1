@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.ReservationServer1.DAO.JPAImpl.Repository.MemberRepository;
 import com.ReservationServer1.data.DTO.member.MemberDTO;
-import com.ReservationServer1.data.Entity.MemberEntity;
+import com.ReservationServer1.data.Entity.member.MemberEntity;
 
 @SpringBootTest
 public class MemberDAOUnitTest {

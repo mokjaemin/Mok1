@@ -67,9 +67,9 @@ public class StoreController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<List<String>> getStoreBy(@RequestParam String storeName, Authentication authentication) {
+  public ResponseEntity<String> getStoreBy(@RequestParam String storeName, Authentication authentication) {
     logger.info("[StoreController] LoginStore(가게 권한 반환) 호출");
-    List<String> result = storeService.loginStore(storeName, authentication.getName());
+    String result = storeService.loginStore(storeName, authentication.getName());
     return ResponseEntity.status(HttpStatus.OK).body(result);
   }
 }

@@ -12,7 +12,7 @@ import com.ReservationServer1.DAO.StoreDAO;
 import com.ReservationServer1.DAO.JPAImpl.Cache.StoreListRepository;
 import com.ReservationServer1.data.DTO.store.StoreDTO;
 import com.ReservationServer1.data.DTO.store.StoreListDTO;
-import com.ReservationServer1.data.Entity.StoreEntity;
+import com.ReservationServer1.data.Entity.store.StoreEntity;
 import com.ReservationServer1.service.StoreService;
 import com.ReservationServer1.utils.JWTutil;
 
@@ -58,17 +58,14 @@ public class StoreServiceImpl implements StoreService{
   }
 
   @Override
-  public List<String> loginStore(String storeName, String userId) {
+  public String loginStore(String storeName, String userId) {
     logger.info("[StoreService] loginStore(가게 권한 반환) 호출");
     String ownerId = storeDAO.loginStore(storeName);
-    List<String> result = new ArrayList<>();
     if (ownerId.equals(userId)) {
-      result.add("OWNER");
-      result.add(JWTutil.createJWT(storeName, "OWNER", secretKey, expiredLoginMs));
-      return result;
+      String token = JWTutil.createJWT(storeName, "OWNER", secretKey, expiredLoginMs);
+      return token;
     }
-    result.add("USER");
-    return result;
+    return "user";
   }
 
 }

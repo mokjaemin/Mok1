@@ -2,7 +2,7 @@ package com.ReservationServer1.data.Listener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.ReservationServer1.data.Entity.MemberEntity;
+import com.ReservationServer1.data.Entity.member.MemberEntity;
 import jakarta.persistence.PostLoad;
 import jakarta.persistence.PostPersist;
 import jakarta.persistence.PostRemove;

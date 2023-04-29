@@ -2,7 +2,7 @@ package com.ReservationServer1.DAO;
 
 import com.ReservationServer1.data.DTO.member.LoginDTO;
 import com.ReservationServer1.data.DTO.member.ModifyMemberDTO;
-import com.ReservationServer1.data.Entity.MemberEntity;
+import com.ReservationServer1.data.Entity.member.MemberEntity;
 
 public interface MemberDAO {
 

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import com.ReservationServer1.DAO.StoreDAO;
 import com.ReservationServer1.DAO.JPAImpl.Repository.StoreRepository;
-import com.ReservationServer1.data.Entity.StoreEntity;
+import com.ReservationServer1.data.Entity.store.StoreEntity;
 
 
 @Repository("StoreDAO")
