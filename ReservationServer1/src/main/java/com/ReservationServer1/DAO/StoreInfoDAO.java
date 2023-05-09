@@ -6,6 +6,7 @@ import com.ReservationServer1.data.Entity.store.StoreRestDaysEntity;
 
 public interface StoreInfoDAO {
 
-  void registerDay(RestDayDTO restDayDTO, String storeName);
-  List<String> getRestDays(String storeName);
+  void postDayOff(RestDayDTO restDayDTO);
+  List<String> getDayOff(String storeName);
+  void deleteDayOff(RestDayDTO restDayDTO);
 }

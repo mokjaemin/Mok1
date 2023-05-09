@@ -5,6 +5,7 @@ import com.ReservationServer1.data.DTO.store.RestDayDTO;
 
 public interface StoreInfoService {
 
-  String dayRegister(RestDayDTO restDayDTO, String storeName);
-  List<String> dayInfo(String storeName);
+  String postDayOff(RestDayDTO restDayDTO);
+  List<String> getDayOff(String storeName);
+  String deleteDayOff(RestDayDTO restDayDTO);
 }

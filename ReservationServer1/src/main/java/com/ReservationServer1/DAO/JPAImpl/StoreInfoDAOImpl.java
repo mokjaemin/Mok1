@@ -8,6 +8,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import com.ReservationServer1.DAO.StoreInfoDAO;
 import com.ReservationServer1.DAO.JPAImpl.Repository.StoreRestDayMapRepository;
 import com.ReservationServer1.DAO.JPAImpl.Repository.StoreRestDayRepository;
@@ -17,6 +18,7 @@ import com.ReservationServer1.data.Entity.store.StoreRestDaysMapEntity;
 
 
 @Repository
+@Transactional
 public class StoreInfoDAOImpl implements StoreInfoDAO {
 
   private final Logger logger = LoggerFactory.getLogger(StoreInfoDAO.class);
@@ -30,9 +32,9 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
   }
 
   @Override
-  public void registerDay(RestDayDTO restDayDTO, String storeName) {
+  public void postDayOff(RestDayDTO restDayDTO) {
     logger.info("[StoreRestDayDAOImpl] day register(쉬는날 등록) 호출");
-    StoreRestDaysEntity parent = new StoreRestDaysEntity(storeName);
+    StoreRestDaysEntity parent = new StoreRestDaysEntity(restDayDTO.getStoreName());
     storeRestDayRepositoty.save(parent);
     Set<StoreRestDaysMapEntity> childs = new LinkedHashSet<>();
     Set<String> keys = restDayDTO.getDate().keySet();
@@ -47,7 +49,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 
 
   @Override
-  public List<String> getRestDays(String storeName) {
+  public List<String> getDayOff(String storeName) {
     logger.info("[StoreRestDayDAOImpl] get rest days(쉬는날 반환) 호출");
     List<String> result = new ArrayList<>();
     List<StoreRestDaysEntity> check = storeRestDayRepositoty.findByStoreName(storeName);
@@ -59,6 +61,14 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
       }
     }
     return result;
+  }
+
+  @Override
+  public void deleteDayOff(RestDayDTO restDayDTO) {
+    Set<String> keys = restDayDTO.getDate().keySet();
+    for (String key : keys) {
+      storeRestDayMapRepositoty.deleteByStoreNameAndDate(restDayDTO.getStoreName(), restDayDTO.getDate().get(key));
+    }
   }
 
 }

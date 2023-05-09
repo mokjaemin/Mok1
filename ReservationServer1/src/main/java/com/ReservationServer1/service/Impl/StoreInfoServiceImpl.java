@@ -20,17 +20,24 @@ public class StoreInfoServiceImpl implements StoreInfoService{
   }
 
   @Override
-  public String dayRegister(RestDayDTO restDayDTO, String storeName) {
-    logger.info("[StoreRestDayServiceImpl] day register(쉬는날 등록) 호출");
-    storeInfoDAO.registerDay(restDayDTO, storeName);
+  public String postDayOff(RestDayDTO restDayDTO) {
+    logger.info("[StoreRestDayServiceImpl] post Day Off(쉬는날 등록) 호출");
+    storeInfoDAO.postDayOff(restDayDTO);
     return "success";
   }
 
   @Override
-  public List<String> dayInfo(String storeName) {
-    logger.info("[StoreRestDayServiceImpl] get rest days(쉬는날 반환) 호출");
-    List<String> result = storeInfoDAO.getRestDays(storeName);
+  public List<String> getDayOff(String storeName) {
+    logger.info("[StoreRestDayServiceImpl] get Day off(쉬는날 반환) 호출");
+    List<String> result = storeInfoDAO.getDayOff(storeName);
     return result;
+  }
+
+  @Override
+  public String deleteDayOff(RestDayDTO restDayDTO) {
+    logger.info("[StoreRestDayServiceImpl] delete Day Off(쉬는날 삭제) 호출");
+    storeInfoDAO.deleteDayOff(restDayDTO);
+    return "success";
   }
 
 }
