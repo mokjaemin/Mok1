@@ -3,6 +3,7 @@ package com.ReservationServer1.data.Entity.store;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import com.ReservationServer1.data.Entity.BaseEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -12,7 +13,6 @@ import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,7 +32,7 @@ public class StoreRestDaysEntity extends BaseEntity {
   private Long daysId;
   private String storeName;
   
-  @OneToMany(mappedBy = "storeRestDaysEntity", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "storeRestDaysEntity", fetch = FetchType.LAZY,  cascade = CascadeType.REMOVE)
   private Set<StoreRestDaysMapEntity> childSet = new LinkedHashSet<>();
 
   

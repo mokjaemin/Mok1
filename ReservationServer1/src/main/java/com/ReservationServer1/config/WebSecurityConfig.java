@@ -41,9 +41,10 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.POST, "/store").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.GET, "/store").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.GET, "/store/list").hasAuthority("ROLE_USER")
-        // Store Info
+        // Store Info (Days Configuration)
         .requestMatchers(HttpMethod.POST, "/info/day").hasAuthority("ROLE_OWNER")
         .requestMatchers(HttpMethod.GET, "/info/day").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.DELETE, "/info/day").hasAuthority("ROLE_OWNER")
         .and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()

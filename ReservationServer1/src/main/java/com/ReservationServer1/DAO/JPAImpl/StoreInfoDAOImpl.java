@@ -1,9 +1,9 @@
 package com.ReservationServer1.DAO.JPAImpl;
 
+
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,8 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
   private StoreRestDayRepository storeRestDayRepositoty;
   private StoreRestDayMapRepository storeRestDayMapRepositoty;
 
-  public StoreInfoDAOImpl(StoreRestDayRepository storeRestDayRepositoty, StoreRestDayMapRepository storeRestDayMapRepositoty) {
+  public StoreInfoDAOImpl(StoreRestDayRepository storeRestDayRepositoty,
+      StoreRestDayMapRepository storeRestDayMapRepositoty) {
     this.storeRestDayRepositoty = storeRestDayRepositoty;
     this.storeRestDayMapRepositoty = storeRestDayMapRepositoty;
   }
@@ -36,25 +37,27 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
     Set<StoreRestDaysMapEntity> childs = new LinkedHashSet<>();
     Set<String> keys = restDayDTO.getDate().keySet();
     for (String key : keys) {
-      StoreRestDaysMapEntity child = new StoreRestDaysMapEntity(restDayDTO.getDate().get(key), parent);
+      StoreRestDaysMapEntity child =
+          new StoreRestDaysMapEntity(restDayDTO.getDate().get(key), parent);
       storeRestDayMapRepositoty.save(child);
       childs.add(child);
     }
     parent.setChildSet(childs);
   }
 
+
   @Override
   public List<String> getRestDays(String storeName) {
     logger.info("[StoreRestDayDAOImpl] get rest days(쉬는날 반환) 호출");
     List<String> result = new ArrayList<>();
-    Optional<StoreRestDaysEntity> entity = storeRestDayRepositoty.findByStoreName(storeName);
-    // for (StoreRestDayEntity entity : data) {
-    // Set<String> keys = entity.getDate().keySet();
-    // System.out.println(entity.getDate());
-    // for (String key : keys) {
-    // result.add(entity.getDate().get(key));
-    // }
-    // }
+    List<StoreRestDaysEntity> check = storeRestDayRepositoty.findByStoreName(storeName);
+    if (check.isEmpty() == false) {
+      for (StoreRestDaysEntity srde : check) {
+        for (StoreRestDaysMapEntity srdme : srde.getChildSet()) {
+          result.add(srdme.getDate());
+        }
+      }
+    }
     return result;
   }
 
