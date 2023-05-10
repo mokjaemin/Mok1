@@ -1,5 +1,7 @@
 package com.ReservationServer1.data.Entity.store;
 
+
+
 import org.springframework.beans.BeanUtils;
 import com.ReservationServer1.data.DTO.store.StoreDTO;
 import com.ReservationServer1.data.Entity.BaseEntity;

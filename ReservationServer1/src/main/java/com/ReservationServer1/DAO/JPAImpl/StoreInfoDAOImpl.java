@@ -15,6 +15,7 @@ import com.ReservationServer1.DAO.JPAImpl.Repository.StoreRestDayRepository;
 import com.ReservationServer1.data.DTO.store.RestDayDTO;
 import com.ReservationServer1.data.Entity.store.StoreRestDaysEntity;
 import com.ReservationServer1.data.Entity.store.StoreRestDaysMapEntity;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
 
 @Repository
@@ -24,11 +25,13 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
   private final Logger logger = LoggerFactory.getLogger(StoreInfoDAO.class);
   private StoreRestDayRepository storeRestDayRepositoty;
   private StoreRestDayMapRepository storeRestDayMapRepositoty;
+  private final JPAQueryFactory queryFactory;
 
   public StoreInfoDAOImpl(StoreRestDayRepository storeRestDayRepositoty,
-      StoreRestDayMapRepository storeRestDayMapRepositoty) {
+      StoreRestDayMapRepository storeRestDayMapRepositoty, JPAQueryFactory queryFactory) {
     this.storeRestDayRepositoty = storeRestDayRepositoty;
     this.storeRestDayMapRepositoty = storeRestDayMapRepositoty;
+    this.queryFactory = queryFactory;
   }
 
   @Override
@@ -65,10 +68,14 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 
   @Override
   public void deleteDayOff(RestDayDTO restDayDTO) {
-    Set<String> keys = restDayDTO.getDate().keySet();
-    for (String key : keys) {
-      storeRestDayMapRepositoty.deleteByStoreNameAndDate(restDayDTO.getStoreName(), restDayDTO.getDate().get(key));
-    }
+//    QStoreEntity qStoreEntity = QStoreEntity.storeEntity;
+//    StoreEntity storeEntity = queryFactory
+//            .selectFrom(qStoreEntity)
+//            .where(qStoreEntity.storeName.eq("steakHouse8"))
+//            .fetchOne();
+//    
+//    // 원하는 동작 수행
+//    System.out.println(storeEntity);
   }
 
 }

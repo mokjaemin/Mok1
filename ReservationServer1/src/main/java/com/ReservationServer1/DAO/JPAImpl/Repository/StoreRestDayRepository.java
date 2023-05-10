@@ -4,15 +4,11 @@ import java.util.List;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.query.Param;
 import com.ReservationServer1.data.Entity.store.StoreRestDaysEntity;
 
 public interface StoreRestDayRepository extends JpaRepository<StoreRestDaysEntity, Long>{
-  
-  
-  
-  
-  
   
   // Join N+1 Solution without Query DSL
   
