@@ -13,6 +13,10 @@ import com.ReservationServer1.DAO.StoreInfoDAO;
 import com.ReservationServer1.DAO.JPAImpl.Repository.StoreRestDayMapRepository;
 import com.ReservationServer1.DAO.JPAImpl.Repository.StoreRestDayRepository;
 import com.ReservationServer1.data.DTO.store.RestDayDTO;
+import com.ReservationServer1.data.Entity.store.QStoreEntity;
+import com.ReservationServer1.data.Entity.store.QStoreRestDaysEntity;
+import com.ReservationServer1.data.Entity.store.QStoreRestDaysMapEntity;
+import com.ReservationServer1.data.Entity.store.StoreEntity;
 import com.ReservationServer1.data.Entity.store.StoreRestDaysEntity;
 import com.ReservationServer1.data.Entity.store.StoreRestDaysMapEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -25,13 +29,15 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
   private final Logger logger = LoggerFactory.getLogger(StoreInfoDAO.class);
   private StoreRestDayRepository storeRestDayRepositoty;
   private StoreRestDayMapRepository storeRestDayMapRepositoty;
-//  private final JPAQueryFactory queryFactory;
+  private final JPAQueryFactory queryFactory;
 
   public StoreInfoDAOImpl(StoreRestDayRepository storeRestDayRepositoty,
-      StoreRestDayMapRepository storeRestDayMapRepositoty) {
+      StoreRestDayMapRepository storeRestDayMapRepositot, JPAQueryFactory queryFactory) {
     this.storeRestDayRepositoty = storeRestDayRepositoty;
-    this.storeRestDayMapRepositoty = storeRestDayMapRepositoty;
+    this.storeRestDayMapRepositoty = storeRestDayMapRepositot;
+    this.queryFactory = queryFactory;
   }
+
 
   @Override
   public void postDayOff(RestDayDTO restDayDTO) {
@@ -53,8 +59,19 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
   @Override
   public List<String> getDayOff(String storeName) {
     logger.info("[StoreRestDayDAOImpl] get rest days(쉬는날 반환) 호출");
+    QStoreRestDaysEntity parent = QStoreRestDaysEntity.storeRestDaysEntity;
+    QStoreRestDaysMapEntity child = QStoreRestDaysMapEntity.storeRestDaysMapEntity;
+    List<StoreRestDaysEntity> check = queryFactory
+        .select(parent)
+        .distinct()
+        .from(parent)
+        .leftJoin(parent.childSet, child).fetchJoin()
+        .where(parent.storeName.eq(storeName))
+        .fetch();
+
+    
     List<String> result = new ArrayList<>();
-    List<StoreRestDaysEntity> check = storeRestDayRepositoty.findByStoreName(storeName);
+//    List<StoreRestDaysEntity> check = storeRestDayRepositoty.findByStoreName(storeName);
     if (check.isEmpty() == false) {
       for (StoreRestDaysEntity srde : check) {
         for (StoreRestDaysMapEntity srdme : srde.getChildSet()) {
@@ -67,14 +84,10 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 
   @Override
   public void deleteDayOff(RestDayDTO restDayDTO) {
-//    QStoreEntity qStoreEntity = QStoreEntity.storeEntity;
-//    StoreEntity storeEntity = queryFactory
-//            .selectFrom(qStoreEntity)
-//            .where(qStoreEntity.storeName.eq("steakHouse8"))
-//            .fetchOne();
-//    
-//    // 원하는 동작 수행
-//    System.out.println(storeEntity);
+    QStoreEntity now = QStoreEntity.storeEntity;
+    StoreEntity result =
+        queryFactory.select(now).from(now).where(now.storeName.eq("steakHouse8")).fetchOne();
+    System.out.println(result);
   }
 
 }

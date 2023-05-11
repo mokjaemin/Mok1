@@ -2,6 +2,7 @@ package com.ReservationServer1.data.Entity.member;
 
 
 
+
 import org.springframework.beans.BeanUtils;
 import com.ReservationServer1.data.DTO.member.MemberDTO;
 import com.ReservationServer1.data.Entity.BaseEntity;

@@ -129,7 +129,7 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
-		<!-- Querydsl dependencies -->
+		<!-- Query DSL -->
 		<dependency>
 			<groupId>com.querydsl</groupId>
 			<artifactId>querydsl-apt</artifactId>
@@ -137,15 +137,11 @@
 			<classifier>jakarta</classifier>
 			<scope>provided</scope>
 		</dependency>
-		<!-- Querydsl JPA -->
 		<dependency>
 			<groupId>com.querydsl</groupId>
 			<artifactId>querydsl-jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.27</version>
+			<version>5.0.0</version>
+			<classifier>jakarta</classifier>
 		</dependency>
 	</dependencies>
 	<build>
@@ -154,7 +150,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<!-- Query DSL -->
 			<!-- Test Coverage PlugIn -->
 			<plugin>
 				<groupId>org.jacoco</groupId>

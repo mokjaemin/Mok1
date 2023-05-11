@@ -1,5 +1,6 @@
 package com.ReservationServer1.data.DTO.member;
 
+
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
