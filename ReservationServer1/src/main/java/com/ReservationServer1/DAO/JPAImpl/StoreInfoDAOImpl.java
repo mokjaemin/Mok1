@@ -25,13 +25,12 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
   private final Logger logger = LoggerFactory.getLogger(StoreInfoDAO.class);
   private StoreRestDayRepository storeRestDayRepositoty;
   private StoreRestDayMapRepository storeRestDayMapRepositoty;
-  private final JPAQueryFactory queryFactory;
+//  private final JPAQueryFactory queryFactory;
 
   public StoreInfoDAOImpl(StoreRestDayRepository storeRestDayRepositoty,
-      StoreRestDayMapRepository storeRestDayMapRepositoty, JPAQueryFactory queryFactory) {
+      StoreRestDayMapRepository storeRestDayMapRepositoty) {
     this.storeRestDayRepositoty = storeRestDayRepositoty;
     this.storeRestDayMapRepositoty = storeRestDayMapRepositoty;
-    this.queryFactory = queryFactory;
   }
 
   @Override

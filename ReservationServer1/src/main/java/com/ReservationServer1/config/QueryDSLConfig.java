@@ -7,6 +7,7 @@ import jakarta.persistence.PersistenceContext;
 
 
 
+
 @Configuration
 public class QueryDSLConfig {
 

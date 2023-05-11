@@ -133,12 +133,19 @@
 		<dependency>
 			<groupId>com.querydsl</groupId>
 			<artifactId>querydsl-apt</artifactId>
+			<version>5.0.0</version>
+			<classifier>jakarta</classifier>
 			<scope>provided</scope>
 		</dependency>
 		<!-- Querydsl JPA -->
 		<dependency>
 			<groupId>com.querydsl</groupId>
 			<artifactId>querydsl-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.27</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -148,37 +155,6 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 			<!-- Query DSL -->
-			<plugin>
-				<groupId>com.querydsl</groupId>
-				<artifactId>querydsl-maven-plugin</artifactId>
-				<version>4.4.0</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>export</goal>
-						</goals>
-						<configuration>
-							<jdbcDriver>com.mysql.cj.jdbc.Driver</jdbcDriver>
-							<jdbcUrl>jdbc:mysql://graduationprojectmok.cyhr9gpsfoti.ap-northeast-2.rds.amazonaws.com:3306/ReservationServer?serverTimezone=UTC&amp;characterEncoding=UTF-8</jdbcUrl>
-							<packageName>com.ReservationServer1.data.Entity</packageName>
-							<targetFolder>target/generated-sources</targetFolder>
-							<namePrefix>Q</namePrefix>
-						</configuration>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>jakarta.persistence</groupId>
-						<artifactId>jakarta.persistence-api</artifactId>
-						<version>3.0.0</version>
-					</dependency>
-					<dependency>
-						<groupId>com.querydsl</groupId>
-						<artifactId>querydsl-jpa</artifactId>
-						<version>4.4.0</version>
-					</dependency>
-				</dependencies>
-			</plugin>
 			<!-- Test Coverage PlugIn -->
 			<plugin>
 				<groupId>org.jacoco</groupId>
