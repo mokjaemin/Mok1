@@ -18,6 +18,7 @@ import com.ReservationServer1.DAO.JPAImpl.Repository.StoreRestDayRepository;
 import com.ReservationServer1.data.DTO.store.RestDayDTO;
 import com.ReservationServer1.data.Entity.store.StoreRestDaysEntity;
 import com.ReservationServer1.data.Entity.store.StoreRestDaysMapEntity;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 
@@ -26,14 +27,14 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 public class StoreInfoDAOImpl implements StoreInfoDAO {
 
   private final Logger logger = LoggerFactory.getLogger(StoreInfoDAO.class);
-  private StoreRestDayRepository storeRestDayRepositoty;
-  private StoreRestDayMapRepository storeRestDayMapRepositoty;
+  private StoreRestDayRepository storeRestDayRepository;
+  private StoreRestDayMapRepository storeRestDayMapRepository;
   private final JPAQueryFactory queryFactory;
 
-  public StoreInfoDAOImpl(StoreRestDayRepository storeRestDayRepositoty,
-      StoreRestDayMapRepository storeRestDayMapRepositot, JPAQueryFactory queryFactory) {
-    this.storeRestDayRepositoty = storeRestDayRepositoty;
-    this.storeRestDayMapRepositoty = storeRestDayMapRepositot;
+  public StoreInfoDAOImpl(StoreRestDayRepository storeRestDayRepository,
+      StoreRestDayMapRepository storeRestDayMapRepository, JPAQueryFactory queryFactory) {
+    this.storeRestDayRepository = storeRestDayRepository;
+    this.storeRestDayMapRepository = storeRestDayMapRepository;
     this.queryFactory = queryFactory;
   }
 
@@ -42,13 +43,13 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
   public void postDayOff(RestDayDTO restDayDTO) {
     logger.info("[StoreRestDayDAOImpl] day register(쉬는날 등록) 호출");
     StoreRestDaysEntity parent = new StoreRestDaysEntity(restDayDTO.getStoreName());
-    storeRestDayRepositoty.save(parent);
+    storeRestDayRepository.save(parent);
     Set<StoreRestDaysMapEntity> childs = new LinkedHashSet<>();
     Set<String> keys = restDayDTO.getDate().keySet();
     for (String key : keys) {
       StoreRestDaysMapEntity child =
           new StoreRestDaysMapEntity(restDayDTO.getDate().get(key), parent);
-      storeRestDayMapRepositoty.save(child);
+      storeRestDayMapRepository.save(child);
       childs.add(child);
     }
     parent.setChildSet(childs);
@@ -76,13 +77,14 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
   public void deleteDayOff(RestDayDTO restDayDTO) {
     String storeName = restDayDTO.getStoreName();
     Map<String, String> date = restDayDTO.getDate();
-//    for(String key : date.keySet()) {
-//      String day = date.get(key);
-//      queryFactory
-//      .delete(storeRestDaysMapEntity)
-//      .join(storeRestDaysMapEntity.storeRestDaysEntity, storeRestDaysEntity)
-//      .execute();
-//    }
+    for (String key : date.keySet()) {
+      String day = date.get(key);
+      String id = storeRestDayMapRepository.findDaysIdByDate(day);
+      storeRestDayMapRepository.deleteByStoreNameAndDate(storeName, day);
+      if(storeRestDayMapRepository.findCountByDaysId(id) == 0) {
+        storeRestDayRepository.deleteByDaysId(id);
+      }
+    }
   }
 
 }

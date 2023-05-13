@@ -32,7 +32,7 @@ public class StoreRestDaysEntity extends BaseEntity {
   private Long daysId;
   private String storeName;
   
-  @OneToMany(mappedBy = "storeRestDaysEntity", fetch = FetchType.LAZY,  cascade = CascadeType.REMOVE)
+  @OneToMany(mappedBy = "storeRestDaysEntity", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   private Set<StoreRestDaysMapEntity> childSet = new LinkedHashSet<>();
 
   
