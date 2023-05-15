@@ -75,7 +75,7 @@ public class StoreInfoController {
   public ResponseEntity<String> deleteDayOff(@Valid @RequestBody RestDayDTO restDayDTO,
       Authentication authentication) {
     logger.info("[StoreRestDayController] delete Day Off(쉬는날 삭제) 호출");
-    if(!restDayDTO.getStoreName().equals(authentication.getName())) {
+    if (!restDayDTO.getStoreName().equals(authentication.getName())) {
       return ResponseEntity.status(HttpStatus.OK).body("권한이 없습니다.");
     }
     String result = storeInfoService.deleteDayOff(restDayDTO);

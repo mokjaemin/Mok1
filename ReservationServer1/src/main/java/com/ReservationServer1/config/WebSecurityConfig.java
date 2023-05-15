@@ -32,6 +32,7 @@ public class WebSecurityConfig {
         .csrf().disable().cors().and().authorizeHttpRequests()
         // No Security
         .requestMatchers("/member/login", "/member", "/member/auth/pwd", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+//        .requestMatchers(HttpMethod.GET, "/info/day").permitAll()
        
         // member
         .requestMatchers(HttpMethod.POST, "/member/info").hasAuthority("ROLE_USER")

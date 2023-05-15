@@ -18,5 +18,4 @@ public interface StoreRestDayMapRepository extends JpaRepository<StoreRestDaysMa
   
   @Query(value = "SELECT COUNT(*) FROM store_rest_days_map srdm WHERE srdm.days_id = :daysId", nativeQuery = true)
   int findCountByDaysId(@Param("daysId") String daysId);
-
 }
