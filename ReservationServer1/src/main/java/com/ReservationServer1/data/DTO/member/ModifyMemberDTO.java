@@ -1,45 +1,40 @@
 package com.ReservationServer1.data.DTO.member;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 
-@Data
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class ModifyMemberDTO {
-  
+
   @NotNull
   private String userPwd;
-  
+
   @NotNull
   private String userName;
-  
+
   @NotNull
   private String userNumber;
-  
+
   @NotNull
   private String userAddress;
-  
+
   @NotNull
   private String userEmail;
-  
-  
-  public ModifyMemberDTO(String userPwd, String userName, String userNumber, String userAddress, String userEmail) {
-      this.userPwd = userPwd;
-      this.userName = userName;
-      this.userNumber = userNumber;
-      this.userAddress = userAddress;
-      this.userEmail = userEmail;
-  } 
-  
+
+
   public static ModifyMemberDTO sample() {
-      
-      String userPwd = "testPwd";
-      String userName = "testName";
-      String userNumber = "testNumber";
-      String userAddress = "testAddress";
-      String userEmail = "testEmail";
-      return new ModifyMemberDTO(userPwd, userName, userNumber, userAddress, userEmail);
+    return new ModifyMemberDTO("testPwd", "testName", "testNumber", "testAddress", "testEmail");
   }
 }

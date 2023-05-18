@@ -1,9 +1,19 @@
 package com.ReservationServer1.data.DTO.member;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class LoginDTO {
 	
 	@NotNull
@@ -11,11 +21,6 @@ public class LoginDTO {
 	
 	@NotNull
 	private String userPwd;
-	
-	public LoginDTO(String userId, String userPwd) {
-		this.userId = userId;
-		this.userPwd = userPwd;
-	}
 	
 	
 	public static LoginDTO sample() {

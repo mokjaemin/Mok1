@@ -26,8 +26,8 @@ public class MemberServiceImpl implements MemberService {
   
   private final Logger logger = LoggerFactory.getLogger(MemberServiceImpl.class);
   private final MemberDAO memberDAO;
-  private Long expiredLoginMs = 1000 * 60 * 30l; // 30분
-  private Long expiredPwdMs = 1000 * 60 * 5l; // 5분
+  private final Long expiredLoginMs = 1000 * 60 * 30l; // 30분
+  private final Long expiredPwdMs = 1000 * 60 * 5l; // 5분
 
 
   public MemberServiceImpl(MemberDAO memberDAO, JavaMailSender emailSender, Environment env) {
@@ -46,11 +46,10 @@ public class MemberServiceImpl implements MemberService {
 
 
   @Override
-  public String loginMember(String userId, String userPwd) {
+  public String loginMember(LoginDTO loginDTO) {
     logger.info("[MemberService] loginMember(로그인) 호출");
-    LoginDTO loginDTO = new LoginDTO(userId, userPwd);
     memberDAO.login(loginDTO);
-    String token = JWTutil.createJWT(userId, "USER", secretKey, expiredLoginMs);
+    String token = JWTutil.createJWT(loginDTO.getUserId(), "USER", secretKey, expiredLoginMs);
     return token;
   }
   

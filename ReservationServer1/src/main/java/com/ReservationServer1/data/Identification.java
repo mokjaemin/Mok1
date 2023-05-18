@@ -15,7 +15,4 @@ public abstract class Identification {
       this.id = UUID.randomUUID().toString();
   }
 
-  protected Identification(String id) {
-      this.id = id;
-  }
 }

@@ -21,9 +21,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "Store", indexes = {
     @Index(name = "idx_city", columnList = "city"),
     @Index(name = "idx_dong", columnList = "dong")

@@ -1,13 +1,22 @@
 package com.ReservationServer1.data.DTO.store;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
-public class RestDayDTO implements Serializable{
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class RestDayDTO{
   
   private String storeName;
   
@@ -15,17 +24,11 @@ public class RestDayDTO implements Serializable{
   private Map<String, String> date;
   
 
-  public RestDayDTO(String storeName, Map<String, String> date) {
-    this.storeName = storeName;
-    this.date = date;
-  }
-
   public static RestDayDTO sample() {
     Map<String, String> sampleDate = new HashMap<String, String>();
     sampleDate.put("date1", "date1");
     sampleDate.put("date2", "date2");
-    RestDayDTO sample = new RestDayDTO("sampleName", sampleDate);
-    return sample;
+    return new RestDayDTO("sampleName", sampleDate);
   }
 }
 

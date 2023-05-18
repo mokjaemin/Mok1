@@ -18,7 +18,7 @@ import com.ReservationServer1.data.Entity.store.StoreEntity;
 public class StoreDAOImpl implements StoreDAO {
 
   private final Logger logger = LoggerFactory.getLogger(StoreDAO.class);
-  private StoreRepository storeRepository;
+  private final StoreRepository storeRepository;
 
   public StoreDAOImpl(StoreRepository storeRepository) {
     this.storeRepository = storeRepository;

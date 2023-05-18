@@ -25,7 +25,7 @@ public class StoreServiceImpl implements StoreService{
   private final Logger logger = LoggerFactory.getLogger(StoreServiceImpl.class);
   private final StoreDAO storeDAO;
   private final StoreListRepository storeListRepository;
-  private Long expiredLoginMs = 1000 * 60 * 30l; // 30분
+  private final Long expiredLoginMs = 1000 * 60 * 30l; // 30분
   
   public StoreServiceImpl(StoreDAO storeDAO, StoreListRepository storeListRepository) {
     this.storeDAO = storeDAO;

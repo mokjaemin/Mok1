@@ -61,7 +61,7 @@ public class MemberController {
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
   public ResponseEntity<String> login(@Valid @RequestBody LoginDTO loginDTO) {
     logger.info("[MemberController] login(로그인) 호출");
-    String response = memberService.loginMember(loginDTO.getUserId(), loginDTO.getUserPwd());
+    String response = memberService.loginMember(loginDTO);
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
@@ -119,7 +119,6 @@ public class MemberController {
     ObjectMapper objectMapper = new ObjectMapper();
     JsonNode jsonNode = objectMapper.readTree(requestBody);
     String userPwd = jsonNode.get("userPwd").asText();
-    System.out.println(userPwd);
     String response = memberService.delMember(authentication.getName(), userPwd);
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }

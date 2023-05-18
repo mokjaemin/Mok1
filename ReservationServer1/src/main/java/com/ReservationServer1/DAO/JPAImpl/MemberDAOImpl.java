@@ -23,7 +23,7 @@ public class MemberDAOImpl implements MemberDAO {
   @Autowired
   private BCryptPasswordEncoder passwordEncoder;
   private final Logger Logger = LoggerFactory.getLogger(MemberDAO.class);
-  private MemberRepository memberRepository;
+  private final MemberRepository memberRepository;
 
   public MemberDAOImpl(MemberRepository memberRepository) {
     this.memberRepository = memberRepository;

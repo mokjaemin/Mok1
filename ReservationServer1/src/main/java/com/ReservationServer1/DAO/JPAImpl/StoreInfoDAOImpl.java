@@ -26,8 +26,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 public class StoreInfoDAOImpl implements StoreInfoDAO {
 
   private final Logger logger = LoggerFactory.getLogger(StoreInfoDAO.class);
-  private StoreRestDayRepository storeRestDayRepository;
-  private StoreRestDayMapRepository storeRestDayMapRepository;
+  private final StoreRestDayRepository storeRestDayRepository;
+  private final StoreRestDayMapRepository storeRestDayMapRepository;
   private final JPAQueryFactory queryFactory;
 
   public StoreInfoDAOImpl(StoreRestDayRepository storeRestDayRepository,
@@ -40,7 +40,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 
   @Override
   public void postDayOff(RestDayDTO restDayDTO) {
-    logger.info("[StoreRestDayDAOImpl] day register(쉬는날 등록) 호출");
+    logger.info("[StoreInfoDAOImpl] day register(쉬는날 등록) 호출");
     StoreRestDaysEntity parent = new StoreRestDaysEntity(restDayDTO.getStoreName());
     storeRestDayRepository.save(parent);
     Set<StoreRestDaysMapEntity> childs = new LinkedHashSet<>();
@@ -53,19 +53,16 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
     }
     parent.setChildSet(childs);
   }
-  
-  
+
+
   @Override
   public List<String> getDayOff(String storeName) {
-    return queryFactory
-        .select(storeRestDaysMapEntity.date)
-        .from(storeRestDaysMapEntity)
+    return queryFactory.select(storeRestDaysMapEntity.date).from(storeRestDaysMapEntity)
         .leftJoin(storeRestDaysMapEntity.storeRestDaysEntity, storeRestDaysEntity)
-        .where(storeRestDaysEntity.storeName.eq(storeName))
-        .fetch();
+        .where(storeRestDaysEntity.storeName.eq(storeName)).fetch();
   }
 
-  
+
   // Exist로 변경, inner join, boolean Expression(for 대신 쿼리문 만들어줌) 사용
   // TROUBLE SHOOTING에 작성
   // 1. 조회해서 map의 아이디 반환 (쿼리 작성시 boolean Expression으로 하나의 쿼리로 작성)
