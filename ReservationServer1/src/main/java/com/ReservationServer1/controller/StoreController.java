@@ -43,8 +43,7 @@ public class StoreController {
   public ResponseEntity<String> register(@Valid @RequestBody StoreDTO storeDTO, Authentication authentication) {
     logger.info("[StoreController] register(가게 등록) 호출");
     storeDTO.setOwnerId(authentication.getName());
-    String result = storeService.registerStore(storeDTO);
-    return ResponseEntity.status(HttpStatus.OK).body(result);
+    return ResponseEntity.status(HttpStatus.OK).body(storeService.registerStore(storeDTO));
   }
   
   @GetMapping("/list")
@@ -54,10 +53,9 @@ public class StoreController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<List<String>> getStoreBy(@RequestParam String country, String city, String dong, String type, int page, int size) {
+  public ResponseEntity<List<String>> getStoreList(@RequestParam String country, String city, String dong, String type, int page, int size) {
     logger.info("[StoreController] getStoreBy(가게 리스트 출력) 호출");
-    List<String> result = storeService.printStore(country, city, dong, type, page, size);
-    return ResponseEntity.status(HttpStatus.OK).body(result);
+    return ResponseEntity.status(HttpStatus.OK).body(storeService.getStoreList(country, city, dong, type, page, size));
   }
   
   @GetMapping
@@ -67,9 +65,8 @@ public class StoreController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> getStoreBy(@RequestParam String storeName, Authentication authentication) {
+  public ResponseEntity<String> loginStore(@RequestParam String storeName, Authentication authentication) {
     logger.info("[StoreController] LoginStore(가게 권한 반환) 호출");
-    String result = storeService.loginStore(storeName, authentication.getName());
-    return ResponseEntity.status(HttpStatus.OK).body(result);
+    return ResponseEntity.status(HttpStatus.OK).body(storeService.loginStore(storeName, authentication.getName()));
   }
 }

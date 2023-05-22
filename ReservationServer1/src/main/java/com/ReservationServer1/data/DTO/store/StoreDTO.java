@@ -1,13 +1,11 @@
 package com.ReservationServer1.data.DTO.store;
 
 import com.ReservationServer1.data.Identification;
-import com.ReservationServer1.data.DTO.member.FindPwdDTO;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -18,6 +16,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(callSuper = false)
 public class StoreDTO extends Identification {
 
 

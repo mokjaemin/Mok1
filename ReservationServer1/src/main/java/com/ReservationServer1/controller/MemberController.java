@@ -45,10 +45,9 @@ public class MemberController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> register(@Valid @RequestBody MemberDTO member) {
-    logger.info("[MemberController] register(회원가입) 호출");
-    memberService.registerMember(member);
-    return ResponseEntity.status(HttpStatus.OK).body("success");
+  public ResponseEntity<String> registerMember(@Valid @RequestBody MemberDTO member) {
+    logger.info("[MemberController] register(회원가입) 호출"); 
+    return ResponseEntity.status(HttpStatus.OK).body(memberService.registerMember(member));
   }
 
 
@@ -59,10 +58,9 @@ public class MemberController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> login(@Valid @RequestBody LoginDTO loginDTO) {
-    logger.info("[MemberController] login(로그인) 호출");
-    String response = memberService.loginMember(loginDTO);
-    return ResponseEntity.status(HttpStatus.OK).body(response);
+  public ResponseEntity<String> loginMember(@Valid @RequestBody LoginDTO loginDTO) {
+    logger.info("[MemberController] login(로그인) 호출");    
+    return ResponseEntity.status(HttpStatus.OK).body(memberService.loginMember(loginDTO));
   }
 
 
@@ -73,10 +71,9 @@ public class MemberController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> findPwd(@Valid @RequestBody FindPwdDTO findPwdDTO) {
+  public ResponseEntity<String> findPwdMember(@Valid @RequestBody FindPwdDTO findPwdDTO) {
     logger.info("[MemberController] findPwd(비밀번호 찾기) 호출");
-    String response = memberService.findPwdMember(findPwdDTO.getUserId(), findPwdDTO.getUserEmail());
-    return ResponseEntity.status(HttpStatus.OK).body(response);
+    return ResponseEntity.status(HttpStatus.OK).body(memberService.findPwdMember(findPwdDTO.getUserId(), findPwdDTO.getUserEmail()));
   }
   
   
@@ -87,10 +84,9 @@ public class MemberController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> modifyPwd(@Valid @RequestBody String userPwd, Authentication authentication){
+  public ResponseEntity<String> modPwdMember(@Valid @RequestBody String userPwd, Authentication authentication){
     logger.info("[MemberController] modPwd(비밀번호 수정) 호출");
-    String response = memberService.modPwdMember(authentication.getName(), userPwd);
-    return ResponseEntity.status(HttpStatus.OK).body(response);
+    return ResponseEntity.status(HttpStatus.OK).body(memberService.modPwdMember(authentication.getName(), userPwd));
   }
   
   
@@ -101,10 +97,9 @@ public class MemberController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> modifyInfo(@Valid @RequestBody ModifyMemberDTO modifyMemberDTO, Authentication authentication){
+  public ResponseEntity<String> modInfoMember(@Valid @RequestBody ModifyMemberDTO modifyMemberDTO, Authentication authentication){
     logger.info("[MemberController] modInfo(회원정보 수정) 호출");
-    String response = memberService.modInfoMember(authentication.getName(), modifyMemberDTO);
-    return ResponseEntity.status(HttpStatus.OK).body(response);
+    return ResponseEntity.status(HttpStatus.OK).body(memberService.modInfoMember(authentication.getName(), modifyMemberDTO));
   }
   
   
@@ -114,13 +109,12 @@ public class MemberController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> deleteMember(@Valid @RequestBody String requestBody, Authentication authentication) throws IOException{
+  public ResponseEntity<String> delMember(@Valid @RequestBody String userPwd1, Authentication authentication) throws IOException{
     logger.info("[MemberController] delMember(회원정보 삭제) 호출");
     ObjectMapper objectMapper = new ObjectMapper();
-    JsonNode jsonNode = objectMapper.readTree(requestBody);
+    JsonNode jsonNode = objectMapper.readTree(userPwd1);
     String userPwd = jsonNode.get("userPwd").asText();
-    String response = memberService.delMember(authentication.getName(), userPwd);
-    return ResponseEntity.status(HttpStatus.OK).body(response);
+    return ResponseEntity.status(HttpStatus.OK).body(memberService.delMember(authentication.getName(), userPwd));
   }
   
 

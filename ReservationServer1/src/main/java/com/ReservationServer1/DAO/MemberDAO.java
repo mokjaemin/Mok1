@@ -6,10 +6,10 @@ import com.ReservationServer1.data.Entity.member.MemberEntity;
 
 public interface MemberDAO {
 
-	MemberEntity create(MemberEntity memberEntity);
-	MemberEntity login(LoginDTO loginDTO);
-	MemberEntity findPwd(String userName, String userEmail);
-	void modPwd(String userId, String userPwd);
-	void modInfo(String userId, ModifyMemberDTO modifyMemberDTO);
-	void delMember(String userId, String userPwd);
+	String registerMember(MemberEntity memberEntity);
+	void loginMember(LoginDTO loginDTO);
+	MemberEntity findPwdMember(String userName, String userEmail);
+	String modPwdMember(String userId, String userPwd);
+	String modInfoMember(String userId, ModifyMemberDTO modifyMemberDTO);
+	String delMember(String userId, String userPwd);
 }

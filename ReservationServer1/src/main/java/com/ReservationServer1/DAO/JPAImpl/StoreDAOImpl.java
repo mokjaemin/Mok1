@@ -25,13 +25,14 @@ public class StoreDAOImpl implements StoreDAO {
   }
 
   @Override
-  public void registerStore(StoreEntity storeEntity) {
+  public String registerStore(StoreEntity storeEntity) {
     logger.info("[StoreDAO] registerStore(가게 등록) 호출");
     storeRepository.save(storeEntity);
+    return "success";
   }
 
   @Override
-  public List<String> printStore(String country, String city, String dong, String type, int page,
+  public List<String> getStoreList(String country, String city, String dong, String type, int page,
       int size) {
     logger.info("[StoreDAO] printStore(가게 목록 출력) 호출");
     Pageable pageable = PageRequest.of(page, size);
@@ -47,8 +48,7 @@ public class StoreDAOImpl implements StoreDAO {
   @Override
   public String loginStore(String storeName) {
     logger.info("[StoreDAO] loginStore(가게 권한 반환) 호출");
-    StoreEntity store = storeRepository.findByStoreName(storeName);
-    return store.getOwnerId();
+    return storeRepository.findByStoreName(storeName).getOwnerId();
   }
 
 }

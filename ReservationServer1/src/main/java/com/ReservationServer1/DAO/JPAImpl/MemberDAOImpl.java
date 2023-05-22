@@ -20,52 +20,52 @@ import com.ReservationServer1.exception.MemberException;
 @Transactional
 public class MemberDAOImpl implements MemberDAO {
 
-  @Autowired
-  private BCryptPasswordEncoder passwordEncoder;
+  private final BCryptPasswordEncoder passwordEncoder;
   private final Logger Logger = LoggerFactory.getLogger(MemberDAO.class);
   private final MemberRepository memberRepository;
 
-  public MemberDAOImpl(MemberRepository memberRepository) {
+  public MemberDAOImpl(MemberRepository memberRepository, BCryptPasswordEncoder passwordEncoder) {
+    this.passwordEncoder = passwordEncoder;
     this.memberRepository = memberRepository;
   }
 
 
   // 회원등록
   @Override
-  public MemberEntity create(MemberEntity memberEntity) {
+  public String registerMember(MemberEntity memberEntity) {
     Logger.info("[MemberDAO] create(회원가입) 호출");
     if (memberRepository.existsByUserId(memberEntity.getUserId())) {
       throw new MemberException("이미 존재하는 ID입니다: " + memberEntity.getUserId());
     }
     memberEntity.setUserPwd(passwordEncoder.encode(memberEntity.getUserPwd()));
-    return memberRepository.save(memberEntity);
+    memberRepository.save(memberEntity);
+    return "success";
   }
 
 
 
   // 로그인
-  public MemberEntity login(LoginDTO loginDTO) {
+  public void loginMember(LoginDTO loginDTO) {
     Logger.info("[MemberDAO] login(로그인) 호출");
-    if (!memberRepository.existsByUserId(loginDTO.getUserId())) {
-      throw new MemberException("존재하지 않는 ID입니다. : " + loginDTO.getUserId());
-    }
     MemberEntity memberEntity = memberRepository.findByUserId(loginDTO.getUserId());
-    if (!passwordEncoder.matches(loginDTO.getUserPwd(), memberEntity.getUserPwd())) {
+    if (memberEntity == null) {
+      throw new MemberException("아이디가 존재하지 않습니다.");
+    }
+    if(!passwordEncoder.matches(loginDTO.getUserPwd(), memberEntity.getUserPwd())){
       throw new MemberException("비밀번호가 일치하지 않습니다.");
     }
-    return memberEntity;
   }
 
 
   // 비밀번호 찾기
-  public MemberEntity findPwd(String userId, String userEmail) {
-    Logger.info("[MemberDAO] findId(비밀번호 찾기) 호출");
+  public MemberEntity findPwdMember(String userId, String userEmail) {
+    Logger.info("[MemberDAO] findPwd(비밀번호 찾기) 호출");
     MemberEntity memberEntity = memberRepository.findByUserId(userId);
     if (memberEntity == null) {
-      throw new MemberException("해당 아이디가 존재하지 않습니다.");
+      throw new MemberException("존재하지 않는 아이디입니다.");
     }
-    if (!memberEntity.getUserEmail().equals(userEmail)) {
-      throw new MemberException("이메일이 일치하지 않습니다.");
+    if(!memberEntity.getUserEmail().equals(userEmail)){
+      throw new MemberException("이메일 정보가 일치하지 않습니다.");
     }
     return memberEntity;
   }
@@ -73,7 +73,7 @@ public class MemberDAOImpl implements MemberDAO {
 
   // 비밀번호 수정
   @Override
-  public void modPwd(String userId, String userPwd) {
+  public String modPwdMember(String userId, String userPwd) {
     Logger.info("[MemberDAO] modPwd(비밀번호 수정) 호출");
     String encoded_pwd = passwordEncoder.encode(userPwd);
     MemberEntity memberEntity = memberRepository.findByUserId(userId);
@@ -81,12 +81,13 @@ public class MemberDAOImpl implements MemberDAO {
       throw new MemberException("아이디 오류 발생");
     }
     memberEntity.setUserPwd(encoded_pwd);
+    return "success";
   }
 
 
   // 회원정보 수정
   @Override
-  public void modInfo(String userId, ModifyMemberDTO modifyMemberDTO) {
+  public String modInfoMember(String userId, ModifyMemberDTO modifyMemberDTO) {
     Logger.info("[MemberDAO] modInfo(회원정보 수정) 호출");
     String encoded_pwd = passwordEncoder.encode(modifyMemberDTO.getUserPwd());
     MemberEntity memberEntity = memberRepository.findByUserId(userId);
@@ -98,19 +99,21 @@ public class MemberDAOImpl implements MemberDAO {
     memberEntity.setUserEmail(modifyMemberDTO.getUserEmail());
     memberEntity.setUserAddress(modifyMemberDTO.getUserAddress());
     memberEntity.setUserNumber(modifyMemberDTO.getUserNumber());
+    
+    return "success";
   }
   
   
+  // 회원정보 삭제
   @Override
-  public void delMember(String userId, String userPwd) {
+  public String delMember(String userId, String userPwd) {
     Logger.info("[MemberDAO] delMember(회원정보 삭제) 호출");
-    System.out.println(userId);
-    System.out.println(userPwd);
     MemberEntity memberEntity = memberRepository.findByUserId(userId);
     if (!passwordEncoder.matches(userPwd, memberEntity.getUserPwd())) {
       throw new MemberException("비밀번호가 일치하지 않습니다.");
     }
     memberRepository.deleteById(userId);
+    return "success";
   }
 
 

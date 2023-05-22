@@ -23,7 +23,6 @@ public class MemberServiceImpl implements MemberService {
   
   private final JavaMailSender emailSender;
   private final Environment env;
-  
   private final Logger logger = LoggerFactory.getLogger(MemberServiceImpl.class);
   private final MemberDAO memberDAO;
   private final Long expiredLoginMs = 1000 * 60 * 30l; // 30분
@@ -38,17 +37,16 @@ public class MemberServiceImpl implements MemberService {
 
 
   @Override
-  public void registerMember(MemberDTO member) {
+  public String registerMember(MemberDTO member) {
     logger.info("[MemberService] registerMember(회원가입) 호출");
-    MemberEntity entity = new MemberEntity(member);
-    memberDAO.create(entity);
+    return memberDAO.registerMember(MemberEntity.toMemberEntity(member));
   }
 
 
   @Override
   public String loginMember(LoginDTO loginDTO) {
     logger.info("[MemberService] loginMember(로그인) 호출");
-    memberDAO.login(loginDTO);
+    memberDAO.loginMember(loginDTO);
     String token = JWTutil.createJWT(loginDTO.getUserId(), "USER", secretKey, expiredLoginMs);
     return token;
   }
@@ -56,7 +54,7 @@ public class MemberServiceImpl implements MemberService {
   @Override
   public String findPwdMember(String userId, String userEmail) {
     logger.info("[MemberService] findPwdMember(비밀번호 찾기) 호출");
-    MemberEntity result = memberDAO.findPwd(userId, userEmail);
+    MemberEntity result = memberDAO.findPwdMember(userId, userEmail);
     
     String token = JWTutil.createJWT(result.getUserId(), "PWD", secretKey, expiredPwdMs);
     
@@ -73,22 +71,19 @@ public class MemberServiceImpl implements MemberService {
   @Override
   public String modPwdMember(String userId, String userPwd) {
     logger.info("[MemberService] modPwdMember(비밀번호 수정) 호출");
-    memberDAO.modPwd(userId, userPwd);
-    return "success";
+    return memberDAO.modPwdMember(userId, userPwd);
   }
   
   @Override
   public String modInfoMember(String userId, ModifyMemberDTO modifyMemberDTO) {
     logger.info("[MemberService] modInfoMember(회원정보 수정) 호출");
-    memberDAO.modInfo(userId, modifyMemberDTO);
-    return "success";
+    return memberDAO.modInfoMember(userId, modifyMemberDTO);
   }
   
   @Override
   public String delMember(String userId, String userPwd) {
     logger.info("[MemberService] delMember(회원정보 삭제) 호출");
-    memberDAO.delMember(userId, userPwd);
-    return "success";
+    return memberDAO.delMember(userId, userPwd);
   }
 
 
