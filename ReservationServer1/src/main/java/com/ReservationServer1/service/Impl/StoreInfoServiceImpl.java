@@ -29,7 +29,7 @@ public class StoreInfoServiceImpl implements StoreInfoService{
   @Override
   public List<String> getDayOff(String storeName) {
     logger.info("[StoreRestDayServiceImpl] get Day off(쉬는날 반환) 호출");
-    return storeInfoDAO.getDayOff(storeName).stream().sorted().collect(Collectors.toList());
+    return storeInfoDAO.getDayOff(storeName);
   }
 
   @Override

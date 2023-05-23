@@ -1,11 +1,11 @@
 package com.ReservationServer1.data.DTO.store;
 
-import com.ReservationServer1.data.Identification;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -14,12 +14,13 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(callSuper = false)
-public class StoreDTO extends Identification {
+@EqualsAndHashCode
+public class StoreDTO{
 
-
+  
   @NotNull
   private String storeName;
 
@@ -40,13 +41,8 @@ public class StoreDTO extends Identification {
   @NotNull
   private String couponInfo;
 
-  public StoreDTO() {
-    super();
-  }
 
-  public StoreDTO(String storeName, String country, String city, String dong, String type,
-      String couponInfo) {
-    super();
+  public StoreDTO(String storeName, String country, String city, String dong, String type, String couponInfo) {
     this.storeName = storeName;
     this.country = country;
     this.city = city;

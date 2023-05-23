@@ -7,6 +7,8 @@ import org.springframework.beans.BeanUtils;
 import com.ReservationServer1.data.DTO.store.StoreDTO;
 import com.ReservationServer1.data.Entity.BaseEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
@@ -33,7 +35,8 @@ import lombok.ToString;
 public class StoreEntity extends BaseEntity{
   
   @Id
-  private String storeId;
+  @GeneratedValue(strategy = GenerationType.IDENTITY) // int만 사용 가능
+  private int storeId;
   private String storeName;
   private String ownerId;
   private String country;
@@ -49,7 +52,6 @@ public class StoreEntity extends BaseEntity{
   
   public StoreDTO toStoreDTO() {
       StoreDTO storeDTO = new StoreDTO(this.storeName, this.country, this.city, this.dong, this.type, this.couponInfo);
-      storeDTO.setId(this.storeId);
       storeDTO.setOwnerId(this.ownerId);
       return storeDTO;
   }

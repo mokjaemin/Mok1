@@ -65,7 +65,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
         .from(storeRestDaysMapEntity)
         .leftJoin(storeRestDaysMapEntity.storeRestDaysEntity, storeRestDaysEntity)
         .where(storeRestDaysEntity.storeName.eq(storeName)).fetch();
-    return resultList;
+    return resultList.stream().sorted().collect(Collectors.toList());
   }
 
 

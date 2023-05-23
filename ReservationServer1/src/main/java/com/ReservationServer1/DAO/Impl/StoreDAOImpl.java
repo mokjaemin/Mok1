@@ -1,7 +1,7 @@
 package com.ReservationServer1.DAO.Impl;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
@@ -33,16 +33,11 @@ public class StoreDAOImpl implements StoreDAO {
   }
 
   @Override
-  public List<String> getStoreList(String country, String city, String dong, String type, int page,
-      int size) {
+  public List<String> getStoreList(String country, String city, String dong, String type, int page,int size) {
     logger.info("[StoreDAO] printStore(가게 목록 출력) 호출");
     Pageable pageable = PageRequest.of(page, size);
     List<StoreEntity> storeEntityList = storeRepository.findByCountryAndCityAndDongAndType(country, city, dong, type, pageable);
-    List<String> result = new ArrayList<>();
-    for (StoreEntity entity : storeEntityList) {
-      result.add(entity.getStoreName());
-    }
-    return result;
+    return storeEntityList.stream().distinct().map(StoreEntity::getStoreName).sorted().collect(Collectors.toList());
   }
 
   @Override
