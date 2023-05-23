@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.ReservationServer1.DAO.StoreDAO;
-import com.ReservationServer1.DAO.JPAImpl.Cache.StoreListCache;
+import com.ReservationServer1.DAO.DB.Cache.StoreListCache;
 import com.ReservationServer1.data.DTO.store.StoreDTO;
 import com.ReservationServer1.data.DTO.store.cache.StoreListDTO;
 import com.ReservationServer1.data.Entity.store.StoreEntity;
@@ -35,7 +35,7 @@ public class StoreServiceImpl implements StoreService{
   @Override
   public String registerStore(StoreDTO storeDTO) {
     logger.info("[StoreService] registerStore(가게 등록) 호출");
-    return storeDAO.registerStore(StoreEntity.toStoreEntity(storeDTO));
+    return storeDAO.registerStore(new StoreEntity(storeDTO));
   }
 
   @Override

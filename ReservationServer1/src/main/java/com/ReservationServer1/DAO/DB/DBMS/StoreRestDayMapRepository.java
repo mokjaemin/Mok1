@@ -1,4 +1,4 @@
-package com.ReservationServer1.DAO.JPAImpl.Repository;
+package com.ReservationServer1.DAO.DB.DBMS;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;

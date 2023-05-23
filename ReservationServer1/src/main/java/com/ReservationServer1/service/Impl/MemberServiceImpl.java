@@ -1,7 +1,5 @@
 package com.ReservationServer1.service.Impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
@@ -20,10 +18,9 @@ public class MemberServiceImpl implements MemberService {
 
   @Value("${jwt.secret}")
   private String secretKey;
-  
+
   private final JavaMailSender emailSender;
   private final Environment env;
-  private final Logger logger = LoggerFactory.getLogger(MemberServiceImpl.class);
   private final MemberDAO memberDAO;
   private final Long expiredLoginMs = 1000 * 60 * 30l; // 30분
   private final Long expiredPwdMs = 1000 * 60 * 5l; // 5분
@@ -38,27 +35,21 @@ public class MemberServiceImpl implements MemberService {
 
   @Override
   public String registerMember(MemberDTO member) {
-    logger.info("[MemberService] registerMember(회원가입) 호출");
-    return memberDAO.registerMember(MemberEntity.toMemberEntity(member));
+    return memberDAO.registerMember(new MemberEntity(member));
   }
 
 
   @Override
   public String loginMember(LoginDTO loginDTO) {
-    logger.info("[MemberService] loginMember(로그인) 호출");
     memberDAO.loginMember(loginDTO);
     String token = JWTutil.createJWT(loginDTO.getUserId(), "USER", secretKey, expiredLoginMs);
     return token;
   }
-  
+
   @Override
   public String findPwdMember(String userId, String userEmail) {
-    logger.info("[MemberService] findPwdMember(비밀번호 찾기) 호출");
     MemberEntity result = memberDAO.findPwdMember(userId, userEmail);
-    
     String token = JWTutil.createJWT(result.getUserId(), "PWD", secretKey, expiredPwdMs);
-    
-    // 이메일 전송
     SimpleMailMessage message = new SimpleMailMessage();
     message.setFrom(env.getProperty("spring.mail.username"));
     message.setTo(result.getUserEmail());
@@ -67,22 +58,19 @@ public class MemberServiceImpl implements MemberService {
     emailSender.send(message);
     return token;
   }
-  
+
   @Override
   public String modPwdMember(String userId, String userPwd) {
-    logger.info("[MemberService] modPwdMember(비밀번호 수정) 호출");
     return memberDAO.modPwdMember(userId, userPwd);
   }
-  
+
   @Override
   public String modInfoMember(String userId, ModifyMemberDTO modifyMemberDTO) {
-    logger.info("[MemberService] modInfoMember(회원정보 수정) 호출");
     return memberDAO.modInfoMember(userId, modifyMemberDTO);
   }
-  
+
   @Override
   public String delMember(String userId, String userPwd) {
-    logger.info("[MemberService] delMember(회원정보 삭제) 호출");
     return memberDAO.delMember(userId, userPwd);
   }
 

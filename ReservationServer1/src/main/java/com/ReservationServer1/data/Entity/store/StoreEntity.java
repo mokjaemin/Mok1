@@ -3,6 +3,7 @@ package com.ReservationServer1.data.Entity.store;
 
 
 
+import org.springframework.beans.BeanUtils;
 import com.ReservationServer1.data.DTO.store.StoreDTO;
 import com.ReservationServer1.data.Entity.BaseEntity;
 import jakarta.persistence.Entity;
@@ -41,15 +42,11 @@ public class StoreEntity extends BaseEntity{
   private String type;
   private String couponInfo;
   
-  //DTO를 Entity로 변환
-  public static StoreEntity toStoreEntity(StoreDTO storeDTO) {
-      // DTO의 프로퍼티들을 Entity의 프로퍼티들로 매핑
-      return StoreEntity.builder().storeId(storeDTO.getId()).storeName(storeDTO.getStoreName())
-          .ownerId(storeDTO.getOwnerId()).country(storeDTO.getCountry()).city(storeDTO.getCity())
-          .dong(storeDTO.getDong()).type(storeDTO.getType()).couponInfo(storeDTO.getCouponInfo()).build();
+  public StoreEntity(StoreDTO storeDTO) {
+    BeanUtils.copyProperties(storeDTO, this);
   }
+
   
-  // Entity를 다시 DTO로 변환 
   public StoreDTO toStoreDTO() {
       StoreDTO storeDTO = new StoreDTO(this.storeName, this.country, this.city, this.dong, this.type, this.couponInfo);
       storeDTO.setId(this.storeId);

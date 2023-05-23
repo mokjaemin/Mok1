@@ -18,7 +18,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode
 @RedisHash(value = "storeList", timeToLive = 60*10) // 10분
 public class StoreListDTO{
 

@@ -1,4 +1,4 @@
-package com.ReservationServer1.DAO.JPAImpl;
+package com.ReservationServer1.DAO.Impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import com.ReservationServer1.DAO.StoreDAO;
-import com.ReservationServer1.DAO.JPAImpl.Repository.StoreRepository;
+import com.ReservationServer1.DAO.DB.DBMS.StoreRepository;
 import com.ReservationServer1.data.Entity.store.StoreEntity;
+import com.ReservationServer1.exception.MessageException;
 
 
 @Repository("StoreDAO")
@@ -36,8 +37,7 @@ public class StoreDAOImpl implements StoreDAO {
       int size) {
     logger.info("[StoreDAO] printStore(가게 목록 출력) 호출");
     Pageable pageable = PageRequest.of(page, size);
-    List<StoreEntity> storeEntityList =
-        storeRepository.findByCountryAndCityAndDongAndType(country, city, dong, type, pageable);
+    List<StoreEntity> storeEntityList = storeRepository.findByCountryAndCityAndDongAndType(country, city, dong, type, pageable);
     List<String> result = new ArrayList<>();
     for (StoreEntity entity : storeEntityList) {
       result.add(entity.getStoreName());
@@ -48,7 +48,11 @@ public class StoreDAOImpl implements StoreDAO {
   @Override
   public String loginStore(String storeName) {
     logger.info("[StoreDAO] loginStore(가게 권한 반환) 호출");
-    return storeRepository.findByStoreName(storeName).getOwnerId();
+    StoreEntity storeInfo = storeRepository.findByStoreName(storeName);
+    if(storeInfo == null) {
+      throw new MessageException("존재하지 않는 가게입니다.");
+    }
+    return storeInfo.getOwnerId();
   }
 
 }

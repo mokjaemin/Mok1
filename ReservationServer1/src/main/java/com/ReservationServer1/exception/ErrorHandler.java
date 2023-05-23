@@ -40,7 +40,7 @@ public class ErrorHandler {
 	
 	
 	// Exist Member Id Exception Handler
-	@ExceptionHandler(value = MemberException.class)
+	@ExceptionHandler(value = MessageException.class)
 	public ResponseEntity<Map<String, String>> ExistMemberExceptionHandler(Exception e) {
 		HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");

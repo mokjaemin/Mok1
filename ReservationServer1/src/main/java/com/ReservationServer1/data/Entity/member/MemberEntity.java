@@ -2,9 +2,9 @@ package com.ReservationServer1.data.Entity.member;
 
 
 
+import org.springframework.beans.BeanUtils;
 import com.ReservationServer1.data.DTO.member.MemberDTO;
 import com.ReservationServer1.data.Entity.BaseEntity;
-import com.ReservationServer1.data.Entity.store.StoreRestDaysEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -39,11 +39,8 @@ public class MemberEntity extends BaseEntity {
   private String userEmail;
 
 
-  public static MemberEntity toMemberEntity(MemberDTO member) {
-    // DTO의 프로퍼티들을 Entity의 프로퍼티들로 매핑
-    return MemberEntity.builder().userId(member.getUserId()).userPwd(member.getUserPwd())
-        .userName(member.getUserName()).userNumber(member.getUserNumber()).userAddress(member.getUserAddress())
-        .userEmail(member.getUserEmail()).build();
+  public MemberEntity(MemberDTO member) {
+    BeanUtils.copyProperties(member, this);
   }
 
   public static MemberDTO toMemberDTO(MemberEntity memberEntity) {

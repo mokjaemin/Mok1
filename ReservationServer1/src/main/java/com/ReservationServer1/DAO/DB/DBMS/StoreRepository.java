@@ -1,4 +1,4 @@
-package com.ReservationServer1.DAO.JPAImpl.Repository;
+package com.ReservationServer1.DAO.DB.DBMS;
 
 import java.util.List;
 import org.springframework.data.domain.Pageable;

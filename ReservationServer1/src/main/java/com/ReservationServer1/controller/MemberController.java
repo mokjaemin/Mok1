@@ -1,8 +1,6 @@
 package com.ReservationServer1.controller;
 
 import java.io.IOException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -30,7 +28,6 @@ import jakarta.validation.Valid;
 @RequestMapping("/member")
 public class MemberController {
 
-  private final Logger logger = LoggerFactory.getLogger(MemberController.class);
   private final MemberService memberService;
   public MemberController(MemberService memberService) {
     this.memberService = memberService;
@@ -46,7 +43,6 @@ public class MemberController {
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
   public ResponseEntity<String> registerMember(@Valid @RequestBody MemberDTO member) {
-    logger.info("[MemberController] register(회원가입) 호출"); 
     return ResponseEntity.status(HttpStatus.OK).body(memberService.registerMember(member));
   }
 
@@ -59,7 +55,6 @@ public class MemberController {
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
   public ResponseEntity<String> loginMember(@Valid @RequestBody LoginDTO loginDTO) {
-    logger.info("[MemberController] login(로그인) 호출");    
     return ResponseEntity.status(HttpStatus.OK).body(memberService.loginMember(loginDTO));
   }
 
@@ -72,7 +67,6 @@ public class MemberController {
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
   public ResponseEntity<String> findPwdMember(@Valid @RequestBody FindPwdDTO findPwdDTO) {
-    logger.info("[MemberController] findPwd(비밀번호 찾기) 호출");
     return ResponseEntity.status(HttpStatus.OK).body(memberService.findPwdMember(findPwdDTO.getUserId(), findPwdDTO.getUserEmail()));
   }
   
@@ -84,9 +78,11 @@ public class MemberController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> modPwdMember(@Valid @RequestBody String userPwd, Authentication authentication){
-    logger.info("[MemberController] modPwd(비밀번호 수정) 호출");
-    return ResponseEntity.status(HttpStatus.OK).body(memberService.modPwdMember(authentication.getName(), userPwd));
+  public ResponseEntity<String> modPwdMember(@Valid @RequestBody String userPwd, Authentication authentication) throws IOException{
+    ObjectMapper objectMapper = new ObjectMapper();
+    JsonNode jsonNode = objectMapper.readTree(userPwd);
+    String new_userPwd = jsonNode.get("userPwd").asText();
+    return ResponseEntity.status(HttpStatus.OK).body(memberService.modPwdMember(authentication.getName(), new_userPwd));
   }
   
   
@@ -98,7 +94,6 @@ public class MemberController {
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
   public ResponseEntity<String> modInfoMember(@Valid @RequestBody ModifyMemberDTO modifyMemberDTO, Authentication authentication){
-    logger.info("[MemberController] modInfo(회원정보 수정) 호출");
     return ResponseEntity.status(HttpStatus.OK).body(memberService.modInfoMember(authentication.getName(), modifyMemberDTO));
   }
   
@@ -109,12 +104,11 @@ public class MemberController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> delMember(@Valid @RequestBody String userPwd1, Authentication authentication) throws IOException{
-    logger.info("[MemberController] delMember(회원정보 삭제) 호출");
+  public ResponseEntity<String> delMember(@Valid @RequestBody String userPwd, Authentication authentication) throws IOException{
     ObjectMapper objectMapper = new ObjectMapper();
-    JsonNode jsonNode = objectMapper.readTree(userPwd1);
-    String userPwd = jsonNode.get("userPwd").asText();
-    return ResponseEntity.status(HttpStatus.OK).body(memberService.delMember(authentication.getName(), userPwd));
+    JsonNode jsonNode = objectMapper.readTree(userPwd);
+    String new_userPwd = jsonNode.get("userPwd").asText();
+    return ResponseEntity.status(HttpStatus.OK).body(memberService.delMember(authentication.getName(), new_userPwd));
   }
   
 
