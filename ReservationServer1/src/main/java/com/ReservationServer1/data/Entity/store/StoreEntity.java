@@ -2,7 +2,6 @@ package com.ReservationServer1.data.Entity.store;
 
 
 
-
 import org.springframework.beans.BeanUtils;
 import com.ReservationServer1.data.DTO.store.StoreDTO;
 import com.ReservationServer1.data.Entity.BaseEntity;
@@ -27,13 +26,11 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(callSuper=false)
-@Table(name = "Store", indexes = {
-    @Index(name = "idx_city", columnList = "city"),
-    @Index(name = "idx_dong", columnList = "dong")
-})
-public class StoreEntity extends BaseEntity{
-  
+@EqualsAndHashCode(callSuper = false)
+@Table(name = "Store", indexes = {@Index(name = "idx_city", columnList = "city"),
+    @Index(name = "idx_dong", columnList = "dong")})
+public class StoreEntity extends BaseEntity {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY) // int만 사용 가능
   private int storeId;
@@ -44,15 +41,16 @@ public class StoreEntity extends BaseEntity{
   private String dong;
   private String type;
   private String couponInfo;
-  
+
   public StoreEntity(StoreDTO storeDTO) {
     BeanUtils.copyProperties(storeDTO, this);
   }
 
-  
+
   public StoreDTO toStoreDTO() {
-      StoreDTO storeDTO = new StoreDTO(this.storeName, this.country, this.city, this.dong, this.type, this.couponInfo);
-      storeDTO.setOwnerId(this.ownerId);
-      return storeDTO;
+    StoreDTO storeDTO =
+        StoreDTO.builder().storeName(this.storeName).ownerId(this.ownerId).country(this.country)
+            .city(this.city).dong(this.dong).type(this.type).couponInfo(this.couponInfo).build();
+    return storeDTO;
   }
 }

@@ -18,14 +18,15 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class RestDayDTO{
-  
+public class RestDayDTO {
+
+
   @NotNull
   private String storeName;
-  
+
   @NotNull
   private Map<String, String> date;
-  
+
 
   public static RestDayDTO sample() {
     Map<String, String> sampleDate = new HashMap<String, String>();

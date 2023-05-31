@@ -18,13 +18,18 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class StoreDTO{
+public class StoreDTO {
 
-  
-  @NotNull
-  private String storeName;
+  private static final StoreDTO sample =
+      StoreDTO.builder().storeName("storeName").ownerId("ownerId").country("country").city("city")
+          .dong("dong").type("type").couponInfo("couponInfo").build();
+
+
 
   private String ownerId;
+
+  @NotNull
+  private String storeName;
 
   @NotNull
   private String country;
@@ -42,18 +47,7 @@ public class StoreDTO{
   private String couponInfo;
 
 
-  public StoreDTO(String storeName, String country, String city, String dong, String type, String couponInfo) {
-    this.storeName = storeName;
-    this.country = country;
-    this.city = city;
-    this.dong = dong;
-    this.type = type;
-    this.couponInfo = couponInfo;
-  }
-
   public static StoreDTO sample() {
-    StoreDTO sample = new StoreDTO("name", "country", "city", "dong", "type", "couponInfo");
-    sample.setOwnerId("ownerId");
     return sample;
   }
 }

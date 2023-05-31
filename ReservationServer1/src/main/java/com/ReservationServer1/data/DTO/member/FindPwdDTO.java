@@ -21,6 +21,9 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class FindPwdDTO {
 
+  private static final FindPwdDTO sample =
+      FindPwdDTO.builder().userId("testId").userEmail("testEmail").build();
+
   @NotNull
   private String userId;
 
@@ -29,6 +32,6 @@ public class FindPwdDTO {
 
 
   public static FindPwdDTO sample() {
-    return new FindPwdDTO("testId", "testEmail");
+    return sample;
   }
 }

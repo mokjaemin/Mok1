@@ -17,15 +17,18 @@ import lombok.ToString;
 @Builder
 @EqualsAndHashCode
 public class LoginDTO {
-	
-	@NotNull
-	private String userId;
-	
-	@NotNull
-	private String userPwd;
-	
-	
-	public static LoginDTO sample() {
-		return new LoginDTO("testId", "testPwd");
-	}
+
+  private static final LoginDTO sample =
+      LoginDTO.builder().userId("testId").userPwd("testPwd").build();
+
+  @NotNull
+  private String userId;
+
+  @NotNull
+  private String userPwd;
+
+
+  public static LoginDTO sample() {
+    return sample;
+  }
 }

@@ -19,6 +19,9 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class ModifyMemberDTO {
 
+  private static final ModifyMemberDTO sample = ModifyMemberDTO.builder().userPwd("testPwd")
+      .userName("testName").userAddress("testAddress").userEmail("testEmail").build();
+
   @NotNull
   private String userPwd;
 
@@ -36,6 +39,6 @@ public class ModifyMemberDTO {
 
 
   public static ModifyMemberDTO sample() {
-    return new ModifyMemberDTO("testPwd", "testName", "testNumber", "testAddress", "testEmail");
+    return sample;
   }
 }

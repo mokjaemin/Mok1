@@ -19,13 +19,13 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
-@RedisHash(value = "storeList", timeToLive = 60*10) // 10분
-public class StoreListDTO{
+@RedisHash(value = "storeList", timeToLive = 60 * 10) // 10분
+public class StoreListDTO {
 
-    @Id
-    private String Address;
+  @Id
+  private String Address;
 
-    private List<String> storeList;
+  private List<String> storeList;
 
 }
 
