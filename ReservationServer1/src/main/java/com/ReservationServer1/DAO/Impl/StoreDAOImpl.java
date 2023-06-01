@@ -18,7 +18,6 @@ import com.ReservationServer1.exception.MessageException;
 @Transactional
 public class StoreDAOImpl implements StoreDAO {
 
-  private final Logger logger = LoggerFactory.getLogger(StoreDAO.class);
   private final StoreRepository storeRepository;
 
   public StoreDAOImpl(StoreRepository storeRepository) {
@@ -27,14 +26,12 @@ public class StoreDAOImpl implements StoreDAO {
 
   @Override
   public String registerStore(StoreEntity storeEntity) {
-    logger.info("[StoreDAO] registerStore(가게 등록) 호출");
     storeRepository.save(storeEntity);
     return "success";
   }
 
   @Override
   public List<String> getStoreList(String country, String city, String dong, String type, int page,int size) {
-    logger.info("[StoreDAO] printStore(가게 목록 출력) 호출");
     Pageable pageable = PageRequest.of(page, size);
     List<StoreEntity> storeEntityList = storeRepository.findByCountryAndCityAndDongAndType(country, city, dong, type, pageable);
     return storeEntityList.stream().distinct().map(StoreEntity::getStoreName).sorted().collect(Collectors.toList());
@@ -42,7 +39,6 @@ public class StoreDAOImpl implements StoreDAO {
 
   @Override
   public String loginStore(String storeName) {
-    logger.info("[StoreDAO] loginStore(가게 권한 반환) 호출");
     StoreEntity storeInfo = storeRepository.findByStoreName(storeName);
     if(storeInfo == null) {
       throw new MessageException("존재하지 않는 가게입니다.");

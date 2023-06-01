@@ -13,7 +13,6 @@ import com.ReservationServer1.service.StoreInfoService;
 @Service
 public class StoreInfoServiceImpl implements StoreInfoService{
   
-  private final Logger logger = LoggerFactory.getLogger(StoreInfoService.class);
   private final StoreInfoDAO storeInfoDAO;
   
   public StoreInfoServiceImpl(StoreInfoDAO ownerDAO) {
@@ -22,19 +21,16 @@ public class StoreInfoServiceImpl implements StoreInfoService{
 
   @Override
   public String registerDayOff(RestDayDTO restDayDTO) {
-    logger.info("[StoreRestDayServiceImpl] post Day Off(쉬는날 등록) 호출");
     return storeInfoDAO.registerDayOff(restDayDTO);
   }
 
   @Override
   public List<String> getDayOff(String storeName) {
-    logger.info("[StoreRestDayServiceImpl] get Day off(쉬는날 반환) 호출");
     return storeInfoDAO.getDayOff(storeName);
   }
 
   @Override
   public String deleteDayOff(RestDayDTO restDayDTO) {
-    logger.info("[StoreRestDayServiceImpl] delete Day Off(쉬는날 삭제) 호출");
     return storeInfoDAO.deleteDayOff(restDayDTO);
   }
 

@@ -25,13 +25,13 @@ import jakarta.validation.Valid;
 @RequestMapping("/store")
 public class StoreController {
 
-  private final Logger logger = LoggerFactory.getLogger(StoreController.class);
   private final StoreService storeService;
+
   public StoreController(StoreService storeService) {
     this.storeService = storeService;
   }
-  
-  
+
+
   @PostMapping
   @Operation(summary = "가게 등록 요청", description = "가게 정보가 등록됩니다.", tags = {"Store Controller"})
   @ApiResponses({
@@ -40,33 +40,35 @@ public class StoreController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> register(@Valid @RequestBody StoreDTO storeDTO, Authentication authentication) {
-    logger.info("[StoreController] register(가게 등록) 호출");
+  public ResponseEntity<String> registerStore(@Valid @RequestBody StoreDTO storeDTO,
+      Authentication authentication) {
     storeDTO.setOwnerId(authentication.getName());
     return ResponseEntity.status(HttpStatus.OK).body(storeService.registerStore(storeDTO));
   }
-  
+
   @GetMapping("/list")
-  @Operation(summary = "가게 리스트 출력 요청", description = "가게 리스트가 분류되어 반환됩니다.", tags = {"Store Controller"})
-  @ApiResponses({
-      @ApiResponse(responseCode = "200", description = "OK"),
+  @Operation(summary = "가게 리스트 출력 요청", description = "가게 리스트가 분류되어 반환됩니다.",
+      tags = {"Store Controller"})
+  @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<List<String>> getStoreList(@RequestParam String country, String city, String dong, String type, int page, int size) {
-    logger.info("[StoreController] getStoreBy(가게 리스트 출력) 호출");
-    return ResponseEntity.status(HttpStatus.OK).body(storeService.getStoreList(country, city, dong, type, page, size));
+  public ResponseEntity<List<String>> getStoreList(@RequestParam String country, String city,
+      String dong, String type, int page, int size) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(storeService.getStoreList(country, city, dong, type, page, size));
   }
-  
+
   @GetMapping
-  @Operation(summary = "가게 권한 인증 요청", description = "가게 사장/손님 등 권한이 반환됩니다.", tags = {"Store Controller"})
-  @ApiResponses({
-      @ApiResponse(responseCode = "200", description = "OK"),
+  @Operation(summary = "가게 권한 인증 요청", description = "가게 사장/손님 등 권한이 반환됩니다.",
+      tags = {"Store Controller"})
+  @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> loginStore(@RequestParam String storeName, Authentication authentication) {
-    logger.info("[StoreController] LoginStore(가게 권한 반환) 호출");
-    return ResponseEntity.status(HttpStatus.OK).body(storeService.loginStore(storeName, authentication.getName()));
+  public ResponseEntity<String> loginStore(@RequestParam String storeName,
+      Authentication authentication) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(storeService.loginStore(storeName, authentication.getName()));
   }
 }

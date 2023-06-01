@@ -26,7 +26,6 @@ import jakarta.validation.Valid;
 @RequestMapping("/info")
 public class StoreInfoController {
 
-  private final Logger logger = LoggerFactory.getLogger(StoreInfoController.class);
   private final StoreInfoService storeInfoService;
 
   public StoreInfoController(StoreInfoService storeInfoService) {
@@ -44,7 +43,6 @@ public class StoreInfoController {
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
   public ResponseEntity<String> registerDayOff(@Valid @RequestBody RestDayDTO restDayDTO,
       Authentication authentication) {
-    logger.info("[StoreRestDayController] post Day Off(쉬는날 등록) 호출");
     if (!authentication.getName().equals(restDayDTO.getStoreName())) {
       return ResponseEntity.status(HttpStatus.OK).body("권한이 없습니다.");
     }
@@ -59,7 +57,6 @@ public class StoreInfoController {
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
   public ResponseEntity<List<String>> getDayOff(@RequestParam String storeName) {
-    logger.info("[StoreRestDayController] get Day Off(쉬는날 반환) 호출");
     return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.getDayOff(storeName));
   }
 
@@ -72,7 +69,6 @@ public class StoreInfoController {
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
   public ResponseEntity<String> deleteDayOff(@Valid @RequestBody RestDayDTO restDayDTO,
       Authentication authentication) {
-    logger.info("[StoreRestDayController] delete Day Off(쉬는날 삭제) 호출");
     if (!restDayDTO.getStoreName().equals(authentication.getName())) {
       return ResponseEntity.status(HttpStatus.OK).body("권한이 없습니다.");
     }

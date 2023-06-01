@@ -26,7 +26,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 @Transactional
 public class StoreInfoDAOImpl implements StoreInfoDAO {
 
-  private final Logger logger = LoggerFactory.getLogger(StoreInfoDAO.class);
   private final StoreRestDayRepository storeRestDayRepository;
   private final StoreRestDayMapRepository storeRestDayMapRepository;
   private final JPAQueryFactory queryFactory;
@@ -41,7 +40,6 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 
   @Override
   public String registerDayOff(RestDayDTO restDayDTO) {
-    logger.info("[StoreInfoDAOImpl] day register(쉬는날 등록) 호출");
     Map<String, String> dateInfo = restDayDTO.getDate();
     Set<String> keys = dateInfo.keySet();
     Set<StoreRestDaysMapEntity> childs = new LinkedHashSet<>();
@@ -59,12 +57,10 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 
   @Override
   public List<String> getDayOff(String storeName) {
-    List<String> resultList = 
-        queryFactory
-        .selectDistinct(storeRestDaysMapEntity.date)
-        .from(storeRestDaysMapEntity)
-        .leftJoin(storeRestDaysMapEntity.storeRestDaysEntity, storeRestDaysEntity)
-        .where(storeRestDaysEntity.storeName.eq(storeName)).fetch();
+    List<String> resultList =
+        queryFactory.selectDistinct(storeRestDaysMapEntity.date).from(storeRestDaysMapEntity)
+            .leftJoin(storeRestDaysMapEntity.storeRestDaysEntity, storeRestDaysEntity)
+            .where(storeRestDaysEntity.storeName.eq(storeName)).fetch();
     return resultList.stream().sorted().collect(Collectors.toList());
   }
 
