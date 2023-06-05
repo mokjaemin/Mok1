@@ -65,20 +65,20 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
   }
 
 
-  // Exist로 변경, inner join, boolean Expression(for 대신 쿼리문 만들어줌) 사용
-  // TROUBLE SHOOTING에 작성
-  // 1. 조회해서 map의 아이디 반환 (쿼리 작성시 boolean Expression으로 하나의 쿼리로 작성)
-  // 2. 해당 아이디 삭제 boolean expression으로 하나의 쿼리 사용
-  // 3. exist로 삭제한 자식 테이블 존재 여 확인 후 부모 테이블 삭제
   @Override
   public String deleteDayOff(RestDayDTO restDayDTO) {
     String storeName = restDayDTO.getStoreName();
     Map<String, String> date = restDayDTO.getDate();
     for (String key : date.keySet()) {
       String day = date.get(key);
-      String id = storeRestDayMapRepository.findDaysIdByDate(day);
+      Long id = storeRestDayMapRepository.findDaysIdByDate(day);
       storeRestDayMapRepository.deleteByStoreNameAndDate(storeName, day);
-      if (storeRestDayMapRepository.findCountByDaysId(id) == 0) {
+      Integer exist_check = queryFactory
+          .selectOne()
+          .from(storeRestDaysMapEntity)
+          .where(storeRestDaysMapEntity.storeRestDaysEntity.daysId.eq(id))
+          .fetchFirst();
+      if (exist_check == null) {
         storeRestDayRepository.deleteByDaysId(id);
       }
     }

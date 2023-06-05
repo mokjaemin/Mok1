@@ -14,7 +14,7 @@ public interface StoreRestDayMapRepository extends JpaRepository<StoreRestDaysMa
   void deleteByStoreNameAndDate(@Param("storeName") String storeName, @Param("date") String date);
   
   @Query(value = "SELECT srdm.days_id FROM store_rest_days_map srdm WHERE srdm.date = :date", nativeQuery = true)
-  String findDaysIdByDate(@Param("date") String date);
+  Long findDaysIdByDate(@Param("date") String date);
   
   @Query(value = "SELECT COUNT(*) FROM store_rest_days_map srdm WHERE srdm.days_id = :daysId", nativeQuery = true)
   int findCountByDaysId(@Param("daysId") String daysId);

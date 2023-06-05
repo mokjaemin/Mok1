@@ -8,7 +8,7 @@ public interface MemberDAO {
 
 	String registerMember(MemberEntity memberEntity);
 	void loginMember(LoginDTO loginDTO);
-	MemberEntity findPwdMember(String userName, String userEmail);
+	void findPwdMember(String userName, String userEmail);
 	String modPwdMember(String userId, String userPwd);
 	String modInfoMember(String userId, ModifyMemberDTO modifyMemberDTO);
 	String delMember(String userId, String userPwd);

@@ -1,17 +1,15 @@
 package com.ReservationServer1.DAO.Impl;
 
+import static com.ReservationServer1.data.Entity.store.QStoreEntity.storeEntity;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import com.ReservationServer1.DAO.StoreDAO;
 import com.ReservationServer1.DAO.DB.DBMS.StoreRepository;
 import com.ReservationServer1.data.Entity.store.StoreEntity;
 import com.ReservationServer1.exception.MessageException;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
 
 @Repository("StoreDAO")
@@ -19,9 +17,11 @@ import com.ReservationServer1.exception.MessageException;
 public class StoreDAOImpl implements StoreDAO {
 
   private final StoreRepository storeRepository;
+  private final JPAQueryFactory queryFactory;
 
-  public StoreDAOImpl(StoreRepository storeRepository) {
+  public StoreDAOImpl(StoreRepository storeRepository, JPAQueryFactory queryFactory) {
     this.storeRepository = storeRepository;
+    this.queryFactory = queryFactory;
   }
 
   @Override
@@ -31,19 +31,31 @@ public class StoreDAOImpl implements StoreDAO {
   }
 
   @Override
-  public List<String> getStoreList(String country, String city, String dong, String type, int page,int size) {
-    Pageable pageable = PageRequest.of(page, size);
-    List<StoreEntity> storeEntityList = storeRepository.findByCountryAndCityAndDongAndType(country, city, dong, type, pageable);
-    return storeEntityList.stream().distinct().map(StoreEntity::getStoreName).sorted().collect(Collectors.toList());
+  public List<String> getStoreList(String country, String city, String dong, String type, int page, int size) {
+    List<String> store_name = queryFactory
+        .select(storeEntity.storeName)
+        .from(storeEntity)
+        .where(storeEntity.country.eq(country)
+            .and(storeEntity.city.eq(city))
+            .and(storeEntity.dong.eq(dong))
+            .and(storeEntity.type.eq(type)))
+        .limit(size)
+        .offset(page*size)
+        .fetch();
+    return store_name.stream().distinct().sorted().collect(Collectors.toList());
   }
 
   @Override
   public String loginStore(String storeName) {
-    StoreEntity storeInfo = storeRepository.findByStoreName(storeName);
-    if(storeInfo == null) {
+    String ownerId = queryFactory
+        .select(storeEntity.ownerId)
+        .from(storeEntity)
+        .where(storeEntity.storeName.eq(storeName))
+        .fetchFirst();
+    if (ownerId == null) {
       throw new MessageException("존재하지 않는 가게입니다.");
     }
-    return storeInfo.getOwnerId();
+    return ownerId;
   }
 
 }

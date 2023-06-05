@@ -25,7 +25,7 @@ public interface StoreRestDayRepository extends JpaRepository<StoreRestDaysEntit
   
   
   // DELETE
-  void deleteByDaysId(String id);
+  void deleteByDaysId(Long id);
 
 
 }

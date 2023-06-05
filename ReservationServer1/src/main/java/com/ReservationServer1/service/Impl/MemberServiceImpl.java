@@ -48,11 +48,11 @@ public class MemberServiceImpl implements MemberService {
 
   @Override
   public String findPwdMember(String userId, String userEmail) {
-    MemberEntity result = memberDAO.findPwdMember(userId, userEmail);
-    String token = JWTutil.createJWT(result.getUserId(), "PWD", secretKey, expiredPwdMs);
+    memberDAO.findPwdMember(userId, userEmail);
+    String token = JWTutil.createJWT(userId, "PWD", secretKey, expiredPwdMs);
     SimpleMailMessage message = new SimpleMailMessage();
     message.setFrom(env.getProperty("spring.mail.username"));
-    message.setTo(result.getUserEmail());
+    message.setTo(userEmail);
     message.setSubject("비밀번호 인증 메일입니다.");
     message.setText(token);
     emailSender.send(message);
