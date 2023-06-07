@@ -1,8 +1,6 @@
 package com.ReservationServer1.controller;
 
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -13,7 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.ReservationServer1.data.DTO.store.RestDayDTO;
+import com.ReservationServer1.data.DTO.store.StoreRestDayDTO;
+import com.ReservationServer1.data.DTO.store.StoreTimeInfoDTO;
 import com.ReservationServer1.service.StoreInfoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -37,11 +36,11 @@ public class StoreInfoController {
       tags = {"Store Info Controller"})
   @ApiResponses({
       @ApiResponse(responseCode = "200", description = "OK",
-          content = @Content(schema = @Schema(implementation = RestDayDTO.class))),
+          content = @Content(schema = @Schema(implementation = StoreRestDayDTO.class))),
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> registerDayOff(@Valid @RequestBody RestDayDTO restDayDTO,
+  public ResponseEntity<String> registerDayOff(@Valid @RequestBody StoreRestDayDTO restDayDTO,
       Authentication authentication) {
     if (!authentication.getName().equals(restDayDTO.getStoreName())) {
       return ResponseEntity.status(HttpStatus.OK).body("권한이 없습니다.");
@@ -67,12 +66,30 @@ public class StoreInfoController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> deleteDayOff(@Valid @RequestBody RestDayDTO restDayDTO,
+  public ResponseEntity<String> deleteDayOff(@Valid @RequestBody StoreRestDayDTO restDayDTO,
       Authentication authentication) {
     if (!restDayDTO.getStoreName().equals(authentication.getName())) {
       return ResponseEntity.status(HttpStatus.OK).body("권한이 없습니다.");
     }
     return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.deleteDayOff(restDayDTO));
+  }
+  
+  
+  @PostMapping("/time")
+  @Operation(summary = "가게 영업 시간 정보 등록 요청", description = "가게 영업 시간 정보가 등록됩니다.",
+      tags = {"Store Info Controller"})
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "OK",
+          content = @Content(schema = @Schema(implementation = StoreTimeInfoDTO.class))),
+      @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+      @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
+  public ResponseEntity<String> registerTimeInfo(@Valid @RequestBody StoreTimeInfoDTO timeInfoDTO,
+      Authentication authentication) {
+    if (!authentication.getName().equals(timeInfoDTO.getStoreName())) {
+      return ResponseEntity.status(HttpStatus.OK).body("권한이 없습니다.");
+    }
+    return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.registerTimeInfo(timeInfoDTO));
   }
 
 

@@ -4,21 +4,23 @@ package com.ReservationServer1.DAO.Impl;
 import static com.ReservationServer1.data.Entity.store.QStoreRestDaysEntity.storeRestDaysEntity;
 import static com.ReservationServer1.data.Entity.store.QStoreRestDaysMapEntity.storeRestDaysMapEntity;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import com.ReservationServer1.DAO.StoreInfoDAO;
-import com.ReservationServer1.DAO.DB.DBMS.StoreRestDayMapRepository;
-import com.ReservationServer1.DAO.DB.DBMS.StoreRestDayRepository;
-import com.ReservationServer1.data.DTO.store.RestDayDTO;
+import com.ReservationServer1.DAO.DB.DBMS.storeInfo.StoreRestDayMapRepository;
+import com.ReservationServer1.DAO.DB.DBMS.storeInfo.StoreRestDayRepository;
+import com.ReservationServer1.DAO.DB.DBMS.storeInfo.StoreTimeInfoMapRepository;
+import com.ReservationServer1.DAO.DB.DBMS.storeInfo.StoreTimeInfoRepository;
+import com.ReservationServer1.data.DTO.store.StoreRestDayDTO;
+import com.ReservationServer1.data.DTO.store.StoreTimeInfoDTO;
 import com.ReservationServer1.data.Entity.store.StoreRestDaysEntity;
 import com.ReservationServer1.data.Entity.store.StoreRestDaysMapEntity;
+import com.ReservationServer1.data.Entity.store.StoreTimeInfoEntity;
+import com.ReservationServer1.data.Entity.store.StoreTimeInfoMapEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 
@@ -28,21 +30,27 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 
   private final StoreRestDayRepository storeRestDayRepository;
   private final StoreRestDayMapRepository storeRestDayMapRepository;
+  private final StoreTimeInfoRepository storeTimeInfoRepository;
+  private final StoreTimeInfoMapRepository storeTimeInfoMapRepository;
   private final JPAQueryFactory queryFactory;
 
   public StoreInfoDAOImpl(StoreRestDayRepository storeRestDayRepository,
-      StoreRestDayMapRepository storeRestDayMapRepository, JPAQueryFactory queryFactory) {
+      StoreRestDayMapRepository storeRestDayMapRepository,
+      StoreTimeInfoRepository storeTimeInfoRepository,
+      StoreTimeInfoMapRepository storeTimeInfoMapRepository, JPAQueryFactory queryFactory) {
     this.storeRestDayRepository = storeRestDayRepository;
     this.storeRestDayMapRepository = storeRestDayMapRepository;
+    this.storeTimeInfoRepository = storeTimeInfoRepository;
+    this.storeTimeInfoMapRepository = storeTimeInfoMapRepository;
     this.queryFactory = queryFactory;
   }
 
 
   @Override
-  public String registerDayOff(RestDayDTO restDayDTO) {
+  public String registerDayOff(StoreRestDayDTO restDayDTO) {
     Map<String, String> dateInfo = restDayDTO.getDate();
     Set<String> keys = dateInfo.keySet();
-    Set<StoreRestDaysMapEntity> childs = new LinkedHashSet<>();
+    Set<StoreRestDaysMapEntity> childs = new HashSet<>();
     StoreRestDaysEntity parent = new StoreRestDaysEntity(restDayDTO.getStoreName());
     storeRestDayRepository.save(parent);
     for (String key : keys) {
@@ -66,22 +74,41 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 
 
   @Override
-  public String deleteDayOff(RestDayDTO restDayDTO) {
+  public String deleteDayOff(StoreRestDayDTO restDayDTO) {
     String storeName = restDayDTO.getStoreName();
     Map<String, String> date = restDayDTO.getDate();
     for (String key : date.keySet()) {
       String day = date.get(key);
-      Long id = storeRestDayMapRepository.findDaysIdByDate(day);
+      Long days_id = storeRestDayMapRepository.findDaysIdByDate(day);
       storeRestDayMapRepository.deleteByStoreNameAndDate(storeName, day);
-      Integer exist_check = queryFactory
-          .selectOne()
-          .from(storeRestDaysMapEntity)
-          .where(storeRestDaysMapEntity.storeRestDaysEntity.daysId.eq(id))
-          .fetchFirst();
+      Integer exist_check = queryFactory.selectOne().from(storeRestDaysMapEntity)
+          .where(storeRestDaysMapEntity.storeRestDaysEntity.daysId.eq(days_id)).fetchFirst();
       if (exist_check == null) {
-        storeRestDayRepository.deleteByDaysId(id);
+        storeRestDayRepository.deleteByDaysId(days_id);
       }
     }
+    return "success";
+  }
+
+
+  @Override
+  public String registerTimeInfo(StoreTimeInfoDTO storeTimeInfoDTO) {
+    System.out.println(storeTimeInfoDTO.toString());
+    StoreTimeInfoEntity storeTimeInfoEntity =
+        StoreTimeInfoEntity.builder().startTime(storeTimeInfoDTO.getStartTime())
+            .endTime(storeTimeInfoDTO.getEndTime()).intervalTime(storeTimeInfoDTO.getIntervalTime())
+            .storeName(storeTimeInfoDTO.getStoreName()).build();
+    storeTimeInfoRepository.save(storeTimeInfoEntity);
+    
+    Set<String> keys = storeTimeInfoDTO.getBreakTime().keySet();
+    Set<StoreTimeInfoMapEntity> breakTimes = new HashSet<>();
+    for(String key : keys) {
+      String time = storeTimeInfoDTO.getBreakTime().get(key);
+      StoreTimeInfoMapEntity storeTimeInfoMapEntity = StoreTimeInfoMapEntity.builder().time(time).storeTimeInfoEntity(storeTimeInfoEntity).build();
+      storeTimeInfoMapRepository.save(storeTimeInfoMapEntity);
+      breakTimes.add(storeTimeInfoMapEntity);
+    }
+    storeTimeInfoEntity.setBreakTime(breakTimes);
     return "success";
   }
 

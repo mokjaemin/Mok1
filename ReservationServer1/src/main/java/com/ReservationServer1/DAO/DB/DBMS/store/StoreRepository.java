@@ -1,4 +1,4 @@
-package com.ReservationServer1.DAO.DB.DBMS;
+package com.ReservationServer1.DAO.DB.DBMS.store;
 
 
 

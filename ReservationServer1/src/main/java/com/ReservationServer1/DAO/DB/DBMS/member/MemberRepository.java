@@ -1,4 +1,4 @@
-package com.ReservationServer1.DAO.DB.DBMS;
+package com.ReservationServer1.DAO.DB.DBMS.member;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.ReservationServer1.data.Entity.member.MemberEntity;

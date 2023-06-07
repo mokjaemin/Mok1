@@ -1,12 +1,10 @@
 package com.ReservationServer1.service.Impl;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import com.ReservationServer1.DAO.StoreInfoDAO;
-import com.ReservationServer1.data.DTO.store.RestDayDTO;
+import com.ReservationServer1.data.DTO.store.StoreRestDayDTO;
+import com.ReservationServer1.data.DTO.store.StoreTimeInfoDTO;
 import com.ReservationServer1.service.StoreInfoService;
 
 
@@ -20,7 +18,7 @@ public class StoreInfoServiceImpl implements StoreInfoService{
   }
 
   @Override
-  public String registerDayOff(RestDayDTO restDayDTO) {
+  public String registerDayOff(StoreRestDayDTO restDayDTO) {
     return storeInfoDAO.registerDayOff(restDayDTO);
   }
 
@@ -30,8 +28,13 @@ public class StoreInfoServiceImpl implements StoreInfoService{
   }
 
   @Override
-  public String deleteDayOff(RestDayDTO restDayDTO) {
+  public String deleteDayOff(StoreRestDayDTO restDayDTO) {
     return storeInfoDAO.deleteDayOff(restDayDTO);
+  }
+
+  @Override
+  public String registerTimeInfo(StoreTimeInfoDTO timeInfoDTO) {
+    return storeInfoDAO.registerTimeInfo(timeInfoDTO);
   }
 
 }

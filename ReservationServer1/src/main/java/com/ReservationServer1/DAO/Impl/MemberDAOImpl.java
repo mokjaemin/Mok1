@@ -5,7 +5,7 @@ import static com.ReservationServer1.data.Entity.member.QMemberEntity.memberEnti
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import com.ReservationServer1.DAO.MemberDAO;
-import com.ReservationServer1.DAO.DB.DBMS.MemberRepository;
+import com.ReservationServer1.DAO.DB.DBMS.member.MemberRepository;
 import com.ReservationServer1.data.DTO.member.LoginDTO;
 import com.ReservationServer1.data.DTO.member.ModifyMemberDTO;
 import com.ReservationServer1.data.Entity.member.MemberEntity;
@@ -73,12 +73,13 @@ public class MemberDAOImpl implements MemberDAO {
   // 비밀번호 수정
   @Override
   public String modPwdMember(String userId, String userPwd) {
-    MemberEntity memberEntity = memberRepository.findByUserId(userId);
-    if (memberEntity == null) {
-      throw new MessageException("존재하지 않는 아이디입니다.");
+    Integer exist_id = queryFactory.selectOne().from(memberEntity)
+        .where(memberEntity.userId.eq(userId)).fetchFirst();
+    if (exist_id == null) {
+      throw new MessageException("존재하지 않는 아이디 입니다.");
     }
     String encoded_pwd = passwordEncoder.encode(userPwd);
-    memberEntity.setUserPwd(encoded_pwd);
+    queryFactory.update(memberEntity).set(memberEntity.userPwd, encoded_pwd).execute();
     return "success";
   }
 
@@ -86,16 +87,17 @@ public class MemberDAOImpl implements MemberDAO {
   // 회원정보 수정
   @Override
   public String modInfoMember(String userId, ModifyMemberDTO modifyMemberDTO) {
-    MemberEntity memberEntity = memberRepository.findByUserId(userId);
-    if (memberEntity == null) {
-      throw new MessageException("아이디 오류 발생");
+    Integer exist_id = queryFactory.selectOne().from(memberEntity)
+        .where(memberEntity.userId.eq(userId)).fetchFirst();
+    if (exist_id == null) {
+      throw new MessageException("존재하지 않는 아이디 입니다.");
     }
     String encoded_pwd = passwordEncoder.encode(modifyMemberDTO.getUserPwd());
-    memberEntity.setUserPwd(encoded_pwd);
-    memberEntity.setUserName(modifyMemberDTO.getUserName());
-    memberEntity.setUserEmail(modifyMemberDTO.getUserEmail());
-    memberEntity.setUserAddress(modifyMemberDTO.getUserAddress());
-    memberEntity.setUserNumber(modifyMemberDTO.getUserNumber());
+    queryFactory.update(memberEntity).set(memberEntity.userPwd, encoded_pwd)
+        .set(memberEntity.userName, modifyMemberDTO.getUserName())
+        .set(memberEntity.userEmail, modifyMemberDTO.getUserEmail())
+        .set(memberEntity.userAddress, modifyMemberDTO.getUserAddress())
+        .set(memberEntity.userNumber, modifyMemberDTO.getUserNumber()).execute();
     return "success";
   }
 
@@ -105,10 +107,13 @@ public class MemberDAOImpl implements MemberDAO {
   public String delMember(String userId, String userPwd) {
     String get_pwd = queryFactory.select(memberEntity.userPwd).from(memberEntity)
         .where(memberEntity.userId.eq(userId)).fetchFirst();
+    if (get_pwd == null) {
+      throw new MessageException("해당 아이디가 존재하지 않습니다.");
+    }
     if (!passwordEncoder.matches(userPwd, get_pwd)) {
       throw new MessageException("비밀번호가 일치하지 않습니다.");
     }
-    memberRepository.deleteById(userId);
+    queryFactory.delete(memberEntity).where(memberEntity.userId.eq(userId)).execute();
     return "success";
   }
 

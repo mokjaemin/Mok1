@@ -18,7 +18,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class RestDayDTO {
+public class StoreRestDayDTO {
 
 
   @NotNull
@@ -28,11 +28,11 @@ public class RestDayDTO {
   private Map<String, String> date;
 
 
-  public static RestDayDTO sample() {
+  public static StoreRestDayDTO sample() {
     Map<String, String> sampleDate = new HashMap<String, String>();
     sampleDate.put("date1", "date1");
     sampleDate.put("date2", "date2");
-    return new RestDayDTO("sampleName", sampleDate);
+    return new StoreRestDayDTO("sampleName", sampleDate);
   }
 }
 

@@ -32,7 +32,6 @@ public class WebSecurityConfig {
         .csrf().disable().cors().and().authorizeHttpRequests()
         // No Security
         .requestMatchers("/member/login", "/member", "/member/auth/pwd", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-//        .requestMatchers(HttpMethod.GET, "/info/day").permitAll()
        
         // member
         .requestMatchers(HttpMethod.POST, "/member/info").hasAuthority("ROLE_USER")
@@ -46,6 +45,7 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.POST, "/info/day").hasAuthority("ROLE_OWNER")
         .requestMatchers(HttpMethod.GET, "/info/day").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.DELETE, "/info/day").hasAuthority("ROLE_OWNER")
+        .requestMatchers(HttpMethod.POST, "/info/time").hasAuthority("ROLE_OWNER")
         .and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()

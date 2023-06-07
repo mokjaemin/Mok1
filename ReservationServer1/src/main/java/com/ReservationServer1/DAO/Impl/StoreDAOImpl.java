@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import com.ReservationServer1.DAO.StoreDAO;
-import com.ReservationServer1.DAO.DB.DBMS.StoreRepository;
+import com.ReservationServer1.DAO.DB.DBMS.store.StoreRepository;
 import com.ReservationServer1.data.Entity.store.StoreEntity;
 import com.ReservationServer1.exception.MessageException;
 import com.querydsl.jpa.impl.JPAQueryFactory;

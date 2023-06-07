@@ -25,7 +25,6 @@ public class StoreDTO {
           .dong("dong").type("type").couponInfo("couponInfo").build();
 
 
-
   private String ownerId;
 
   @NotNull
