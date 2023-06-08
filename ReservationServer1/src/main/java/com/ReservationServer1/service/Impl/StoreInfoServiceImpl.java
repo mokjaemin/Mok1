@@ -37,4 +37,9 @@ public class StoreInfoServiceImpl implements StoreInfoService{
     return storeInfoDAO.registerTimeInfo(timeInfoDTO);
   }
 
+  @Override
+  public StoreTimeInfoDTO getTimeInfo(String storeName) {
+    return storeInfoDAO.getTimeInfo(storeName);
+  }
+
 }

@@ -1,6 +1,7 @@
 package com.ReservationServer1.data.DTO.store;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,15 +23,15 @@ public class StoreTimeInfoDTO {
   @NotNull
   private String endTime;
   @NotNull
-  private HashMap<String, String> breakTime;
+  private List<String> breakTime;
   @NotNull
   private String intervalTime;
   @NotNull
   private String storeName;
 
   public static StoreTimeInfoDTO sample() {
-    HashMap<String, String> breakTimeSample = new HashMap<>();
-    breakTimeSample.put("breakTimeKey", "breakTimeValue");
+    List<String> breakTimeSample = new ArrayList<>();
+    breakTimeSample.add("breakTime");
     StoreTimeInfoDTO sample = StoreTimeInfoDTO.builder().startTime("startTime").endTime("endTime")
         .breakTime(breakTimeSample).intervalTime("intervalTime").storeName("storeName").build();
     return sample;

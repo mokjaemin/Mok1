@@ -3,7 +3,7 @@ package com.ReservationServer1.DAO.DB.DBMS.storeInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.ReservationServer1.data.Entity.store.StoreRestDaysEntity;
 
-public interface StoreRestDayRepository extends JpaRepository<StoreRestDaysEntity, Long>{
+public interface StoreRestDayDB extends JpaRepository<StoreRestDaysEntity, Long>{
   
   
   // Join N+1 Solution without Query DSL

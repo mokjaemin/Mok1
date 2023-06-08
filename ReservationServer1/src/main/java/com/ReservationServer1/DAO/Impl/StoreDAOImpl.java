@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import com.ReservationServer1.DAO.StoreDAO;
-import com.ReservationServer1.DAO.DB.DBMS.store.StoreRepository;
+import com.ReservationServer1.DAO.DB.DBMS.store.StoreDB;
 import com.ReservationServer1.data.Entity.store.StoreEntity;
 import com.ReservationServer1.exception.MessageException;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -16,42 +16,34 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 @Transactional
 public class StoreDAOImpl implements StoreDAO {
 
-  private final StoreRepository storeRepository;
+  private final StoreDB storeDB;
   private final JPAQueryFactory queryFactory;
 
-  public StoreDAOImpl(StoreRepository storeRepository, JPAQueryFactory queryFactory) {
-    this.storeRepository = storeRepository;
+  public StoreDAOImpl(StoreDB storeDB, JPAQueryFactory queryFactory) {
+    this.storeDB = storeDB;
     this.queryFactory = queryFactory;
   }
 
   @Override
   public String registerStore(StoreEntity storeEntity) {
-    storeRepository.save(storeEntity);
+    storeDB.save(storeEntity);
     return "success";
   }
 
   @Override
-  public List<String> getStoreList(String country, String city, String dong, String type, int page, int size) {
-    List<String> store_name = queryFactory
-        .select(storeEntity.storeName)
-        .from(storeEntity)
-        .where(storeEntity.country.eq(country)
-            .and(storeEntity.city.eq(city))
-            .and(storeEntity.dong.eq(dong))
-            .and(storeEntity.type.eq(type)))
-        .limit(size)
-        .offset(page*size)
-        .fetch();
+  public List<String> getStoreList(String country, String city, String dong, String type, int page,
+      int size) {
+    List<String> store_name = queryFactory.select(storeEntity.storeName).from(storeEntity)
+        .where(storeEntity.country.eq(country).and(storeEntity.city.eq(city))
+            .and(storeEntity.dong.eq(dong)).and(storeEntity.type.eq(type)))
+        .limit(size).offset(page * size).fetch();
     return store_name.stream().distinct().sorted().collect(Collectors.toList());
   }
 
   @Override
   public String loginStore(String storeName) {
-    String ownerId = queryFactory
-        .select(storeEntity.ownerId)
-        .from(storeEntity)
-        .where(storeEntity.storeName.eq(storeName))
-        .fetchFirst();
+    String ownerId = queryFactory.select(storeEntity.ownerId).from(storeEntity)
+        .where(storeEntity.storeName.eq(storeName)).fetchFirst();
     if (ownerId == null) {
       throw new MessageException("존재하지 않는 가게입니다.");
     }

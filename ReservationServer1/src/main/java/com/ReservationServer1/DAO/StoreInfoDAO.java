@@ -11,4 +11,5 @@ public interface StoreInfoDAO {
   String deleteDayOff(StoreRestDayDTO restDayDTO);
   
   String registerTimeInfo(StoreTimeInfoDTO storeTimeInfoDTO);
+  StoreTimeInfoDTO getTimeInfo(String storeName);
 }

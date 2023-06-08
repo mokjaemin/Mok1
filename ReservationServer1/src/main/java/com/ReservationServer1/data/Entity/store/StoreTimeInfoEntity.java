@@ -36,6 +36,6 @@ public class StoreTimeInfoEntity {
   
   @OneToMany(mappedBy = "storeTimeInfoEntity", fetch = FetchType.LAZY)
   private Set<StoreTimeInfoMapEntity> breakTime;
-  
+    
 
 }

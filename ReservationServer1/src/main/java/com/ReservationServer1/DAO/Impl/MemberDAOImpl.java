@@ -1,11 +1,11 @@
 package com.ReservationServer1.DAO.Impl;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import static com.ReservationServer1.data.Entity.member.QMemberEntity.memberEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import com.ReservationServer1.DAO.MemberDAO;
-import com.ReservationServer1.DAO.DB.DBMS.member.MemberRepository;
+import com.ReservationServer1.DAO.DB.DBMS.member.MemberDB;
 import com.ReservationServer1.data.DTO.member.LoginDTO;
 import com.ReservationServer1.data.DTO.member.ModifyMemberDTO;
 import com.ReservationServer1.data.Entity.member.MemberEntity;
@@ -19,13 +19,13 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 public class MemberDAOImpl implements MemberDAO {
 
   private final BCryptPasswordEncoder passwordEncoder;
-  private final MemberRepository memberRepository;
+  private final MemberDB memberDB;
   private final JPAQueryFactory queryFactory;
 
-  public MemberDAOImpl(MemberRepository memberRepository, BCryptPasswordEncoder passwordEncoder,
+  public MemberDAOImpl(MemberDB memberDB, BCryptPasswordEncoder passwordEncoder,
       JPAQueryFactory queryFactory) {
     this.passwordEncoder = passwordEncoder;
-    this.memberRepository = memberRepository;
+    this.memberDB = memberDB;
     this.queryFactory = queryFactory;
   }
 
@@ -34,11 +34,11 @@ public class MemberDAOImpl implements MemberDAO {
   @Override
   public String registerMember(MemberEntity memberEntity) {
     String user_id = memberEntity.getUserId();
-    if (memberRepository.existsByUserId(user_id)) {
+    if (memberDB.existsByUserId(user_id)) {
       throw new MessageException("이미 존재하는 ID입니다: " + user_id);
     }
     memberEntity.setUserPwd(passwordEncoder.encode(memberEntity.getUserPwd()));
-    memberRepository.save(memberEntity);
+    memberDB.save(memberEntity);
     return "success";
   }
 

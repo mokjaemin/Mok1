@@ -1,7 +1,7 @@
 package com.ReservationServer1.data.DTO.store;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,13 +25,12 @@ public class StoreRestDayDTO {
   private String storeName;
 
   @NotNull
-  private Map<String, String> date;
+  private Set<String> date;
 
 
   public static StoreRestDayDTO sample() {
-    Map<String, String> sampleDate = new HashMap<String, String>();
-    sampleDate.put("date1", "date1");
-    sampleDate.put("date2", "date2");
+    Set<String> sampleDate = new HashSet<>();
+    sampleDate.add("date1");
     return new StoreRestDayDTO("sampleName", sampleDate);
   }
 }
