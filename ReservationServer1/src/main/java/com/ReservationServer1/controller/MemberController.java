@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -72,7 +73,7 @@ public class MemberController {
   
   
   
-  @PostMapping("/pwd")
+  @PutMapping("/pwd")
   @Operation(summary = "비밀번호 수정 요청", description = "비밀번호 수정을 요청합니다.", tags = {"Member Controller"})
   @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
@@ -86,7 +87,7 @@ public class MemberController {
   }
   
   
-  @PostMapping("/info")
+  @PutMapping("/info")
   @Operation(summary = "회원정보 수정 요청", description = "회원정보 수정을 요청합니다.", tags = {"Member Controller"})
   @ApiResponses({@ApiResponse(responseCode = "200", description = "OK",
       content = @Content(schema = @Schema(implementation = ModifyMemberDTO.class))),

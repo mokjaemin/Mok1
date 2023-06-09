@@ -12,4 +12,5 @@ public interface StoreInfoDAO {
   
   String registerTimeInfo(StoreTimeInfoDTO storeTimeInfoDTO);
   StoreTimeInfoDTO getTimeInfo(String storeName);
+  String modTimeInfo(StoreTimeInfoDTO storeTimeInfoDTO);
 }

@@ -82,6 +82,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
       storeRestDayMapDB.deleteByStoreNameAndDate(storeName, day);
       Integer exist_check = queryFactory.selectOne().from(storeRestDaysMapEntity)
           .where(storeRestDaysMapEntity.storeRestDaysEntity.daysId.eq(days_id)).fetchFirst();
+      // 만약 자식 테이블 비었다면 해당 부모테이블도 삭제
       if (exist_check == null) {
         storeRestDayDB.deleteByDaysId(days_id);
       }
@@ -92,18 +93,22 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 
   @Override
   public String registerTimeInfo(StoreTimeInfoDTO storeTimeInfoDTO) {
+    // 부모 테이블 생성
     StoreTimeInfoEntity storeTimeInfoEntity =
         StoreTimeInfoEntity.builder().startTime(storeTimeInfoDTO.getStartTime())
             .endTime(storeTimeInfoDTO.getEndTime()).intervalTime(storeTimeInfoDTO.getIntervalTime())
             .storeName(storeTimeInfoDTO.getStoreName()).build();
+    // 부모 테이블 저장
     storeTimeInfoDB.save(storeTimeInfoEntity);
     Set<StoreTimeInfoMapEntity> childs = new HashSet<>();
     for (String time : storeTimeInfoDTO.getBreakTime()) {
+      // 자식테이블 저장
       StoreTimeInfoMapEntity storeTimeInfoMapEntity = StoreTimeInfoMapEntity.builder().time(time)
           .storeTimeInfoEntity(storeTimeInfoEntity).build();
       storeTimeInfoMapDB.save(storeTimeInfoMapEntity);
       childs.add(storeTimeInfoMapEntity);
     }
+    // 부모테이블에 자식테이블 저장
     storeTimeInfoEntity.setBreakTime(childs);
     return "success";
   }
@@ -111,10 +116,11 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 
   @Override
   public StoreTimeInfoDTO getTimeInfo(String storeName) {
+    // 자식 테이블에서 쉬는 시간 불러옴
     List<String> resultList =
         queryFactory.selectDistinct(storeTimeInfoMapEntity.time).from(storeTimeInfoMapEntity)
-            .leftJoin(storeTimeInfoMapEntity.storeTimeInfoEntity, storeTimeInfoEntity)
-            .where(storeTimeInfoEntity.storeName.eq(storeName)).fetch();
+            .where(storeTimeInfoMapEntity.storeTimeInfoEntity.storeName.eq(storeName)).fetch();
+    // 부모테이블의 데이터 불러옴
     StoreTimeInfoDTO result = queryFactory
         .select(Projections.fields(StoreTimeInfoDTO.class,
             storeTimeInfoEntity.startTime,
@@ -124,9 +130,47 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
         ))
         .from(storeTimeInfoEntity)
         .where(storeTimeInfoEntity.storeName.eq(storeName))
-        .fetchOne();
+        .fetchFirst();
+    // 부모테이블에 자식테이블 삽입
     result.setBreakTime(resultList.stream().sorted().toList());
     return result;
+  }
+
+
+  @Override
+  public String modTimeInfo(StoreTimeInfoDTO storeTimeInfoDTO) {
+    // 부모 엔터티 수정
+    String storeName = storeTimeInfoDTO.getStoreName();
+    StoreTimeInfoEntity p_entity = queryFactory
+        .select(storeTimeInfoEntity)
+        .from(storeTimeInfoEntity)
+        .where(storeTimeInfoEntity.storeName.eq(storeName))
+        .fetchFirst();
+    p_entity.setStartTime(storeTimeInfoDTO.getStartTime());
+    p_entity.setEndTime(storeTimeInfoDTO.getEndTime());
+    p_entity.setIntervalTime(storeTimeInfoDTO.getIntervalTime());
+    
+    // 자식 엔터티 수정
+    List<StoreTimeInfoMapEntity> breakTimeList =
+        queryFactory.selectDistinct(storeTimeInfoMapEntity).from(storeTimeInfoMapEntity)
+            .leftJoin(storeTimeInfoMapEntity.storeTimeInfoEntity, storeTimeInfoEntity)
+            .where(storeTimeInfoEntity.storeName.eq(storeName)).fetch();
+    List<String> new_times = storeTimeInfoDTO.getBreakTime();
+    int count = 0;
+    for(StoreTimeInfoMapEntity c_entity : breakTimeList) {
+      c_entity.setTime(new_times.get(count));
+      count += 1;
+    }
+    // 추가적인 데이터에 대해서는 새로 생성해서 추가
+    if(count < new_times.size()) {
+      while(count < new_times.size()) {
+        StoreTimeInfoMapEntity storeTimeInfoMapEntity = StoreTimeInfoMapEntity.builder().time(new_times.get(count))
+            .storeTimeInfoEntity(p_entity).build();
+        storeTimeInfoMapDB.save(storeTimeInfoMapEntity);
+        count += 1;
+      }
+    }
+    return "success";
   }
 
 }

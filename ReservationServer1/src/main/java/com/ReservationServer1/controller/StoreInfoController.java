@@ -7,6 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -91,6 +92,20 @@ public class StoreInfoController {
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
   public ResponseEntity<StoreTimeInfoDTO> getTimeInfo(@RequestParam String storeName, Authentication authentication) {
     return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.getTimeInfo(storeName));
+  }
+  
+  @PutMapping("/time")
+  @Operation(summary = "가게 영업시간 정보 등록 요청", description = "가게 영업시간 정보가 등록됩니다.", tags = {"Store Info Controller"})
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = StoreTimeInfoDTO.class))),
+      @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+      @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
+  public ResponseEntity<String> modTimeInfo(@Valid @RequestBody StoreTimeInfoDTO timeInfoDTO, Authentication authentication) {
+    if (!authentication.getName().equals(timeInfoDTO.getStoreName())) {
+      return ResponseEntity.status(HttpStatus.OK).body("권한이 없습니다.");
+    }
+    return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.modTimeInfo(timeInfoDTO));
   }
 
 

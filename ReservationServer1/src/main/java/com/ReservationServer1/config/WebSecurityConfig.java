@@ -34,9 +34,9 @@ public class WebSecurityConfig {
         .requestMatchers("/member/login", "/member", "/member/auth/pwd", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
        
         // member
-        .requestMatchers(HttpMethod.POST, "/member/info").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.PUT, "/member/info").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.DELETE, "/member").hasAnyAuthority("ROLE_USER")
-        .requestMatchers(HttpMethod.POST, "/member/pwd").hasAuthority("ROLE_PWD")
+        .requestMatchers(HttpMethod.PUT, "/member/pwd").hasAuthority("ROLE_PWD")
         // Store
         .requestMatchers(HttpMethod.POST, "/store").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.GET, "/store").hasAuthority("ROLE_USER")
@@ -48,6 +48,7 @@ public class WebSecurityConfig {
         // Store Info (Time Info)
         .requestMatchers(HttpMethod.POST, "/info/time").hasAuthority("ROLE_OWNER")
         .requestMatchers(HttpMethod.GET, "/info/time").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.PUT, "/info/time").hasAuthority("ROLE_OWNER")
         
         .and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
