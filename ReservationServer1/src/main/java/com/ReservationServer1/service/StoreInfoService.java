@@ -13,4 +13,5 @@ public interface StoreInfoService {
   String registerTimeInfo(StoreTimeInfoDTO timeInfoDTO);
   StoreTimeInfoDTO getTimeInfo(String storeName);
   String modTimeInfo(StoreTimeInfoDTO timeInfoDTO);
+  String deleteTimeInfo(String storeName);
 }

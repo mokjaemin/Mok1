@@ -46,5 +46,10 @@ public class StoreInfoServiceImpl implements StoreInfoService{
   public String modTimeInfo(StoreTimeInfoDTO timeInfoDTO) {
     return storeInfoDAO.modTimeInfo(timeInfoDTO);
   }
+  
+  @Override
+  public String deleteTimeInfo(String storeName) {
+    return storeInfoDAO.deleteTimeInfo(storeName);
+  }
 
 }
