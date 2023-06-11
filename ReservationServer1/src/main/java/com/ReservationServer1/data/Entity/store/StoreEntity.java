@@ -32,7 +32,7 @@ import lombok.ToString;
 public class StoreEntity extends BaseEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY) // int만 사용 가능
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int storeId;
   private String storeName;
   private String ownerId;

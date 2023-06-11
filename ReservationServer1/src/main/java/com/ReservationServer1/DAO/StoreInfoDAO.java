@@ -3,6 +3,7 @@ package com.ReservationServer1.DAO;
 import java.util.List;
 import com.ReservationServer1.data.DTO.store.StoreRestDayDTO;
 import com.ReservationServer1.data.DTO.store.StoreTimeInfoDTO;
+import com.ReservationServer1.data.Entity.store.StoreTableInfoEntity;
 
 public interface StoreInfoDAO {
 
@@ -14,4 +15,6 @@ public interface StoreInfoDAO {
   StoreTimeInfoDTO getTimeInfo(String storeName);
   String modTimeInfo(StoreTimeInfoDTO storeTimeInfoDTO);
   String deleteTimeInfo(String storeName);
+  
+  String registerTableInfo(StoreTableInfoEntity storeTableInfoEntity);
 }

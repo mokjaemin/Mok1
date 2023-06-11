@@ -2,6 +2,7 @@ package com.ReservationServer1.service;
 
 import java.util.List;
 import com.ReservationServer1.data.DTO.store.StoreRestDayDTO;
+import com.ReservationServer1.data.DTO.store.StoreTableInfoDTO;
 import com.ReservationServer1.data.DTO.store.StoreTimeInfoDTO;
 
 public interface StoreInfoService {
@@ -14,4 +15,6 @@ public interface StoreInfoService {
   StoreTimeInfoDTO getTimeInfo(String storeName);
   String modTimeInfo(StoreTimeInfoDTO timeInfoDTO);
   String deleteTimeInfo(String storeName);
+  
+  String registerTableInfo(StoreTableInfoDTO storeTableInfoDTO);
 }

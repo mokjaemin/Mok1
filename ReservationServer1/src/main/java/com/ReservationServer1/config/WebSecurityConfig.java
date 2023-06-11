@@ -50,6 +50,9 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.GET, "/info/time").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.PUT, "/info/time").hasAuthority("ROLE_OWNER")
         .requestMatchers(HttpMethod.DELETE, "/info/time").hasAuthority("ROLE_OWNER")
+        // Store Table Info (Table Info)
+        .requestMatchers(HttpMethod.POST, "/info/table").hasAuthority("ROLE_OWNER")
+        
         
         .and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

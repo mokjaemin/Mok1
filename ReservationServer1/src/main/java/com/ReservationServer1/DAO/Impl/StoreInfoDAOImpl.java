@@ -20,12 +20,14 @@ import com.ReservationServer1.data.DTO.store.StoreRestDayDTO;
 import com.ReservationServer1.data.DTO.store.StoreTimeInfoDTO;
 import com.ReservationServer1.data.Entity.store.StoreRestDaysEntity;
 import com.ReservationServer1.data.Entity.store.StoreRestDaysMapEntity;
+import com.ReservationServer1.data.Entity.store.StoreTableInfoEntity;
 import com.ReservationServer1.data.Entity.store.StoreTimeInfoEntity;
 import com.ReservationServer1.data.Entity.store.StoreTimeInfoMapEntity;
 import com.ReservationServer1.exception.MessageException;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 
 
 @Repository("StoreInfoDAO")
@@ -37,22 +39,23 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
   private final StoreTimeInfoDB storeTimeInfoDB;
   private final StoreTimeInfoMapDB storeTimeInfoMapDB;
   private final JPAQueryFactory queryFactory;
+  private final EntityManager entityManager;
 
   public StoreInfoDAOImpl(StoreRestDayDB storeRestDayDB, StoreRestDayMapDB storeRestDayMapDB,
       StoreTimeInfoDB storeTimeInfoDB, StoreTimeInfoMapDB storeTimeInfoMapDB,
-      JPAQueryFactory queryFactory) {
+      JPAQueryFactory queryFactory, EntityManager entityManager) {
     this.storeRestDayDB = storeRestDayDB;
     this.storeRestDayMapDB = storeRestDayMapDB;
     this.storeTimeInfoDB = storeTimeInfoDB;
     this.storeTimeInfoMapDB = storeTimeInfoMapDB;
     this.queryFactory = queryFactory;
+    this.entityManager = entityManager;
   }
 
 
   @Override
   public String registerDayOff(StoreRestDayDTO restDayDTO) {
     StoreRestDaysEntity parent = new StoreRestDaysEntity(restDayDTO.getStoreName());
-    storeRestDayDB.save(parent);
     Set<StoreRestDaysMapEntity> childs = new HashSet<>();
     for (String date : restDayDTO.getDate()) {
       StoreRestDaysMapEntity child = new StoreRestDaysMapEntity(date, parent);
@@ -148,6 +151,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 
   @Override
   public String modTimeInfo(StoreTimeInfoDTO storeTimeInfoDTO) {
+    
     // 부모 엔터티 수정
     String storeName = storeTimeInfoDTO.getStoreName();
     StoreTimeInfoEntity p_entity = queryFactory.select(storeTimeInfoEntity)
@@ -170,6 +174,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
       c_entity.setTime(new_times.get(count));
       count += 1;
     }
+    
     // 추가적인 데이터에 대해서는 새로 생성해서 추가
     if (count < new_times.size()) {
       while (count < new_times.size()) {
@@ -188,6 +193,13 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
         .execute();
     queryFactory.delete(storeTimeInfoEntity).where(storeTimeInfoEntity.storeName.eq(storeName))
         .execute();
+    return "success";
+  }
+
+
+  @Override
+  public String registerTableInfo(StoreTableInfoEntity storeTableInfoEntity) {
+    entityManager.persist(storeTableInfoEntity);
     return "success";
   }
 
