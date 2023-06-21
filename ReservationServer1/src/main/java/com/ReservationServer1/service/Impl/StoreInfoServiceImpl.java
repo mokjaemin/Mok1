@@ -68,16 +68,46 @@ public class StoreInfoServiceImpl implements StoreInfoService {
         uploadDir.mkdirs();
       }
       String filename = storeTableInfoDTO.getStoreName();
-      Path filePath = Path.of(DIR, filename+".png");
+      Path filePath = Path.of(DIR, filename + ".png");
       Files.copy(storeTableInfoDTO.getTableImage().getInputStream(), filePath,
           StandardCopyOption.REPLACE_EXISTING);
-      StoreTableInfoEntity storeTableInfoEntity = StoreTableInfoEntity.builder()
-          .storeName(storeTableInfoDTO.getStoreName())
-          .count(storeTableInfoDTO.getCount())
-          .imageURL(filePath.toString()).build();
+      StoreTableInfoEntity storeTableInfoEntity =
+          StoreTableInfoEntity.builder().storeName(storeTableInfoDTO.getStoreName())
+              .count(storeTableInfoDTO.getCount()).imageURL(filePath.toString()).build();
       return storeInfoDAO.registerTableInfo(storeTableInfoEntity);
     } catch (IOException e) {
       return "File upload failed";
+    }
+  }
+
+  @Override
+  public String modTableInfo(StoreTableInfoDTO storeTableInfoDTO) {
+    try {
+      File uploadDir = new File(DIR);
+      if (!uploadDir.exists()) {
+        uploadDir.mkdirs();
+      }
+      String filename = storeTableInfoDTO.getStoreName();
+      Path filePath = Path.of(DIR, filename + ".png");
+      Files.copy(storeTableInfoDTO.getTableImage().getInputStream(), filePath,
+          StandardCopyOption.REPLACE_EXISTING);
+      StoreTableInfoEntity storeTableInfoEntity =
+          StoreTableInfoEntity.builder().storeName(storeTableInfoDTO.getStoreName())
+              .count(storeTableInfoDTO.getCount()).imageURL(filePath.toString()).build();
+      return storeInfoDAO.modTableInfo(storeTableInfoEntity);
+    } catch (IOException e) {
+      return "File Upload Failed";
+    }
+  }
+
+  @Override
+  public String deleteTableInfo(String storeName) {
+    try {
+      Path filePath = Path.of(DIR, storeName + ".png");
+      Files.delete(filePath);
+      return storeInfoDAO.deleteTableInfo(storeName);
+    } catch (IOException e) {
+      return "File Delete Failed";
     }
   }
 }

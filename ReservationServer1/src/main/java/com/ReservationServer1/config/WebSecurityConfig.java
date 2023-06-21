@@ -52,6 +52,8 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.DELETE, "/info/time").hasAuthority("ROLE_OWNER")
         // Store Table Info (Table Info)
         .requestMatchers(HttpMethod.POST, "/info/table").hasAuthority("ROLE_OWNER")
+        .requestMatchers(HttpMethod.PUT, "/info/table").hasAuthority("ROLE_OWNER")
+        .requestMatchers(HttpMethod.DELETE, "/info/table").hasAuthority("ROLE_OWNER")
         
         
         .and()

@@ -17,4 +17,6 @@ public interface StoreInfoDAO {
   String deleteTimeInfo(String storeName);
   
   String registerTableInfo(StoreTableInfoEntity storeTableInfoEntity);
+  String modTableInfo(StoreTableInfoEntity storeTableInfoEntity);
+  String deleteTableInfo(String storeName);
 }

@@ -17,4 +17,6 @@ public interface StoreInfoService {
   String deleteTimeInfo(String storeName);
   
   String registerTableInfo(StoreTableInfoDTO storeTableInfoDTO);
+  String modTableInfo(StoreTableInfoDTO storeTableInfoDTO);
+  String deleteTableInfo(String storeName);
 }

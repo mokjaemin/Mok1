@@ -97,7 +97,7 @@ public class StoreInfoController {
   }
   
   @PutMapping("/time")
-  @Operation(summary = "가게 영업시간 정보 등록 요청", description = "가게 영업시간 정보가 등록됩니다.", tags = {"Store Info Controller"})
+  @Operation(summary = "가게 영업시간 정보 수정 요청", description = "가게 영업시간 정보가 수정됩니다.", tags = {"Store Info Controller"})
   @ApiResponses({
       @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = StoreTimeInfoDTO.class))),
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
@@ -131,11 +131,38 @@ public class StoreInfoController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> registerTableInfo(@ModelAttribute StoreTableInfoDTO storeTableInfoDTO, Authentication authentication) {
+  public ResponseEntity<String> registerTableInfo(@Valid @ModelAttribute StoreTableInfoDTO storeTableInfoDTO, Authentication authentication) {
     if (!authentication.getName().equals(storeTableInfoDTO.getStoreName())) {
       return ResponseEntity.status(HttpStatus.OK).body("권한이 없습니다.");
     }
     return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.registerTableInfo(storeTableInfoDTO));
+  }
+  
+  @PutMapping("/table")
+  @Operation(summary = "가게 영업시간 정보 수정 요청", description = "가게 영업시간 정보가 수정됩니다.", tags = {"Store Info Controller"})
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = StoreTimeInfoDTO.class))),
+      @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+      @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
+  public ResponseEntity<String> modTableInfo(@Valid @ModelAttribute StoreTableInfoDTO storeTableInfoDTO, Authentication authentication) {
+    if (!authentication.getName().equals(storeTableInfoDTO.getStoreName())) {
+      return ResponseEntity.status(HttpStatus.OK).body("권한이 없습니다.");
+    }
+    return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.modTableInfo(storeTableInfoDTO));
+  }
+  
+  @DeleteMapping("/table")
+  @Operation(summary = "가게 영업시간 삭제 요청", description = "가게 영업시간 정보가 삭제됩니다.", tags = {"Store Info Controller"})
+  @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
+      @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+      @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
+  public ResponseEntity<String> deleteTableInfo(@RequestParam String storeName, Authentication authentication) {
+    if (!storeName.equals(authentication.getName())) {
+      return ResponseEntity.status(HttpStatus.OK).body("권한이 없습니다.");
+    }
+    return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.deleteTableInfo(storeName));
   }
 
 
