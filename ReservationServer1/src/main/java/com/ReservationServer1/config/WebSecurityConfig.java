@@ -54,6 +54,8 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.POST, "/info/table").hasAuthority("ROLE_OWNER")
         .requestMatchers(HttpMethod.PUT, "/info/table").hasAuthority("ROLE_OWNER")
         .requestMatchers(HttpMethod.DELETE, "/info/table").hasAuthority("ROLE_OWNER")
+        // Store Reservation And Order (Reservation Order Info)
+        .requestMatchers(HttpMethod.POST, "/ro/reservation").hasAuthority("ROLE_USER")
         
         
         .and()
