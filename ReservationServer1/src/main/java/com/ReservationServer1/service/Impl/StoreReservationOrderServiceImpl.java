@@ -19,4 +19,19 @@ public class StoreReservationOrderServiceImpl implements StoreReservationOrderSe
     return storeReservationOrderDAO.registerReservation(reservationDTO, userId);
   }
 
+  @Override
+  public String updateReservation(ReservationDTO reservationDTO, String userId) {
+    return storeReservationOrderDAO.updateReservation(reservationDTO, userId);
+  }
+
+  @Override
+  public ReservationDTO getReservation(String storeName, String userId) {
+    return storeReservationOrderDAO.getReservation(storeName, userId);
+  }
+
+  @Override
+  public String deleteReservation(String storeName, String userId) {
+    return storeReservationOrderDAO.deleteReservation(storeName, userId);
+  }
+
 }
