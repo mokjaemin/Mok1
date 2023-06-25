@@ -2,10 +2,11 @@ package com.ReservationServer1.DAO.Impl;
 
 
 import static com.ReservationServer1.data.Entity.store.QStoreRestDaysEntity.storeRestDaysEntity;
+import static com.ReservationServer1.data.Entity.store.QStoreFoodsInfoEntity.storeFoodsInfoEntity;
 import static com.ReservationServer1.data.Entity.store.QStoreRestDaysMapEntity.storeRestDaysMapEntity;
+import static com.ReservationServer1.data.Entity.store.QStoreTableInfoEntity.storeTableInfoEntity;
 import static com.ReservationServer1.data.Entity.store.QStoreTimeInfoEntity.storeTimeInfoEntity;
 import static com.ReservationServer1.data.Entity.store.QStoreTimeInfoMapEntity.storeTimeInfoMapEntity;
-import static com.ReservationServer1.data.Entity.store.QStoreTableInfoEntity.storeTableInfoEntity;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,10 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ReservationServer1.DAO.StoreInfoDAO;
 import com.ReservationServer1.DAO.DB.DBMS.storeInfo.StoreRestDayDB;
 import com.ReservationServer1.DAO.DB.DBMS.storeInfo.StoreRestDayMapDB;
-import com.ReservationServer1.DAO.DB.DBMS.storeInfo.StoreTimeInfoDB;
 import com.ReservationServer1.DAO.DB.DBMS.storeInfo.StoreTimeInfoMapDB;
+import com.ReservationServer1.data.DTO.store.StoreFoodsInfoDTO;
 import com.ReservationServer1.data.DTO.store.StoreRestDayDTO;
 import com.ReservationServer1.data.DTO.store.StoreTimeInfoDTO;
+import com.ReservationServer1.data.Entity.store.StoreFoodsInfoEntity;
 import com.ReservationServer1.data.Entity.store.StoreRestDaysEntity;
 import com.ReservationServer1.data.Entity.store.StoreRestDaysMapEntity;
 import com.ReservationServer1.data.Entity.store.StoreTableInfoEntity;
@@ -225,6 +227,46 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
   public String deleteTableInfo(String storeName) {
     queryFactory.delete(storeTableInfoEntity)
         .where(storeTableInfoEntity.storeName.eq(storeName)).execute();
+    return "success";
+  }
+
+
+  @Override
+  public String registerFoodsInfo(StoreFoodsInfoEntity storeFoodsInfoEntity) {
+    entityManager.persist(storeFoodsInfoEntity);
+    return "success";
+  }
+
+
+  @Override
+  public List<StoreFoodsInfoEntity> getFoodsInfo(String storeName) {
+    List<StoreFoodsInfoEntity> result = queryFactory.select(storeFoodsInfoEntity).from(storeFoodsInfoEntity)
+        .where(storeFoodsInfoEntity.storeName.eq(storeName)).fetch();
+    if(result == null) {
+      throw new MessageException("해당 음식점은 음식을 등록하지 않았습니다.");
+    }
+    return result;
+  }
+
+
+  @Override
+  public String modFoodsInfo(StoreFoodsInfoEntity new_entity) {
+    StoreFoodsInfoEntity origin_entity = queryFactory.select(storeFoodsInfoEntity).from(storeFoodsInfoEntity)
+        .where(storeFoodsInfoEntity.storeName.eq(new_entity.getStoreName())
+            .and(storeFoodsInfoEntity.foodName.eq(new_entity.getFoodName()))).fetchFirst();
+    origin_entity.setFoodName(new_entity.getFoodName());
+    origin_entity.setFoodDescription(new_entity.getFoodDescription());
+    origin_entity.setImageURL(new_entity.getImageURL());    
+    return "success";
+  }
+
+
+  @Override
+  public String deleteFoodsInfo(String storeName, String foodName) {
+    queryFactory.delete(storeFoodsInfoEntity)
+    .where(storeFoodsInfoEntity.storeName.eq(storeName)
+        .and(storeFoodsInfoEntity.foodName.eq(foodName)))
+    .execute();
     return "success";
   }
 }

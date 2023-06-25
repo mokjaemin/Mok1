@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.ReservationServer1.data.DTO.store.StoreFoodsInfoDTO;
+import com.ReservationServer1.data.DTO.store.StoreFoodsInfoResultDTO;
 import com.ReservationServer1.data.DTO.store.StoreRestDayDTO;
 import com.ReservationServer1.data.DTO.store.StoreTableInfoDTO;
 import com.ReservationServer1.data.DTO.store.StoreTimeInfoDTO;
@@ -139,9 +141,9 @@ public class StoreInfoController {
   }
   
   @PutMapping("/table")
-  @Operation(summary = "가게 영업시간 정보 수정 요청", description = "가게 영업시간 정보가 수정됩니다.", tags = {"Store Info Controller"})
+  @Operation(summary = "가게 테이블 정보 수정 요청", description = "가게 테이블 정보가 수정됩니다.", tags = {"Store Info Controller"})
   @ApiResponses({
-      @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = StoreTimeInfoDTO.class))),
+      @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = StoreTableInfoDTO.class))),
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
@@ -153,7 +155,7 @@ public class StoreInfoController {
   }
   
   @DeleteMapping("/table")
-  @Operation(summary = "가게 영업시간 삭제 요청", description = "가게 영업시간 정보가 삭제됩니다.", tags = {"Store Info Controller"})
+  @Operation(summary = "가게 테이블 삭제 요청", description = "가게 테이블 정보가 삭제됩니다.", tags = {"Store Info Controller"})
   @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
@@ -164,6 +166,57 @@ public class StoreInfoController {
     }
     return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.deleteTableInfo(storeName));
   }
+  
+  
+  @PostMapping("/foods")
+  @Operation(summary = "가게 음식 정보 등록 요청", description = "가게 음식 정보가 등록됩니다.", tags = {"Store Info Controller"})
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = StoreFoodsInfoDTO.class))),
+      @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+      @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
+  public ResponseEntity<String> registerFoodsInfo(@Valid @ModelAttribute StoreFoodsInfoDTO storeFoodsInfoDTO, Authentication authentication) {
+    if (!authentication.getName().equals(storeFoodsInfoDTO.getStoreName())) {
+      return ResponseEntity.status(HttpStatus.OK).body("권한이 없습니다.");
+    }
+    return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.registerFoodsInfo(storeFoodsInfoDTO));
+  }
+  
+  @GetMapping("/foods")
+  @Operation(summary = "가게 음식 정보 출력 요청", description = "가게 음식 정보가 출력됩니다.", tags = {"Store Info Controller"})
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
+      @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+      @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
+  public ResponseEntity<List<StoreFoodsInfoResultDTO>> getFoodsInfo(@RequestParam String storeName, Authentication authentication) {
+    return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.getFoodsInfo(storeName));
+  }
 
+  @PutMapping("/foods")
+  @Operation(summary = "가게 음식 정보 수정 요청", description = "가게 음식 정보가 수정됩니다.", tags = {"Store Info Controller"})
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = StoreFoodsInfoDTO.class))),
+      @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+      @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
+  public ResponseEntity<String> modFoodsInfo(@Valid @ModelAttribute StoreFoodsInfoDTO storeFoodsInfoDTO, Authentication authentication) {
+    if (!authentication.getName().equals(storeFoodsInfoDTO.getStoreName())) {
+      return ResponseEntity.status(HttpStatus.OK).body("권한이 없습니다.");
+    }
+    return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.modFoodsInfo(storeFoodsInfoDTO));
+  }
+  
+  @DeleteMapping("/foods")
+  @Operation(summary = "가게 음식 정보 삭제 요청", description = "가게 음식 정보가 삭제됩니다.", tags = {"Store Info Controller"})
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
+      @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+      @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
+  public ResponseEntity<String> deleteFoodsInfo(@RequestParam String storeName, String foodName, Authentication authentication) {
+    if (!authentication.getName().equals(storeName)) {
+      return ResponseEntity.status(HttpStatus.OK).body("권한이 없습니다.");
+    }
+    return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.deleteFoodsInfo(storeName, foodName));
+  }
 
 }
