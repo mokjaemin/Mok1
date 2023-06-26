@@ -256,6 +256,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
             .and(storeFoodsInfoEntity.foodName.eq(new_entity.getFoodName()))).fetchFirst();
     origin_entity.setFoodName(new_entity.getFoodName());
     origin_entity.setFoodDescription(new_entity.getFoodDescription());
+    origin_entity.setFoodPrice(new_entity.getFoodPrice());
     origin_entity.setImageURL(new_entity.getImageURL());    
     return "success";
   }

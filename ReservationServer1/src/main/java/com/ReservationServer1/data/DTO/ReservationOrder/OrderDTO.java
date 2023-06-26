@@ -1,6 +1,6 @@
-package com.ReservationServer1.data.DTO.store;
+package com.ReservationServer1.data.DTO.ReservationOrder;
 
-import org.springframework.web.multipart.MultipartFile;
+import java.util.HashMap;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,19 +17,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class StoreFoodsInfoDTO {
+public class OrderDTO {
 
   @NotNull
   private String storeName;
   
   @NotNull
-  private String foodName;
+  private HashMap<String, Integer> orderInfo;
   
-  @NotNull
-  private String foodDescription;
-  
-  @NotNull
-  private int foodPrice;
-  
-  private MultipartFile foodImage;
 }

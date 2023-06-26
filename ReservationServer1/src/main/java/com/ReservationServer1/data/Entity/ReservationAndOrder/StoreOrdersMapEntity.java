@@ -1,7 +1,4 @@
-package com.ReservationServer1.data.Entity.store;
-
-
-
+package com.ReservationServer1.data.Entity.ReservationAndOrder;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
@@ -23,22 +20,26 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
+@Table(name = "StoreOrdersMap")
 @EqualsAndHashCode(callSuper=false)
-@Table(name = "StoreRestDaysMap")
-public class StoreRestDaysMapEntity {
+public class StoreOrdersMapEntity {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long dayId;
+  private Long orderId;
+  
+  private String foodName;
+  
+  private int foodCount;
   
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "days_id")
+  @JoinColumn(name = "orders_id")
   @JsonBackReference
-  private StoreRestDaysEntity storeRestDaysEntity;
+  private StoreOrdersEntity storeOrdersEntity;
   
-  private String date;
-  
-  public StoreRestDaysMapEntity(String date, StoreRestDaysEntity storeRestDaysEntity) {
-    this.date = date;
-    this.storeRestDaysEntity = storeRestDaysEntity;;
+  public StoreOrdersMapEntity(String foodName, int foodCount, StoreOrdersEntity storeOrdersEntity) {
+    this.foodName = foodName;
+    this.foodCount = foodCount;
+    this.storeOrdersEntity = storeOrdersEntity;
   }
 }

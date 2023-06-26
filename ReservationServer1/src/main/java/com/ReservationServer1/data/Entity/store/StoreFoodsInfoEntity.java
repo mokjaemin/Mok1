@@ -37,12 +37,14 @@ public class StoreFoodsInfoEntity extends BaseEntity{
 
   private String foodDescription;
   
+  private int foodPrice;
+  
   private String imageURL;
   
   public StoreFoodsInfoResultDTO toStoreFoodsInfoResultDTO() {
     return StoreFoodsInfoResultDTO.builder().storeName(this.storeName)
         .foodName(this.foodName).foodDescription(this.foodDescription)
-        .build();
+        .foodPrice(this.foodPrice).build();
   }
   
 }

@@ -60,10 +60,16 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.PUT, "/info/foods").hasAuthority("ROLE_OWNER")
         .requestMatchers(HttpMethod.DELETE, "/info/foods").hasAuthority("ROLE_OWNER")
         // Store Reservation And Order (Reservation Order Info)
+        // Store Reservation
         .requestMatchers(HttpMethod.POST, "/ro/reservation").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.PUT, "/ro/reservation").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.GET, "/ro/reservation").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.DELETE, "/ro/reservation").hasAuthority("ROLE_USER")
+        // Store Order
+        .requestMatchers(HttpMethod.POST, "/ro/order").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.PUT, "/ro/order").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.GET, "/ro/order").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.DELETE, "/ro/order").hasAuthority("ROLE_USER")
         
         
         .and()

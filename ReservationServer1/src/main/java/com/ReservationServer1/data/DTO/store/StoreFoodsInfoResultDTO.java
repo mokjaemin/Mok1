@@ -1,6 +1,5 @@
 package com.ReservationServer1.data.DTO.store;
 
-import org.springframework.web.multipart.MultipartFile;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +26,9 @@ public class StoreFoodsInfoResultDTO {
 
   @NotNull
   private String foodDescription;
+  
+  @NotNull
+  private int foodPrice;
 
   private String encoded_image;
 }

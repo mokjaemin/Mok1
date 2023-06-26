@@ -133,7 +133,7 @@ public class StoreInfoServiceImpl implements StoreInfoService {
       StoreFoodsInfoEntity storeFoodsInfoEntity = StoreFoodsInfoEntity.builder()
           .storeName(storeFoodsInfoDTO.getStoreName()).foodName(storeFoodsInfoDTO.getFoodName())
           .foodDescription(storeFoodsInfoDTO.getFoodDescription()).imageURL(filePath.toString())
-          .build();
+          .foodPrice(storeFoodsInfoDTO.getFoodPrice()).build();
       return storeInfoDAO.registerFoodsInfo(storeFoodsInfoEntity);
     } catch (IOException e) {
       return "File Upload Failed";
@@ -174,7 +174,7 @@ public class StoreInfoServiceImpl implements StoreInfoService {
       StoreFoodsInfoEntity storeFoodsInfoEntity = StoreFoodsInfoEntity.builder()
           .storeName(storeFoodsInfoDTO.getStoreName()).foodName(storeFoodsInfoDTO.getFoodName())
           .foodDescription(storeFoodsInfoDTO.getFoodDescription()).imageURL(filePath.toString())
-          .build();
+          .foodPrice(storeFoodsInfoDTO.getFoodPrice()).build();
       return storeInfoDAO.modFoodsInfo(storeFoodsInfoEntity);
     } catch (IOException e) {
       return "File Upload Failed";
