@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.ReservationServer1.data.DTO.ReservationOrder.OrderDTO;
 import com.ReservationServer1.data.DTO.ReservationOrder.ReservationDTO;
-import com.ReservationServer1.data.DTO.store.StoreRestDayDTO;
+import com.ReservationServer1.data.Entity.ReservationAndOrder.StoreReservationEntity;
 import com.ReservationServer1.service.StoreReservationOrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -71,7 +71,7 @@ public class StoreReservationOrderController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<ReservationDTO> getReservation(@Valid @RequestParam String storeName,
+  public ResponseEntity<StoreReservationEntity> getReservation(@Valid @RequestParam String storeName,
       Authentication authentication) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(storeReservationOrderService.getReservation(storeName, authentication.getName()));

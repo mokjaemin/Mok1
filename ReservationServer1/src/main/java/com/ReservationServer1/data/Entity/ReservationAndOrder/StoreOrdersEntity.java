@@ -19,7 +19,7 @@ import lombok.ToString;
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(exclude="childSet")
 @NoArgsConstructor
 @Table(name = "StoreOrders")
 public class StoreOrdersEntity {

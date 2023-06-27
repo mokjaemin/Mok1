@@ -1,7 +1,9 @@
 package com.ReservationServer1.DAO.Impl;
 
 
+import static com.ReservationServer1.data.Entity.ReservationAndOrder.QStoreOrdersEntity.storeOrdersEntity;
 import static com.ReservationServer1.data.Entity.ReservationAndOrder.QStoreReservationEntity.storeReservationEntity;
+import static com.ReservationServer1.data.Entity.ReservationAndOrder.QStoreOrdersMapEntity.storeOrdersMapEntity;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Repository;
@@ -13,8 +15,6 @@ import com.ReservationServer1.data.Entity.ReservationAndOrder.StoreOrdersEntity;
 import com.ReservationServer1.data.Entity.ReservationAndOrder.StoreOrdersMapEntity;
 import com.ReservationServer1.data.Entity.ReservationAndOrder.StoreReservationEntity;
 import com.ReservationServer1.exception.MessageException;
-import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
@@ -52,14 +52,14 @@ public class StoreReservationOrderDAOImpl implements StoreReservationOrderDAO {
   }
 
   @Override
-  public ReservationDTO getReservation(String storeName, String userId) {
-    ReservationDTO result = queryFactory
-        .select(Projections.fields(ReservationDTO.class, storeReservationEntity.date,
-            storeReservationEntity.time, storeReservationEntity.storeTable,
-            Expressions.asString(storeName).as("storeName")))
-        .from(storeReservationEntity).where(storeReservationEntity.storeName.eq(storeName)
+  public StoreReservationEntity getReservation(String storeName, String userId) {
+    StoreReservationEntity result = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).leftJoin(storeReservationEntity.child, storeOrdersEntity)
+        .fetchJoin().leftJoin(storeOrdersEntity.childSet, storeOrdersMapEntity).fetchJoin()
+        .where(storeReservationEntity.storeName.eq(storeName)
             .and(storeReservationEntity.userId.eq(userId)))
         .fetchFirst();
+
     if (result == null) {
       throw new MessageException("정보가 존재하지 않습니다.");
     }
@@ -75,16 +75,16 @@ public class StoreReservationOrderDAOImpl implements StoreReservationOrderDAO {
 
   @Override
   public String registerOrder(OrderDTO orderDTO, String userId) {
-    List<StoreOrdersMapEntity> childs = new ArrayList<>();
     StoreReservationEntity grandfa = queryFactory.select(storeReservationEntity)
         .from(storeReservationEntity).where(storeReservationEntity.userId.eq(userId)
             .and(storeReservationEntity.storeName.eq(orderDTO.getStoreName())))
         .fetchFirst();
-    if(grandfa == null) {
+    if (grandfa == null) {
       throw new MessageException("정보가 존재하지 않습니다.");
     }
     StoreOrdersEntity father = new StoreOrdersEntity(grandfa);
     entityManager.persist(father);
+    List<StoreOrdersMapEntity> childs = new ArrayList<>();
     for (String foodName : orderDTO.getOrderInfo().keySet()) {
       StoreOrdersMapEntity child =
           new StoreOrdersMapEntity(foodName, orderDTO.getOrderInfo().get(foodName), father);
@@ -98,14 +98,38 @@ public class StoreReservationOrderDAOImpl implements StoreReservationOrderDAO {
 
   @Override
   public String updateOrder(OrderDTO orderDTO, String userId) {
-    // TODO Auto-generated method stub
-    return null;
+    StoreReservationEntity result = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).leftJoin(storeReservationEntity.child, storeOrdersEntity)
+        .fetchJoin().leftJoin(storeOrdersEntity.childSet, storeOrdersMapEntity).fetchJoin()
+        .where(storeReservationEntity.storeName.eq(orderDTO.getStoreName())
+            .and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+
+    List<StoreOrdersMapEntity> childsSet = result.getChild().getChildSet();
+    for (StoreOrdersMapEntity child : childsSet) {
+      for (String foodName : orderDTO.getOrderInfo().keySet()) {
+        if (child.getFoodName().equals(foodName)) {
+          child.setFoodCount(orderDTO.getOrderInfo().get(foodName));
+        }
+      }
+    }
+    return "success";
   }
 
   @Override
   public String deleteOrder(String storeName, String foodName, String userId) {
-    // TODO Auto-generated method stub
-    return null;
+    StoreReservationEntity result = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).leftJoin(storeReservationEntity.child, storeOrdersEntity)
+        .fetchJoin().leftJoin(storeOrdersEntity.childSet, storeOrdersMapEntity).fetchJoin()
+        .where(storeReservationEntity.storeName.eq(storeName)
+            .and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+    queryFactory.delete(storeOrdersMapEntity)
+    .where(storeOrdersMapEntity.storeOrdersEntity.ordersId.eq(result.getChild().getOrdersId())
+        
+        .and(storeOrdersMapEntity.foodName.eq(foodName)))
+    .execute();
+    return "success";
   }
 
 }

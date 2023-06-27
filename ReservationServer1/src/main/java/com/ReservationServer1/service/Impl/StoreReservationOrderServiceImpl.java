@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import com.ReservationServer1.DAO.StoreReservationOrderDAO;
 import com.ReservationServer1.data.DTO.ReservationOrder.OrderDTO;
 import com.ReservationServer1.data.DTO.ReservationOrder.ReservationDTO;
+import com.ReservationServer1.data.Entity.ReservationAndOrder.StoreReservationEntity;
 import com.ReservationServer1.service.StoreReservationOrderService;
 
 @Service
@@ -26,7 +27,7 @@ public class StoreReservationOrderServiceImpl implements StoreReservationOrderSe
   }
 
   @Override
-  public ReservationDTO getReservation(String storeName, String userId) {
+  public StoreReservationEntity getReservation(String storeName, String userId) {
     return storeReservationOrderDAO.getReservation(storeName, userId);
   }
 
