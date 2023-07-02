@@ -1,4 +1,4 @@
-package com.ReservationServer1.data.DTO.ReservationOrder;
+package com.ReservationServer1.data.DTO.ROP;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

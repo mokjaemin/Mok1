@@ -1,4 +1,4 @@
-package com.ReservationServer1.data.Entity.ReservationAndOrder;
+package com.ReservationServer1.data.Entity.ROP;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
@@ -7,9 +7,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.EqualsAndHashCode;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,26 +21,23 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-@Table(name = "StoreOrdersMap")
-@EqualsAndHashCode(callSuper=false)
-public class StoreOrdersMapEntity {
+@AllArgsConstructor
+@Builder
+@Table(name = "StorePay")
+public class StorePayEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long orderId;
+  private Long paymentId;
   
-  private String foodName;
-  
-  private int foodCount;
-  
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "orders_id")
+  @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "ordersId")
   @JsonBackReference
   private StoreOrdersEntity storeOrdersEntity;
   
-  public StoreOrdersMapEntity(String foodName, int foodCount, StoreOrdersEntity storeOrdersEntity) {
-    this.foodName = foodName;
-    this.foodCount = foodCount;
-    this.storeOrdersEntity = storeOrdersEntity;
-  }
+  private int amount;
+  
+  private String comment;
+  
+  private String bigComment;
 }

@@ -1,32 +1,36 @@
 package com.ReservationServer1.DAO.Impl;
 
 
-import static com.ReservationServer1.data.Entity.ReservationAndOrder.QStoreOrdersEntity.storeOrdersEntity;
-import static com.ReservationServer1.data.Entity.ReservationAndOrder.QStoreReservationEntity.storeReservationEntity;
-import static com.ReservationServer1.data.Entity.ReservationAndOrder.QStoreOrdersMapEntity.storeOrdersMapEntity;
+import static com.ReservationServer1.data.Entity.ROP.QStoreOrdersEntity.storeOrdersEntity;
+import static com.ReservationServer1.data.Entity.ROP.QStoreOrdersMapEntity.storeOrdersMapEntity;
+import static com.ReservationServer1.data.Entity.ROP.QStorePayEntity.storePayEntity;
+import static com.ReservationServer1.data.Entity.ROP.QStoreReservationEntity.storeReservationEntity;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import com.ReservationServer1.DAO.StoreReservationOrderDAO;
-import com.ReservationServer1.data.DTO.ReservationOrder.OrderDTO;
-import com.ReservationServer1.data.DTO.ReservationOrder.ReservationDTO;
-import com.ReservationServer1.data.Entity.ReservationAndOrder.StoreOrdersEntity;
-import com.ReservationServer1.data.Entity.ReservationAndOrder.StoreOrdersMapEntity;
-import com.ReservationServer1.data.Entity.ReservationAndOrder.StoreReservationEntity;
+import com.ReservationServer1.DAO.StoreROPDAO;
+import com.ReservationServer1.data.DTO.ROP.OrderDTO;
+import com.ReservationServer1.data.DTO.ROP.PayDTO;
+import com.ReservationServer1.data.DTO.ROP.ReservationDTO;
+import com.ReservationServer1.data.Entity.ROP.StoreOrdersEntity;
+import com.ReservationServer1.data.Entity.ROP.StoreOrdersMapEntity;
+import com.ReservationServer1.data.Entity.ROP.StorePayEntity;
+import com.ReservationServer1.data.Entity.ROP.StoreReservationEntity;
 import com.ReservationServer1.exception.MessageException;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
 @Repository("ReservationAndOrderDAO")
 @Transactional
-public class StoreReservationOrderDAOImpl implements StoreReservationOrderDAO {
+public class StoreROPImpl implements StoreROPDAO {
 
 
   private final JPAQueryFactory queryFactory;
   private final EntityManager entityManager;
 
-  public StoreReservationOrderDAOImpl(JPAQueryFactory queryFactory, EntityManager entityManager) {
+  public StoreROPImpl(JPAQueryFactory queryFactory,
+      EntityManager entityManager) {
     this.entityManager = entityManager;
     this.queryFactory = queryFactory;
   }
@@ -51,11 +55,15 @@ public class StoreReservationOrderDAOImpl implements StoreReservationOrderDAO {
     return "success";
   }
 
+  
+  // 수정!! 
   @Override
   public StoreReservationEntity getReservation(String storeName, String userId) {
     StoreReservationEntity result = queryFactory.select(storeReservationEntity)
-        .from(storeReservationEntity).leftJoin(storeReservationEntity.child, storeOrdersEntity)
-        .fetchJoin().leftJoin(storeOrdersEntity.childSet, storeOrdersMapEntity).fetchJoin()
+        .from(storeReservationEntity)
+        .leftJoin(storeReservationEntity.child, storeOrdersEntity).fetchJoin()
+        .leftJoin(storeOrdersEntity.payment, storePayEntity).fetchJoin()
+        .leftJoin(storeOrdersEntity.childSet, storeOrdersMapEntity).fetchJoin()
         .where(storeReservationEntity.storeName.eq(storeName)
             .and(storeReservationEntity.userId.eq(userId)))
         .fetchFirst();
@@ -124,11 +132,36 @@ public class StoreReservationOrderDAOImpl implements StoreReservationOrderDAO {
         .where(storeReservationEntity.storeName.eq(storeName)
             .and(storeReservationEntity.userId.eq(userId)))
         .fetchFirst();
-    queryFactory.delete(storeOrdersMapEntity)
-    .where(storeOrdersMapEntity.storeOrdersEntity.ordersId.eq(result.getChild().getOrdersId())
-        
-        .and(storeOrdersMapEntity.foodName.eq(foodName)))
-    .execute();
+    queryFactory
+        .delete(storeOrdersMapEntity).where(storeOrdersMapEntity.storeOrdersEntity.ordersId
+            .eq(result.getChild().getOrdersId()).and(storeOrdersMapEntity.foodName.eq(foodName)))
+        .execute();
+    return "success";
+  }
+
+  @Override
+  public String registerPay(PayDTO payDTO) {
+    StoreOrdersEntity result = queryFactory.select(storeOrdersEntity)
+        .from(storeOrdersEntity)
+        .leftJoin(storeOrdersEntity.storeReservationEntity, storeReservationEntity).fetchJoin()
+        .where(storeReservationEntity.reservationId.eq(payDTO.getReservationId()))
+        .fetchFirst();
+    StorePayEntity entity = StorePayEntity.builder().amount(payDTO.getAmount()).build();
+    entity.setStoreOrdersEntity(result);
+    entityManager.persist(entity);
+    result.setPayment(entity);    
+    return "success";
+  }
+
+  @Override
+  public String deletePay(Long reservationId) {
+    Long payId = queryFactory.select(storeReservationEntity.child.payment.paymentId)
+        .from(storeReservationEntity)
+        .leftJoin(storeReservationEntity.child, storeOrdersEntity).fetchJoin()
+        .leftJoin(storeOrdersEntity.payment, storePayEntity).fetchJoin()
+        .where(storeReservationEntity.reservationId.eq(reservationId))
+        .fetchFirst();
+    queryFactory.delete(storePayEntity).where(storePayEntity.paymentId.eq(payId));
     return "success";
   }
 

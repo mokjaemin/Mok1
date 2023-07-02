@@ -1,7 +1,6 @@
 package com.ReservationServer1.config;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,30 +8,27 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-//import com.ReservationServer1.service.MemberService;
 import lombok.RequiredArgsConstructor;
 
 
 
 @RequiredArgsConstructor
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 public class WebSecurityConfig {
 
-  
-//  private final MemberService memberService;
 
   @Value("${jwt.secret}")
   private String secretKey;
+  
 
 
-  @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    return http.httpBasic().disable()
-        .csrf().disable().cors().and().authorizeHttpRequests()
+  protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http.httpBasic().disable().csrf().disable().cors()
+        .and()
+        .authorizeHttpRequests()
         // No Security
         .requestMatchers("/member/login", "/member", "/member/auth/pwd", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-       
         // member
         .requestMatchers(HttpMethod.PUT, "/member/info").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.DELETE, "/member").hasAnyAuthority("ROLE_USER")
@@ -61,21 +57,29 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.DELETE, "/info/foods").hasAuthority("ROLE_OWNER")
         // Store Reservation And Order (Reservation Order Info)
         // Store Reservation
-        .requestMatchers(HttpMethod.POST, "/ro/reservation").hasAuthority("ROLE_USER")
-        .requestMatchers(HttpMethod.PUT, "/ro/reservation").hasAuthority("ROLE_USER")
-        .requestMatchers(HttpMethod.GET, "/ro/reservation").hasAuthority("ROLE_USER")
-        .requestMatchers(HttpMethod.DELETE, "/ro/reservation").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.POST, "/rop/reservation").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.PUT, "/rop/reservation").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.GET, "/rop/reservation").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.DELETE, "/rop/reservation").hasAuthority("ROLE_USER")
         // Store Order
-        .requestMatchers(HttpMethod.POST, "/ro/order").hasAuthority("ROLE_USER")
-        .requestMatchers(HttpMethod.PUT, "/ro/order").hasAuthority("ROLE_USER")
-        .requestMatchers(HttpMethod.GET, "/ro/order").hasAuthority("ROLE_USER")
-        .requestMatchers(HttpMethod.DELETE, "/ro/order").hasAuthority("ROLE_USER")
-        
-        
-        .and()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and()
-        .addFilterBefore(new JwtFilter(secretKey), UsernamePasswordAuthenticationFilter.class)
-        .build();
+        .requestMatchers(HttpMethod.POST, "/rop/order").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.PUT, "/rop/order").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.GET, "/rop/order").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.DELETE, "/rop/order").hasAuthority("ROLE_USER")
+        // Store Payment
+        .requestMatchers(HttpMethod.POST, "/rop/pay").hasAuthority("ROLE_OWNER")
+        .requestMatchers(HttpMethod.DELETE, "/rop/pay").hasAuthority("ROLE_OWNER")
+        // Store Payment Comment
+        .requestMatchers(HttpMethod.POST, "/rop/pay/comment").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.PUT, "/rop/pay/comment").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.DELETE, "/rop/pay/comment").hasAuthority("ROLE_USER")
+        // Store Payment Big Comment
+        .requestMatchers(HttpMethod.POST, "/rop/pay/bigcomment").hasAuthority("ROLE_OWNER")
+        .requestMatchers(HttpMethod.PUT, "/rop/pay/bigomment").hasAuthority("ROLE_OWNER")
+        .requestMatchers(HttpMethod.DELETE, "/rop/pay/bigcomment").hasAuthority("ROLE_OWNER")
+
+        .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and().addFilterBefore(new JwtFilter(secretKey), UsernamePasswordAuthenticationFilter.class);
+    return http.build();
   }
 }

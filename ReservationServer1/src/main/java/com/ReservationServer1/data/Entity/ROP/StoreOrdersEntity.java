@@ -1,4 +1,4 @@
-package com.ReservationServer1.data.Entity.ReservationAndOrder;
+package com.ReservationServer1.data.Entity.ROP;
 
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -19,7 +19,7 @@ import lombok.ToString;
 @Entity
 @Getter
 @Setter
-@ToString(exclude="childSet")
+@ToString(exclude={"childSet", "payment"})
 @NoArgsConstructor
 @Table(name = "StoreOrders")
 public class StoreOrdersEntity {
@@ -35,6 +35,10 @@ public class StoreOrdersEntity {
   
   @OneToMany(mappedBy = "storeOrdersEntity", fetch = FetchType.LAZY)
   private List<StoreOrdersMapEntity> childSet;
+  
+  
+  @OneToOne(mappedBy = "storeOrdersEntity", fetch = FetchType.LAZY)
+  private StorePayEntity payment;
   
   public StoreOrdersEntity(StoreReservationEntity storeReservationEntity) {
     this.storeReservationEntity = storeReservationEntity;

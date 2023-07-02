@@ -1,11 +1,12 @@
-package com.ReservationServer1.DAO;
+package com.ReservationServer1.service;
 
-import com.ReservationServer1.data.DTO.ReservationOrder.OrderDTO;
-import com.ReservationServer1.data.DTO.ReservationOrder.ReservationDTO;
-import com.ReservationServer1.data.Entity.ReservationAndOrder.StoreReservationEntity;
+import com.ReservationServer1.data.DTO.ROP.OrderDTO;
+import com.ReservationServer1.data.DTO.ROP.PayDTO;
+import com.ReservationServer1.data.DTO.ROP.ReservationDTO;
+import com.ReservationServer1.data.Entity.ROP.StoreReservationEntity;
 
-public interface StoreReservationOrderDAO {
-
+public interface StoreROPService {
+  
   String registerReservation(ReservationDTO reservationDTO, String userId);
   String updateReservation(ReservationDTO reservationDTO, String userId);
   StoreReservationEntity getReservation(String storeName, String userId);
@@ -15,4 +16,7 @@ public interface StoreReservationOrderDAO {
   String updateOrder(OrderDTO orderDTO, String userId);
   String deleteOrder(String storeName, String foodName, String userId);
   
+  String registerPay(PayDTO payDTO);
+  String deletePay(Long reservationId);
+
 }

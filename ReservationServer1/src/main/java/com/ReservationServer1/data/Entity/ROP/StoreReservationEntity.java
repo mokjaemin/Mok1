@@ -1,7 +1,7 @@
-package com.ReservationServer1.data.Entity.ReservationAndOrder;
+package com.ReservationServer1.data.Entity.ROP;
 
 import org.springframework.beans.BeanUtils;
-import com.ReservationServer1.data.DTO.ReservationOrder.ReservationDTO;
+import com.ReservationServer1.data.DTO.ROP.ReservationDTO;
 import com.ReservationServer1.data.Entity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

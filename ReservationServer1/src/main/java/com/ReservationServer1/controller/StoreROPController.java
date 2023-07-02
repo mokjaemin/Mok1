@@ -11,10 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.ReservationServer1.data.DTO.ReservationOrder.OrderDTO;
-import com.ReservationServer1.data.DTO.ReservationOrder.ReservationDTO;
-import com.ReservationServer1.data.Entity.ReservationAndOrder.StoreReservationEntity;
-import com.ReservationServer1.service.StoreReservationOrderService;
+import com.ReservationServer1.data.DTO.ROP.OrderDTO;
+import com.ReservationServer1.data.DTO.ROP.PayDTO;
+import com.ReservationServer1.data.DTO.ROP.ReservationDTO;
+import com.ReservationServer1.data.Entity.ROP.StoreReservationEntity;
+import com.ReservationServer1.service.StoreROPService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,15 +23,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
+
 @RestController("StoreReservationOrderController")
-@RequestMapping("/ro")
-public class StoreReservationOrderController {
+@RequestMapping("/rop")
+public class StoreROPController {
 
-  private final StoreReservationOrderService storeReservationOrderService;
+  private final StoreROPService storeROPService;
 
-  public StoreReservationOrderController(
-      StoreReservationOrderService storeReservationOrderService) {
-    this.storeReservationOrderService = storeReservationOrderService;
+  public StoreROPController(StoreROPService storeROPService) {
+    this.storeROPService = storeROPService;
   }
 
   @PostMapping("/reservation")
@@ -45,11 +46,11 @@ public class StoreReservationOrderController {
   public ResponseEntity<String> registerReservation(
       @Valid @RequestBody ReservationDTO reservationDTO, Authentication authentication) {
     return ResponseEntity.status(HttpStatus.OK).body(
-        storeReservationOrderService.registerReservation(reservationDTO, authentication.getName()));
+        storeROPService.registerReservation(reservationDTO, authentication.getName()));
   }
 
   @PutMapping("/reservation")
-  @Operation(summary = "가게 예약 등록 요청", description = "가게 예약 정보가 수정됩니다.",
+  @Operation(summary = "가게 예약 수정 요청", description = "가게 예약 정보가 수정됩니다.",
       tags = {"Store Reservation Order Controller"})
   @ApiResponses({
       @ApiResponse(responseCode = "200", description = "OK",
@@ -60,21 +61,21 @@ public class StoreReservationOrderController {
   public ResponseEntity<String> updateReservation(@Valid @RequestBody ReservationDTO reservationDTO,
       Authentication authentication) {
     return ResponseEntity.status(HttpStatus.OK).body(
-        storeReservationOrderService.updateReservation(reservationDTO, authentication.getName()));
+        storeROPService.updateReservation(reservationDTO, authentication.getName()));
   }
 
 
   @GetMapping("/reservation")
-  @Operation(summary = "가게 예약 정보 요청", description = "가게 예약 정보가 출력됩니다.",
+  @Operation(summary = "가게 예약 정보 출력 요청", description = "가게 예약 정보가 출력됩니다.",
       tags = {"Store Reservation Order Controller"})
   @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<StoreReservationEntity> getReservation(@Valid @RequestParam String storeName,
-      Authentication authentication) {
+  public ResponseEntity<StoreReservationEntity> getReservation(
+      @Valid @RequestParam String storeName, Authentication authentication) {
     return ResponseEntity.status(HttpStatus.OK)
-        .body(storeReservationOrderService.getReservation(storeName, authentication.getName()));
+        .body(storeROPService.getReservation(storeName, authentication.getName()));
   }
 
 
@@ -88,7 +89,7 @@ public class StoreReservationOrderController {
   public ResponseEntity<String> delelteReservation(@Valid @RequestParam String storeName,
       Authentication authentication) {
     return ResponseEntity.status(HttpStatus.OK)
-        .body(storeReservationOrderService.deleteReservation(storeName, authentication.getName()));
+        .body(storeROPService.deleteReservation(storeName, authentication.getName()));
   }
 
   @PostMapping("/order")
@@ -102,13 +103,13 @@ public class StoreReservationOrderController {
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
   public ResponseEntity<String> registerOrder(@Valid @RequestBody OrderDTO orderDTO,
       Authentication authentication) {
-    return ResponseEntity.status(HttpStatus.OK).body(
-        storeReservationOrderService.registerOrder(orderDTO, authentication.getName()));
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(storeROPService.registerOrder(orderDTO, authentication.getName()));
   }
-  
-  
+
+
   @PutMapping("/order")
-  @Operation(summary = "가게 주문 등록 요청", description = "가게 주문 정보가 수정됩니다.",
+  @Operation(summary = "가게 주문 수정 요청", description = "가게 주문 정보가 수정됩니다.",
       tags = {"Store Reservation Order Controller"})
   @ApiResponses({
       @ApiResponse(responseCode = "200", description = "OK",
@@ -118,11 +119,11 @@ public class StoreReservationOrderController {
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
   public ResponseEntity<String> updateOrder(@Valid @RequestBody OrderDTO orderDTO,
       Authentication authentication) {
-    return ResponseEntity.status(HttpStatus.OK).body(
-        storeReservationOrderService.updateOrder(orderDTO, authentication.getName()));
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(storeROPService.updateOrder(orderDTO, authentication.getName()));
   }
-  
-  
+
+
   @DeleteMapping("/order")
   @Operation(summary = "가게 주문 삭제 요청", description = "가게 주문 정보가 삭제됩니다.",
       tags = {"Store Reservation Order Controller"})
@@ -130,9 +131,44 @@ public class StoreReservationOrderController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> delelteReservation(@Valid @RequestParam String storeName, String foodName,
+  public ResponseEntity<String> delelteReservation(@Valid @RequestParam String storeName,
+      String foodName, Authentication authentication) {
+    return ResponseEntity.status(HttpStatus.OK).body(
+        storeROPService.deleteOrder(storeName, foodName, authentication.getName()));
+  }
+
+
+  @PostMapping("/pay")
+  @Operation(summary = "가게 결제 등록 요청", description = "가게 결제 정보가 등록됩니다.",
+      tags = {"Store Reservation Order Controller"})
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "OK",
+          content = @Content(schema = @Schema(implementation = PayDTO.class))),
+      @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+      @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
+  public ResponseEntity<String> registerPay(@Valid @RequestBody PayDTO payDTO,
       Authentication authentication) {
+    if (!authentication.getName().equals(payDTO.getStoreName())) {
+      return ResponseEntity.status(HttpStatus.OK).body("권한이 없습니다.");
+    }
     return ResponseEntity.status(HttpStatus.OK)
-        .body(storeReservationOrderService.deleteOrder(storeName, foodName, authentication.getName()));
+        .body(storeROPService.registerPay(payDTO));
+  }
+
+  @DeleteMapping("/pay")
+  @Operation(summary = "가게 결제 삭제 요청", description = "가게 결제 정보가 삭제됩니다.",
+      tags = {"Store Reservation Order Controller"})
+  @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
+      @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+      @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
+  public ResponseEntity<String> deleltePay(@Valid @RequestParam String storeName,
+      Long reservationId, Authentication authentication) {
+    if (!authentication.getName().equals(storeName)) {
+      return ResponseEntity.status(HttpStatus.OK).body("권한이 없습니다.");
+    }
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(storeROPService.deletePay(reservationId));
   }
 }
