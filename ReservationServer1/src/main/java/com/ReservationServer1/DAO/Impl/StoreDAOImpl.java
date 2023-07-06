@@ -1,49 +1,53 @@
 package com.ReservationServer1.DAO.Impl;
 
 import static com.ReservationServer1.data.Entity.store.QStoreEntity.storeEntity;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import com.ReservationServer1.DAO.StoreDAO;
-import com.ReservationServer1.DAO.DB.DBMS.store.StoreDB;
 import com.ReservationServer1.data.Entity.store.StoreEntity;
 import com.ReservationServer1.exception.MessageException;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 
 
 @Repository("StoreDAO")
 @Transactional
 public class StoreDAOImpl implements StoreDAO {
 
-  private final StoreDB storeDB;
   private final JPAQueryFactory queryFactory;
+  private final EntityManager entityManager;
 
-  public StoreDAOImpl(StoreDB storeDB, JPAQueryFactory queryFactory) {
-    this.storeDB = storeDB;
+  public StoreDAOImpl(JPAQueryFactory queryFactory, EntityManager entityManager) {
+    this.entityManager = entityManager;
     this.queryFactory = queryFactory;
   }
 
   @Override
   public String registerStore(StoreEntity storeEntity) {
-    storeDB.save(storeEntity);
+    entityManager.persist(storeEntity);
     return "success";
   }
 
   @Override
-  public List<String> getStoreList(String country, String city, String dong, String type, int page,
+  public HashMap<String, Integer> getStoreList(String country, String city, String dong, String type, int page,
       int size) {
-    List<String> store_name = queryFactory.select(storeEntity.storeName).from(storeEntity)
+    List<StoreEntity> storeInfo = queryFactory.select(storeEntity).from(storeEntity)
         .where(storeEntity.country.eq(country).and(storeEntity.city.eq(city))
             .and(storeEntity.dong.eq(dong)).and(storeEntity.type.eq(type)))
         .limit(size).offset(page * size).fetch();
-    return store_name.stream().distinct().sorted().collect(Collectors.toList());
+    HashMap<String, Integer> result = new HashMap<>();
+    for(StoreEntity info : storeInfo) {
+      result.put(info.getStoreName(), info.getStoreId());
+    }
+    return result;
   }
 
   @Override
-  public String loginStore(String storeName) {
+  public String loginStore(int storeId) {
     String ownerId = queryFactory.select(storeEntity.ownerId).from(storeEntity)
-        .where(storeEntity.storeName.eq(storeName)).fetchFirst();
+        .where(storeEntity.storeId.eq(storeId)).fetchFirst();
     if (ownerId == null) {
       throw new MessageException("존재하지 않는 가게입니다.");
     }

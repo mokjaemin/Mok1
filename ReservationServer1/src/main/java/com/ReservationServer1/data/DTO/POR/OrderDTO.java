@@ -1,5 +1,6 @@
-package com.ReservationServer1.data.DTO.ROP;
+package com.ReservationServer1.data.DTO.POR;
 
+import java.util.HashMap;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @Getter
 @Setter
 @ToString
@@ -17,19 +17,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class ReservationDTO {
-  
-  @NotNull
-  private String storeName;
-  
-  @NotNull
-  private String date;
-  
-  @NotNull
-  private String time;
-  
-  @NotNull
-  private String storeTable;
-  
+public class OrderDTO {
 
+  @NotNull
+  private int storeId;
+  
+  @NotNull
+  private HashMap<String, Integer> orderInfo;
+  
 }

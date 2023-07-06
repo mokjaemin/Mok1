@@ -1,14 +1,12 @@
 package com.ReservationServer1.service.Impl;
 
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.ReservationServer1.DAO.StoreDAO;
-import com.ReservationServer1.DAO.DB.Cache.StoreListCache;
+import com.ReservationServer1.DAO.Cache.StoreListCache;
 import com.ReservationServer1.data.DTO.store.StoreDTO;
 import com.ReservationServer1.data.DTO.store.cache.StoreListDTO;
 import com.ReservationServer1.data.Entity.store.StoreEntity;
@@ -37,12 +35,12 @@ public class StoreServiceImpl implements StoreService {
   }
 
   @Override
-  public List<String> getStoreList(String country, String city, String dong, String type, int page,
+  public HashMap<String, Integer> getStoreList(String country, String city, String dong, String type, int page,
       int size) {
     String address = country + city + dong + type + page + size;
     Optional<StoreListDTO> storeList = storeListCache.findById(address);
     if (storeList.isEmpty() == true) {
-      List<String> new_storeList = storeDAO.getStoreList(country, city, dong, type, page, size);
+      HashMap<String, Integer> new_storeList = storeDAO.getStoreList(country, city, dong, type, page, size);
       StoreListDTO storeListDTO = new StoreListDTO(address, new_storeList);
       storeListCache.save(storeListDTO);
       return new_storeList;
@@ -51,9 +49,9 @@ public class StoreServiceImpl implements StoreService {
   }
 
   @Override
-  public String loginStore(String storeName, String userId) {
-    if (storeDAO.loginStore(storeName).equals(userId)) {
-      return JWTutil.createJWT(storeName, "OWNER", secretKey, expiredLoginMs);
+  public String loginStore(int storeId, String userId) {
+    if (storeDAO.loginStore(storeId).equals(userId)) {
+      return JWTutil.createJWT(String.valueOf(storeId), "OWNER", secretKey, expiredLoginMs);
     }
     return "user";
   }

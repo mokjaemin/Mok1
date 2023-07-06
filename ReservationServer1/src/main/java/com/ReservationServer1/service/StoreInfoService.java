@@ -9,21 +9,38 @@ import com.ReservationServer1.data.DTO.store.StoreTimeInfoDTO;
 
 public interface StoreInfoService {
 
+  // DAY OFF
   String registerDayOff(StoreRestDayDTO restDayDTO);
-  List<String> getDayOff(String storeName);
+
+  List<String> getDayOff(int storeId);
+
   String deleteDayOff(StoreRestDayDTO restDayDTO);
-  
+
+
+  // TIME INFO
   String registerTimeInfo(StoreTimeInfoDTO timeInfoDTO);
-  StoreTimeInfoDTO getTimeInfo(String storeName);
+
+  StoreTimeInfoDTO getTimeInfo(int storeId);
+
   String modTimeInfo(StoreTimeInfoDTO timeInfoDTO);
-  String deleteTimeInfo(String storeName);
-  
+
+  String deleteTimeInfo(int storeId);
+
+
+  // TABLE INFO
   String registerTableInfo(StoreTableInfoDTO storeTableInfoDTO);
+
   String modTableInfo(StoreTableInfoDTO storeTableInfoDTO);
-  String deleteTableInfo(String storeName);
+
+  String deleteTableInfo(int storeId);
   
-  String registerFoodsInfo(StoreFoodsInfoDTO storeFoodsInfoDTO);
-  List<StoreFoodsInfoResultDTO> getFoodsInfo(String storeName);
-  String modFoodsInfo(StoreFoodsInfoDTO storeFoodsInfoDTO);
-  String deleteFoodsInfo(String storeName, String foodName);
+  
+  // FOODS INFO
+   String registerFoodsInfo(StoreFoodsInfoDTO storeFoodsInfoDTO);
+
+   List<StoreFoodsInfoResultDTO> getFoodsInfo(int storeId);
+
+   String modFoodsInfo(StoreFoodsInfoDTO storeFoodsInfoDTO);
+
+   String deleteFoodsInfo(int storeId, String foodName);
 }

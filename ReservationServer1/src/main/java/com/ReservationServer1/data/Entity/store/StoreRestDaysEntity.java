@@ -21,19 +21,21 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-@Table(name = "StoreRestDays", indexes = {@Index(name = "idx_storeName", columnList = "storeName")})
+@Table(name = "StoreRestDays")
+//, indexes = {@Index(name = "idx_storeName", columnList = "storeName")})
 public class StoreRestDaysEntity extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long daysId;
-  private String storeName;
+  
+  private int storeId;
   
   @OneToMany(mappedBy = "storeRestDaysEntity", fetch = FetchType.LAZY)
   private Set<StoreRestDaysMapEntity> childSet;
 
   
-  public StoreRestDaysEntity(String storeName) {
-    this.storeName = storeName;
+  public StoreRestDaysEntity(int storeId) {
+    this.storeId = storeId;
   }
 }

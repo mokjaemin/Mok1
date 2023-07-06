@@ -31,7 +31,7 @@ public class StoreFoodsInfoEntity extends BaseEntity{
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long tableId;
   
-  private String storeName;
+  private int storeId;
   
   private String foodName;
 
@@ -42,7 +42,7 @@ public class StoreFoodsInfoEntity extends BaseEntity{
   private String imageURL;
   
   public StoreFoodsInfoResultDTO toStoreFoodsInfoResultDTO() {
-    return StoreFoodsInfoResultDTO.builder().storeName(this.storeName)
+    return StoreFoodsInfoResultDTO.builder().storeId(this.storeId)
         .foodName(this.foodName).foodDescription(this.foodDescription)
         .foodPrice(this.foodPrice).build();
   }

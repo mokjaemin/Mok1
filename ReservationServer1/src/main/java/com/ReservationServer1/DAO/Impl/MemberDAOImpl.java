@@ -5,12 +5,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import com.ReservationServer1.DAO.MemberDAO;
-import com.ReservationServer1.DAO.DB.DBMS.member.MemberDB;
 import com.ReservationServer1.data.DTO.member.LoginDTO;
 import com.ReservationServer1.data.DTO.member.ModifyMemberDTO;
 import com.ReservationServer1.data.Entity.member.MemberEntity;
 import com.ReservationServer1.exception.MessageException;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 
 
 
@@ -19,26 +19,28 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 public class MemberDAOImpl implements MemberDAO {
 
   private final BCryptPasswordEncoder passwordEncoder;
-  private final MemberDB memberDB;
   private final JPAQueryFactory queryFactory;
+  private final EntityManager entityManager;
 
-  public MemberDAOImpl(MemberDB memberDB, BCryptPasswordEncoder passwordEncoder,
-      JPAQueryFactory queryFactory) {
+  public MemberDAOImpl(BCryptPasswordEncoder passwordEncoder, JPAQueryFactory queryFactory,
+      EntityManager entityManager) {
     this.passwordEncoder = passwordEncoder;
-    this.memberDB = memberDB;
     this.queryFactory = queryFactory;
+    this.entityManager = entityManager;
   }
 
 
   // 회원등록
   @Override
-  public String registerMember(MemberEntity memberEntity) {
-    String user_id = memberEntity.getUserId();
-    if (memberDB.existsByUserId(user_id)) {
+  public String registerMember(MemberEntity entity) {
+    String user_id = entity.getUserId();
+    Integer exist_id = queryFactory.selectOne().from(memberEntity)
+        .where(memberEntity.userId.eq(user_id)).fetchFirst();
+    if (exist_id != null) {
       throw new MessageException("이미 존재하는 ID입니다: " + user_id);
     }
-    memberEntity.setUserPwd(passwordEncoder.encode(memberEntity.getUserPwd()));
-    memberDB.save(memberEntity);
+    entity.setUserPwd(passwordEncoder.encode(entity.getUserPwd()));
+    entityManager.persist(entity);
     return "success";
   }
 

@@ -1,9 +1,8 @@
 package com.ReservationServer1.data.DTO.store.cache;
 
-import java.util.List;
+import java.util.HashMap;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
-import com.ReservationServer1.data.DTO.store.StoreDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -25,7 +24,7 @@ public class StoreListDTO {
   @Id
   private String Address;
 
-  private List<String> storeList;
+  private HashMap<String, Integer> storeList;
 
 }
 

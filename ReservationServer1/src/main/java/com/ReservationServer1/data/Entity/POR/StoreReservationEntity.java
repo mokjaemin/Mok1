@@ -1,7 +1,7 @@
-package com.ReservationServer1.data.Entity.ROP;
+package com.ReservationServer1.data.Entity.POR;
 
 import org.springframework.beans.BeanUtils;
-import com.ReservationServer1.data.DTO.ROP.ReservationDTO;
+import com.ReservationServer1.data.DTO.POR.ReservationDTO;
 import com.ReservationServer1.data.Entity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -31,7 +31,7 @@ public class StoreReservationEntity extends BaseEntity{
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long reservationId;
   private String userId;
-  private String storeName;
+  private int storeId;
   private String date;
   private String time;
   private String storeTable;

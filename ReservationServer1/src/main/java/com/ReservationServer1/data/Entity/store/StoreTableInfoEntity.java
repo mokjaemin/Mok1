@@ -28,7 +28,7 @@ public class StoreTableInfoEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long tableId;
   
-  private String storeName;
+  private int storeId;
   
   private int count;
   

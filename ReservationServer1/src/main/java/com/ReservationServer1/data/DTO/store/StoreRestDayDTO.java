@@ -22,7 +22,7 @@ public class StoreRestDayDTO {
 
 
   @NotNull
-  private String storeName;
+  private int storeId;
 
   @NotNull
   private Set<String> date;
@@ -31,7 +31,7 @@ public class StoreRestDayDTO {
   public static StoreRestDayDTO sample() {
     Set<String> sampleDate = new HashSet<>();
     sampleDate.add("date1");
-    return new StoreRestDayDTO("sampleName", sampleDate);
+    return new StoreRestDayDTO(1, sampleDate);
   }
 }
 

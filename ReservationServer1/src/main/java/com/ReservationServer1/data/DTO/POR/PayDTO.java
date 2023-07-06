@@ -1,4 +1,4 @@
-package com.ReservationServer1.data.DTO.ROP;
+package com.ReservationServer1.data.DTO.POR;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -22,7 +22,7 @@ public class PayDTO {
   private Long reservationId;
   
   @NotNull
-  private String storeName;
+  private int storeId;
   
   @NotNull
   private int amount;

@@ -27,13 +27,13 @@ public class StoreTimeInfoDTO {
   @NotNull
   private String intervalTime;
   @NotNull
-  private String storeName;
+  private int storeId;
 
   public static StoreTimeInfoDTO sample() {
     List<String> breakTimeSample = new ArrayList<>();
     breakTimeSample.add("breakTime");
     StoreTimeInfoDTO sample = StoreTimeInfoDTO.builder().startTime("startTime").endTime("endTime")
-        .breakTime(breakTimeSample).intervalTime("intervalTime").storeName("storeName").build();
+        .breakTime(breakTimeSample).intervalTime("intervalTime").storeId(1).build();
     return sample;
   }
 

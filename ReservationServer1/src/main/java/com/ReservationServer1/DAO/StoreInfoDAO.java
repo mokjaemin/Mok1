@@ -9,20 +9,20 @@ import com.ReservationServer1.data.Entity.store.StoreTableInfoEntity;
 public interface StoreInfoDAO {
 
   String registerDayOff(StoreRestDayDTO restDayDTO);
-  List<String> getDayOff(String storeName);
+  List<String> getDayOff(int storeId);
   String deleteDayOff(StoreRestDayDTO restDayDTO);
   
   String registerTimeInfo(StoreTimeInfoDTO storeTimeInfoDTO);
-  StoreTimeInfoDTO getTimeInfo(String storeName);
+  StoreTimeInfoDTO getTimeInfo(int storeId);
   String modTimeInfo(StoreTimeInfoDTO storeTimeInfoDTO);
-  String deleteTimeInfo(String storeName);
-  
+  String deleteTimeInfo(int storeId);
+
   String registerTableInfo(StoreTableInfoEntity storeTableInfoEntity);
   String modTableInfo(StoreTableInfoEntity storeTableInfoEntity);
-  String deleteTableInfo(String storeName);
+  String deleteTableInfo(int storeId);
   
   String registerFoodsInfo(StoreFoodsInfoEntity storeFoodsInfoEntity);
-  List<StoreFoodsInfoEntity> getFoodsInfo(String storeName);
+  List<StoreFoodsInfoEntity> getFoodsInfo(int storeId);
   String modFoodsInfo(StoreFoodsInfoEntity storeFoodsInfoEntity);
-  String deleteFoodsInfo(String storeName, String foodName);
+  String deleteFoodsInfo(int storeId, String foodName);
 }

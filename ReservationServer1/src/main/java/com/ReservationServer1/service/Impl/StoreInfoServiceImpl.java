@@ -38,10 +38,11 @@ public class StoreInfoServiceImpl implements StoreInfoService {
   }
 
   @Override
-  public List<String> getDayOff(String storeName) {
-    return storeInfoDAO.getDayOff(storeName);
+  public List<String> getDayOff(int storeId) {
+    return storeInfoDAO.getDayOff(storeId);
   }
 
+  //
   @Override
   public String deleteDayOff(StoreRestDayDTO restDayDTO) {
     return storeInfoDAO.deleteDayOff(restDayDTO);
@@ -53,8 +54,8 @@ public class StoreInfoServiceImpl implements StoreInfoService {
   }
 
   @Override
-  public StoreTimeInfoDTO getTimeInfo(String storeName) {
-    return storeInfoDAO.getTimeInfo(storeName);
+  public StoreTimeInfoDTO getTimeInfo(int storeId) {
+    return storeInfoDAO.getTimeInfo(storeId);
   }
 
   @Override
@@ -63,9 +64,10 @@ public class StoreInfoServiceImpl implements StoreInfoService {
   }
 
   @Override
-  public String deleteTimeInfo(String storeName) {
-    return storeInfoDAO.deleteTimeInfo(storeName);
+  public String deleteTimeInfo(int storeId) {
+    return storeInfoDAO.deleteTimeInfo(storeId);
   }
+
 
   @Override
   public String registerTableInfo(StoreTableInfoDTO storeTableInfoDTO) {
@@ -74,12 +76,12 @@ public class StoreInfoServiceImpl implements StoreInfoService {
       if (!uploadDir.exists()) {
         uploadDir.mkdirs();
       }
-      String filename = storeTableInfoDTO.getStoreName();
-      Path filePath = Path.of(DIR_TABLE, filename + ".png");
+      int storeId = storeTableInfoDTO.getStoreId();
+      Path filePath = Path.of(DIR_TABLE, String.valueOf(storeId) + ".png");
       Files.copy(storeTableInfoDTO.getTableImage().getInputStream(), filePath,
           StandardCopyOption.REPLACE_EXISTING);
       StoreTableInfoEntity storeTableInfoEntity =
-          StoreTableInfoEntity.builder().storeName(storeTableInfoDTO.getStoreName())
+          StoreTableInfoEntity.builder().storeId(storeTableInfoDTO.getStoreId())
               .count(storeTableInfoDTO.getCount()).imageURL(filePath.toString()).build();
       return storeInfoDAO.registerTableInfo(storeTableInfoEntity);
     } catch (IOException e) {
@@ -94,12 +96,12 @@ public class StoreInfoServiceImpl implements StoreInfoService {
       if (!uploadDir.exists()) {
         uploadDir.mkdirs();
       }
-      String filename = storeTableInfoDTO.getStoreName();
-      Path filePath = Path.of(DIR_TABLE, filename + ".png");
+      int storeId = storeTableInfoDTO.getStoreId();
+      Path filePath = Path.of(DIR_TABLE, String.valueOf(storeId) + ".png");
       Files.copy(storeTableInfoDTO.getTableImage().getInputStream(), filePath,
           StandardCopyOption.REPLACE_EXISTING);
       StoreTableInfoEntity storeTableInfoEntity =
-          StoreTableInfoEntity.builder().storeName(storeTableInfoDTO.getStoreName())
+          StoreTableInfoEntity.builder().storeId(storeTableInfoDTO.getStoreId())
               .count(storeTableInfoDTO.getCount()).imageURL(filePath.toString()).build();
       return storeInfoDAO.modTableInfo(storeTableInfoEntity);
     } catch (IOException e) {
@@ -107,16 +109,18 @@ public class StoreInfoServiceImpl implements StoreInfoService {
     }
   }
 
+
   @Override
-  public String deleteTableInfo(String storeName) {
+  public String deleteTableInfo(int storeId) {
     try {
-      Path filePath = Path.of(DIR_TABLE, storeName + ".png");
+      Path filePath = Path.of(DIR_TABLE, String.valueOf(storeId) + ".png");
       Files.delete(filePath);
-      return storeInfoDAO.deleteTableInfo(storeName);
+      return storeInfoDAO.deleteTableInfo(storeId);
     } catch (IOException e) {
       return "File Delete Failed";
     }
   }
+
 
   @Override
   public String registerFoodsInfo(StoreFoodsInfoDTO storeFoodsInfoDTO) {
@@ -125,13 +129,13 @@ public class StoreInfoServiceImpl implements StoreInfoService {
       if (!uploadDir.exists()) {
         uploadDir.mkdirs();
       }
-      String filename = storeFoodsInfoDTO.getStoreName();
+      int storeId = storeFoodsInfoDTO.getStoreId();
       String foodName = storeFoodsInfoDTO.getFoodName();
-      Path filePath = Path.of(DIR_FOODS, filename + "_" + foodName + ".png");
+      Path filePath = Path.of(DIR_FOODS, String.valueOf(storeId) + "_" + foodName + ".png");
       Files.copy(storeFoodsInfoDTO.getFoodImage().getInputStream(), filePath,
           StandardCopyOption.REPLACE_EXISTING);
       StoreFoodsInfoEntity storeFoodsInfoEntity = StoreFoodsInfoEntity.builder()
-          .storeName(storeFoodsInfoDTO.getStoreName()).foodName(storeFoodsInfoDTO.getFoodName())
+          .storeId(storeFoodsInfoDTO.getStoreId()).foodName(storeFoodsInfoDTO.getFoodName())
           .foodDescription(storeFoodsInfoDTO.getFoodDescription()).imageURL(filePath.toString())
           .foodPrice(storeFoodsInfoDTO.getFoodPrice()).build();
       return storeInfoDAO.registerFoodsInfo(storeFoodsInfoEntity);
@@ -141,10 +145,10 @@ public class StoreInfoServiceImpl implements StoreInfoService {
   }
 
   @Override
-  public List<StoreFoodsInfoResultDTO> getFoodsInfo(String storeName) {
+  public List<StoreFoodsInfoResultDTO> getFoodsInfo(int storeId) {
     try {
       List<StoreFoodsInfoResultDTO> result = new ArrayList<>();
-      List<StoreFoodsInfoEntity> storeFoodsInfoEntity = storeInfoDAO.getFoodsInfo(storeName);
+      List<StoreFoodsInfoEntity> storeFoodsInfoEntity = storeInfoDAO.getFoodsInfo(storeId);
       for (StoreFoodsInfoEntity entity : storeFoodsInfoEntity) {
         Path filePath = Path.of(entity.getImageURL());
         byte[] imageBytes = Files.readAllBytes(filePath);
@@ -166,13 +170,13 @@ public class StoreInfoServiceImpl implements StoreInfoService {
       if (!uploadDir.exists()) {
         uploadDir.mkdirs();
       }
-      String filename = storeFoodsInfoDTO.getStoreName();
+      int storeId = storeFoodsInfoDTO.getStoreId();
       String foodName = storeFoodsInfoDTO.getFoodName();
-      Path filePath = Path.of(DIR_FOODS, filename + "_" + foodName + ".png");
+      Path filePath = Path.of(DIR_FOODS, String.valueOf(storeId) + "_" + foodName + ".png");
       Files.copy(storeFoodsInfoDTO.getFoodImage().getInputStream(), filePath,
           StandardCopyOption.REPLACE_EXISTING);
       StoreFoodsInfoEntity storeFoodsInfoEntity = StoreFoodsInfoEntity.builder()
-          .storeName(storeFoodsInfoDTO.getStoreName()).foodName(storeFoodsInfoDTO.getFoodName())
+          .storeId(storeFoodsInfoDTO.getStoreId()).foodName(storeFoodsInfoDTO.getFoodName())
           .foodDescription(storeFoodsInfoDTO.getFoodDescription()).imageURL(filePath.toString())
           .foodPrice(storeFoodsInfoDTO.getFoodPrice()).build();
       return storeInfoDAO.modFoodsInfo(storeFoodsInfoEntity);
@@ -182,11 +186,11 @@ public class StoreInfoServiceImpl implements StoreInfoService {
   }
 
   @Override
-  public String deleteFoodsInfo(String storeName, String foodName) {
+  public String deleteFoodsInfo(int storeId, String foodName) {
     try {
-      Path filePath = Path.of(DIR_FOODS, storeName + "_" + foodName + ".png");
+      Path filePath = Path.of(DIR_FOODS, String.valueOf(storeId) + "_" + foodName + ".png");
       Files.delete(filePath);
-      return storeInfoDAO.deleteFoodsInfo(storeName, foodName);
+      return storeInfoDAO.deleteFoodsInfo(storeId, foodName);
     } catch (IOException e) {
       return "File Delete Failed";
     }

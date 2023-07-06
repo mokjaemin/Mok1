@@ -19,7 +19,7 @@ import lombok.ToString;
 public class StoreFoodsInfoResultDTO {
   
   @NotNull
-  private String storeName;
+  private int storeId;
 
   @NotNull
   private String foodName;

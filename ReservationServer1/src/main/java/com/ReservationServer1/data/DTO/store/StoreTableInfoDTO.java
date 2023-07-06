@@ -20,7 +20,7 @@ import lombok.ToString;
 public class StoreTableInfoDTO {
 
   @NotNull
-  private String storeName;
+  private int storeId;
   
   @NotNull
   private int count;

@@ -1,12 +1,9 @@
-package com.ReservationServer1.data.Entity.store;
+package com.ReservationServer1.data.Entity.board;
 
-import java.util.Set;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @Entity
 @Getter
 @Setter
@@ -23,19 +19,25 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "StoreTimeInfo")
-public class StoreTimeInfoEntity {
+@Table(name = "StoreBoard")
+public class StoreBoardEntity {
   
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long timesId;
-  private String startTime;
-  private String endTime;
-  private String intervalTime;
+  private Long boardId;
+  
   private int storeId;
   
-  @OneToMany(mappedBy = "storeTimeInfoEntity", fetch = FetchType.LAZY)
-  private Set<StoreTimeInfoMapEntity> breakTime;
-    
+  private String userId;
+  
+  private String title;
+  
+  private String content;
+  
+  private String comment;
+  
+  private String imageURL;
+  
+  private double rating;
 
 }

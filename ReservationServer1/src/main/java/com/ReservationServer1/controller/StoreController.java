@@ -1,8 +1,6 @@
 package com.ReservationServer1.controller;
 
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.HashMap;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -53,7 +51,7 @@ public class StoreController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<List<String>> getStoreList(@RequestParam String country, String city,
+  public ResponseEntity<HashMap<String, Integer>> getStoreList(@RequestParam String country, String city,
       String dong, String type, int page, int size) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(storeService.getStoreList(country, city, dong, type, page, size));
@@ -66,9 +64,9 @@ public class StoreController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> loginStore(@RequestParam String storeName,
+  public ResponseEntity<String> loginStore(@RequestParam int storeId,
       Authentication authentication) {
     return ResponseEntity.status(HttpStatus.OK)
-        .body(storeService.loginStore(storeName, authentication.getName()));
+        .body(storeService.loginStore(storeId, authentication.getName()));
   }
 }

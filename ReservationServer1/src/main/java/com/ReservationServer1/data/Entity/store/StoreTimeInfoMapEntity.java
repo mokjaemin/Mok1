@@ -34,7 +34,7 @@ public class StoreTimeInfoMapEntity {
   private Long timeId;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "store_name", referencedColumnName = "storeName")
+  @JoinColumn(name = "storeId", referencedColumnName = "storeId")
   @JsonBackReference
   private StoreTimeInfoEntity storeTimeInfoEntity;
   

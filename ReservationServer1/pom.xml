@@ -18,7 +18,7 @@
 	<description>ReservationServer1</description>
 	<!-- Properties -->
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<!-- Dependancies -->
 	<dependencies>

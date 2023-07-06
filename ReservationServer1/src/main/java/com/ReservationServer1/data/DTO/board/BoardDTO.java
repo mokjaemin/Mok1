@@ -1,4 +1,4 @@
-package com.ReservationServer1.data.DTO.store;
+package com.ReservationServer1.data.DTO.board;
 
 import org.springframework.web.multipart.MultipartFile;
 import jakarta.validation.constraints.NotNull;
@@ -17,19 +17,20 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class StoreFoodsInfoDTO {
+public class BoardDTO {
 
   @NotNull
   private int storeId;
-  
+
   @NotNull
-  private String foodName;
-  
+  private String title;
+
   @NotNull
-  private String foodDescription;
-  
+  private String content;
+
   @NotNull
-  private int foodPrice;
+  private double rating;
   
   private MultipartFile foodImage;
+
 }

@@ -1,4 +1,4 @@
-package com.ReservationServer1.data.Entity.ROP;
+package com.ReservationServer1.data.Entity.POR;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
