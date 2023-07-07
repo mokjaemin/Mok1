@@ -3,6 +3,7 @@ package com.ReservationServer1.DAO.Impl;
 
 import static com.ReservationServer1.data.Entity.POR.QStoreReservationEntity.storeReservationEntity;
 import static com.ReservationServer1.data.Entity.board.QStoreBoardEntity.storeBoardEntity;
+import java.util.List;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import com.ReservationServer1.DAO.StoreBoardDAO;
@@ -45,7 +46,7 @@ public class StoreBoardDAOImpl implements StoreBoardDAO {
   public String updateBoard(Long boardId, BoardDTO boardDTO, String userId) {
     StoreBoardEntity entity = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
         .where(storeBoardEntity.boardId.eq(boardId)).fetchFirst();
-    if(!userId.equals(entity.getUserId())) {
+    if (!userId.equals(entity.getUserId())) {
       throw new MessageException("권한이 없습니다.: " + userId);
     }
     entity.setTitle(boardDTO.getTitle());
@@ -58,12 +59,59 @@ public class StoreBoardDAOImpl implements StoreBoardDAO {
   public Long deleteBoard(Long boardId, String userId) {
     StoreBoardEntity entity = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
         .where(storeBoardEntity.boardId.eq(boardId)).fetchFirst();
-    if(!entity.getUserId().equals(userId)) {
+    if (!entity.getUserId().equals(userId)) {
       throw new MessageException("권한이 없습니다.: " + userId);
     }
     Long board_id = entity.getBoardId();
     queryFactory.delete(storeBoardEntity).where(storeBoardEntity.boardId.eq(boardId)).execute();
     return board_id;
+  }
+
+  @Override
+  public List<StoreBoardEntity> getBoard(int storeId) {
+    List<StoreBoardEntity> result = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
+        .where(storeBoardEntity.storeId.eq(storeId)).fetch();
+    return result;
+  }
+
+  @Override
+  public List<StoreBoardEntity> getBoardById(String userId) {
+    List<StoreBoardEntity> result = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
+        .where(storeBoardEntity.userId.eq(userId)).fetch();
+    return result;
+  }
+
+  @Override
+  public String registerBoardComment(Long boardId, String comment, String storeId) {
+    StoreBoardEntity entity = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
+        .where(storeBoardEntity.boardId.eq(boardId)).fetchFirst();
+    if(!String.valueOf(entity.getStoreId()).equals(storeId)) {
+      throw new MessageException("권한이 없습니다.: " + storeId);
+    }
+    entity.setComment(comment);
+    return "success";
+  }
+
+  @Override
+  public String updateBoardComment(Long boardId, String comment, String storeId) {
+    StoreBoardEntity entity = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
+        .where(storeBoardEntity.boardId.eq(boardId)).fetchFirst();
+    if(!String.valueOf(entity.getStoreId()).equals(storeId)) {
+      throw new MessageException("권한이 없습니다.: " + storeId);
+    }
+    entity.setComment(comment);
+    return "success";
+  }
+
+  @Override
+  public String deleteBoardComment(Long boardId, String storeId) {
+    StoreBoardEntity entity = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
+        .where(storeBoardEntity.boardId.eq(boardId)).fetchFirst();
+    if(!String.valueOf(entity.getStoreId()).equals(storeId)) {
+      throw new MessageException("권한이 없습니다.: " + storeId);
+    }
+    entity.setComment(null);
+    return "success";
   }
 
 }

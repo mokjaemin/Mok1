@@ -87,6 +87,11 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.POST, "/board").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.PUT, "/board").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.DELETE, "/board").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.GET, "/board").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.GET, "/board/user").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.POST, "/board/comment").hasAuthority("ROLE_OWNER")
+        .requestMatchers(HttpMethod.PUT, "/board/comment").hasAuthority("ROLE_OWNER")
+        .requestMatchers(HttpMethod.DELETE, "/board/comment").hasAuthority("ROLE_OWNER")
 
         .and()
         .addFilterBefore(new JwtFilter(secretKey), UsernamePasswordAuthenticationFilter.class);

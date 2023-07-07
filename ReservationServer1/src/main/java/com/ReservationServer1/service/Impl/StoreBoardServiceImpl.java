@@ -5,16 +5,21 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import com.ReservationServer1.DAO.StoreBoardDAO;
 import com.ReservationServer1.data.DTO.board.BoardDTO;
+import com.ReservationServer1.data.DTO.board.BoardResultDTO;
+import com.ReservationServer1.data.Entity.board.StoreBoardEntity;
 import com.ReservationServer1.service.StoreBoardService;
 
 @Service
 public class StoreBoardServiceImpl implements StoreBoardService {
 
 
-  private static final String DIR_BOARD = "/Users/mokjaemin/Desktop/Mok1/storeBoard";
+  private static final String DIR_BOARD = "/Users/mokjaemin/Desktop/Mok1/storeBoard/";
   private final StoreBoardDAO storeBoardDAO;
 
   public StoreBoardServiceImpl(StoreBoardDAO storeBoardDAO) {
@@ -67,4 +72,60 @@ public class StoreBoardServiceImpl implements StoreBoardService {
     }
   }
 
+  @Override
+  public List<BoardResultDTO> getBoard(int storeId) {
+    try {
+      List<StoreBoardEntity> result = storeBoardDAO.getBoard(storeId);
+      List<BoardResultDTO> answer = new ArrayList<>();
+      for (StoreBoardEntity now : result) {
+        BoardResultDTO dto = BoardResultDTO.builder().boardId(now.getBoardId()).storeId(storeId)
+            .userId(now.getUserId()).title(now.getTitle()).content(now.getContent())
+            .comment(now.getComment()).rating(now.getRating()).build();
+        Path filePath = Path.of(now.getImageURL());
+        byte[] imageBytes = Files.readAllBytes(filePath);
+        String encoded_image = Base64.getEncoder().encodeToString(imageBytes);
+        dto.setFoodImage(encoded_image);
+        answer.add(dto);
+      }
+      return answer;
+    } catch (IOException e) {
+      return null;
+    }
+  }
+
+  @Override
+  public List<BoardResultDTO> getBoardByUser(String userId) {
+    try {
+      List<StoreBoardEntity> result = storeBoardDAO.getBoardById(userId);
+      List<BoardResultDTO> answer = new ArrayList<>();
+      for (StoreBoardEntity now : result) {
+        BoardResultDTO dto = BoardResultDTO.builder().boardId(now.getBoardId())
+            .storeId(now.getStoreId()).userId(userId).title(now.getTitle())
+            .content(now.getContent()).comment(now.getComment()).rating(now.getRating()).build();
+        Path filePath = Path.of(now.getImageURL());
+        byte[] imageBytes = Files.readAllBytes(filePath);
+        String encoded_image = Base64.getEncoder().encodeToString(imageBytes);
+        dto.setFoodImage(encoded_image);
+        answer.add(dto);
+      }
+      return answer;
+    } catch (IOException e) {
+      return null;
+    }
+  }
+
+  @Override
+  public String registerBoardComment(Long boardId, String comment, String storeId) {
+    return storeBoardDAO.registerBoardComment(boardId, comment, storeId);
+  }
+
+  @Override
+  public String updateBoardComment(Long boardId, String comment, String storeId) {
+    return storeBoardDAO.updateBoardComment(boardId, comment, storeId);
+  }
+
+  @Override
+  public String deleteBoardComment(Long boardId, String storeId) {
+    return storeBoardDAO.deleteBoardComment(boardId, storeId);
+  }
 }
