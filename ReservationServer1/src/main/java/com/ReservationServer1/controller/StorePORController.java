@@ -28,9 +28,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
 
-@RestController("StoreReservationOrderController")
+@RestController("StoreReservationOrderPaymentController")
 @RequestMapping("/por")
 public class StorePORController {
+  
   private final StorePORService storePORService;
 
   public StorePORController(StorePORService storePORService) {

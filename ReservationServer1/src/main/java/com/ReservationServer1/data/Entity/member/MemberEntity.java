@@ -7,6 +7,7 @@ import com.ReservationServer1.data.DTO.member.MemberDTO;
 import com.ReservationServer1.data.Entity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +25,9 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Member")
+@Table(name = "Member", indexes = {@Index(name = "idx_email", columnList = "userEmail")})
+//, indexes = {@Index(name = "idx_city", columnList = "city"),
+//    @Index(name = "idx_dong", columnList = "dong")}
 @EqualsAndHashCode(callSuper = false)
 // @EntityListeners(CustomListener.class)
 public class MemberEntity extends BaseEntity {

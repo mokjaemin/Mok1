@@ -6,13 +6,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import com.ReservationServer1.exception.MessageException;
 import lombok.RequiredArgsConstructor;
 
 
@@ -28,13 +28,14 @@ public class WebSecurityConfig {
 
 
   @Bean
-  protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.httpBasic().disable().cors().and()
-        .csrf().disable().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and().authorizeHttpRequests()
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http.httpBasic().disable().csrf().disable().cors().and().authorizeHttpRequests()
         // No Security
-        .requestMatchers("/member/login", "/member", "/member/auth/pwd", "/swagger-ui/**", "/v3/api-docs/**")
+        .requestMatchers("/member/login", "/member", "/member/auth/pwd", "/swagger-ui/**",
+            "/v3/api-docs/**")
         .permitAll()
+        // test
+        .requestMatchers(HttpMethod.GET, "/member").permitAll()
         // member
         .requestMatchers(HttpMethod.PUT, "/member/info").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.DELETE, "/member").hasAnyAuthority("ROLE_USER")
@@ -93,7 +94,7 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.PUT, "/board/comment").hasAuthority("ROLE_OWNER")
         .requestMatchers(HttpMethod.DELETE, "/board/comment").hasAuthority("ROLE_OWNER")
 
-        .and()
+        .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
         .addFilterBefore(new JwtFilter(secretKey), UsernamePasswordAuthenticationFilter.class);
     return http.build();
   }

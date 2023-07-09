@@ -28,8 +28,8 @@ public class StoreInfoServiceImpl implements StoreInfoService {
   private static final String DIR_FOODS = "/Users/mokjaemin/Desktop/Mok1/storeFoods";
   private final StoreInfoDAO storeInfoDAO;
 
-  public StoreInfoServiceImpl(StoreInfoDAO ownerDAO) {
-    this.storeInfoDAO = ownerDAO;
+  public StoreInfoServiceImpl(StoreInfoDAO storeInfoDAO) {
+    this.storeInfoDAO = storeInfoDAO;
   }
 
   @Override

@@ -64,6 +64,9 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
         queryFactory.selectDistinct(storeRestDaysMapEntity.date).from(storeRestDaysMapEntity)
             .leftJoin(storeRestDaysMapEntity.storeRestDaysEntity, storeRestDaysEntity)
             .where(storeRestDaysEntity.storeId.eq(storeId)).fetch();
+    if(resultList == null) {
+      throw new MessageException("정보가 등록되지 않았습니다.");
+    }
     return resultList.stream().sorted().collect(Collectors.toList());
   }
 
@@ -73,7 +76,6 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
     int storeId = restDayDTO.getStoreId();
     Set<String> date = restDayDTO.getDate();
     for (String day : date) {
-
       Long days_id = queryFactory.select(storeRestDaysEntity.daysId).from(storeRestDaysEntity)
           .where(storeRestDaysEntity.storeId.eq(storeId)).fetchFirst();
 
@@ -85,8 +87,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
           .where(storeRestDaysMapEntity.storeRestDaysEntity.daysId.eq(days_id)).fetchFirst();
       // 만약 자식 테이블 비었다면 해당 부모테이블도 삭제
       if (exist_check == null) {
-        queryFactory.delete(storeRestDaysEntity).where(storeRestDaysEntity.daysId.eq(days_id))
-            .execute();
+        queryFactory.delete(storeRestDaysEntity).where(storeRestDaysEntity.daysId.eq(days_id)).execute();
       }
     }
     return "success";

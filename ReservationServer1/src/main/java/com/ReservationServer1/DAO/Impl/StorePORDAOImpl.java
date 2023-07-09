@@ -56,7 +56,6 @@ public class StorePORDAOImpl implements StorePORDAO {
   }
 
 
-  // 수정!!
   @Override
   public StoreReservationEntity getReservation(int storeId, String userId) {
     StoreReservationEntity result = queryFactory.select(storeReservationEntity)

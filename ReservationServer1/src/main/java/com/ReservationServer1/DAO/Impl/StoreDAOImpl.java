@@ -49,7 +49,7 @@ public class StoreDAOImpl implements StoreDAO {
     String ownerId = queryFactory.select(storeEntity.ownerId).from(storeEntity)
         .where(storeEntity.storeId.eq(storeId)).fetchFirst();
     if (ownerId == null) {
-      throw new MessageException("존재하지 않는 가게입니다.");
+      throw new MessageException("권한이 없습니다.");
     }
     return ownerId;
   }

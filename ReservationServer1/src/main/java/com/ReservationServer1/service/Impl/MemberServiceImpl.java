@@ -75,5 +75,11 @@ public class MemberServiceImpl implements MemberService {
   }
 
 
+  @Override
+  public MemberEntity getMember(String userId) {
+    return memberDAO.getMember(userId);
+  }
+
+
 
 }

@@ -11,6 +11,7 @@ import com.ReservationServer1.service.StorePORService;
 
 @Service
 public class StorePORServiceImpl implements StorePORService {
+  
   private final StorePORDAO storePORDAO;
 
   public StorePORServiceImpl(StorePORDAO storePORDAO) {

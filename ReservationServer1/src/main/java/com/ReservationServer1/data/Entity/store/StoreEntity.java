@@ -5,6 +5,7 @@ package com.ReservationServer1.data.Entity.store;
 import org.springframework.beans.BeanUtils;
 import com.ReservationServer1.data.DTO.store.StoreDTO;
 import com.ReservationServer1.data.Entity.BaseEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
