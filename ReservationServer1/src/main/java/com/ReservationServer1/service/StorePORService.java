@@ -15,24 +15,36 @@ public interface StorePORService {
   StoreReservationEntity getReservation(int storeId, String userId);
 
   String deleteReservation(int storeId, String userId);
+  
+  
 
   String registerOrder(OrderDTO orderDTO, String userId);
 
   String updateOrder(OrderDTO orderDTO, String userId);
 
   String deleteOrder(int storeId, String foodName, String userId);
+  
+  
+  
 
   String registerPay(PayDTO payDTO);
 
   String deletePay(Long reservationId);
+  
+  
+  
 
   String registerComment(long reservationId, String comment, String userId);
 
   String deleteComment(Long reservationId, String userId);
+  
+  
 
   String registerBigComment(long reservationId, String bigcomment, int storeId);
 
   String deleteBigComment(Long reservationId, int storeId);
+  
+  
   
   int getCouponClient(int storeId, String userId);
   
