@@ -1,4 +1,4 @@
-PROJECT : Make a restaurant reservation
+# PROJECT : Make a restaurant reservation
 
 
 # DESCRIPTION
