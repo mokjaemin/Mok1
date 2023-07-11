@@ -26,7 +26,7 @@ https://docs.google.com/document/d/1AKWyWDcy_u3G-zKH0nWjQUifhvrn_jncopUeqKt-gEQ/
 3. 회원 정보 찾기
 4. 회원 정보 수정
 5. 회원 정보 삭제
-- Owner
+- Store Basic
 1. 가게 등록
 2. 가게 지역별 리스트
 3. 가게 관리자 페이지 로그인
