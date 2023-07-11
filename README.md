@@ -20,18 +20,59 @@ https://docs.google.com/document/d/13W18PYfz040IY35pNc1uI9T5nt0C9nzI4S5q_MH0USw/
 https://docs.google.com/document/d/1AKWyWDcy_u3G-zKH0nWjQUifhvrn_jncopUeqKt-gEQ/edit
 
 # Functions
-(All functions is both for A Customer and A Owner of Restaurant)
 - Member
-1. Making Accounts
-2. Login with other Open Login API
-3. Modifing Member Information
-4. Deleting Account
-- Board
-1. Writing Content
-2. Deleting Content
-3. Modifing Content
+1. 계정 생성
+2. 로그인
+3. 회원 정보 찾기
+4. 회원 정보 수정
+5. 회원 정보 삭제
+- Owner
+1. 가게 등록
+2. 가게 지역별 리스트
+3. 가게 관리자 페이지 로그인
+- Store Info
+1. 가게 쉬는날 등록
+2. 가게 쉬는날 수정
+3. 가게 쉬는날 삭제
+4. 가게 쉬는날 출력
+5. 가게 영업시간 정보 등록
+6. 가게 영업시간 정보 수정
+7. 가게 영업시간 정보 삭제
+8. 가게 영업시간 정보 출력
+9. 가게 예약 테이블 정보 출력
+10. 가게 예약 테이블 정보 수정
+11. 가게 예약 테이블 정보 삭제
+12. 가게 메뉴 등록
+13. 가게 메뉴 수정
+14. 가게 메뉴 삭제
+- Reservation & Order & Pay & Coupon
+1. 가게 자리/시간 예약
+2. 가게 자리/시간 수정
+3. 가게 자리/시간 삭제
+4. 음식 주문 등록
+5. 음식 주문 수정
+6. 음식 주문 삭제
+7. 결제 등록
+8. 결제 취소
+9. 쿠폰 조회
+- Recipt & Board
+1. 영수증 출력
+2. 영수증 댓글 등록
+3. 영수증 댓글 수정
+4. 영수증 댓글 삭제
+5. 영수증 대댓글 등록
+6. 영수증 대댓글 수정
+7. 영수증 대댓글 삭제
+8. 공개 게시판 글 등록
+9. 공개 게시판 글 수정
+10. 공개 게시판 글 삭제
+11. 공개 게시판 댓글 등록
+12. 공개 게시판 댓글 수정
+13. 공개 게시판 댓글 삭제
 
-Coming Soon : Other Functions !
+
+
+
 
 # Skills AND Env
 - IDE : STS4
