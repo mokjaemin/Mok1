@@ -1,7 +1,7 @@
-# My First Deliberate Project "Mok1" with Spring
+# Make a restaurant reservation
 
 # Description
-- This is a server application for Making resercation of some restaurants
+- 해당 프로젝트는 음식점 예약 서버입니다.
 
 # PROTOTYPE
 https://www.figma.com/proto/p667iVrA2n38Qvr8l64xaQ/Graduation-Project?node-id=6-49&scaling=scale-down&page-id=0%3A1&starting-point-node-id=6%3A15
