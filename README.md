@@ -2,6 +2,13 @@
 
 # Description
 - 해당 프로젝트는 음식점 예약 서버입니다.
+- 음식점이 닫았거나 만석인 경우, 더 이상 겪지 마세요!
+
+# User
+- 음식점을 갔다가 음식점이 닫거나 만석이라 불편을 겪으신 분
+- 음식점 단골 기억을 하기 어려운 사장님들
+- 중요한 약속이 있어 예약을 간편하게 하고 싶은 분
+
 
 # PROTOTYPE
 https://www.figma.com/proto/p667iVrA2n38Qvr8l64xaQ/Graduation-Project?node-id=6-49&scaling=scale-down&page-id=0%3A1&starting-point-node-id=6%3A15
