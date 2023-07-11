@@ -25,7 +25,7 @@
 - CLIENT : HTTP Requests/Response
 - CLIENT API : Restful API
 - CLIENT TESTING : Insomnia, SWAGGER
-- SEQURITY : JASYPT Library, Spring Security
+- SEQURITY : JASYPT Library, Spring Security, JWT
 - DATA API : Query DSL
 - DATABASE : MYSQL with AWS(Main DB), Redis(Cache)
 - TESTING : JUNIT, Mockito
