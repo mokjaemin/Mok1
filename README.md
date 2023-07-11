@@ -1,4 +1,4 @@
-<img width="997" alt="클래스 다이어그램" src="https://github.com/mokjaemin/Mok1/assets/95067670/ce7c1c7c-db8a-4bf9-b3fa-a9bb2679703c"># PROJECT : Make a restaurant reservation
+PROJECT : Make a restaurant reservation
 
 
 # DESCRIPTION
@@ -13,7 +13,7 @@
 
 
 # USER INTERFACE
-
+<img width="997" alt="클래스 다이어그램" src="https://github.com/mokjaemin/Mok1/assets/95067670/ce7c1c7c-db8a-4bf9-b3fa-a9bb2679703c"># 
 
 # PROTOTYPE
 https://www.figma.com/proto/p667iVrA2n38Qvr8l64xaQ/Graduation-Project?node-id=6-49&scaling=scale-down&page-id=0%3A1&starting-point-node-id=6%3A15
