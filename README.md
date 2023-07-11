@@ -12,8 +12,7 @@
 - 중요한 약속이 있어 예약을 간편하게 하고 싶은 분
 
 
-# USER INTERFACE
-CLICK BELOW
+# USER INTERFACE ( CLICK BELOW )
 [![Video Label](http://img.youtube.com/vi/4kFZOOxNqD0/0.jpg)](https://youtu.be/4kFZOOxNqD0)
 
 
