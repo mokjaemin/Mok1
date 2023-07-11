@@ -15,6 +15,23 @@
 # USER INTERFACE
 [![Video Label](http://img.youtube.com/vi/4kFZOOxNqD0/0.jpg)](https://youtu.be/4kFZOOxNqD0)
 
+
+# SKILLS
+- IDE : STS4
+- BUILD TOOLS : MAVEN
+- FRAMEWORK : SPRING BOOT
+- SERVER : TOMCAT
+- LANGUAGE : JAVA
+- CLIENT : HTTP Requests/Response
+- CLIENT API : Restful API
+- CLIENT TESTING : Insomnia, SWAGGER
+- SEQURITY : JASYPT Library, Spring Security
+- DATA API : Query DSL
+- DATABASE : MYSQL with AWS(Main DB), Redis(Cache)
+- TESTING : JUNIT, Mockito
+- TEST COVERAGE : JACOCO
+
+
 # PROTOTYPE
 https://www.figma.com/proto/p667iVrA2n38Qvr8l64xaQ/Graduation-Project?node-id=6-49&scaling=scale-down&page-id=0%3A1&starting-point-node-id=6%3A15
 
@@ -77,22 +94,3 @@ https://docs.google.com/document/d/1AKWyWDcy_u3G-zKH0nWjQUifhvrn_jncopUeqKt-gEQ/
 11. 공개 게시판 댓글 등록
 12. 공개 게시판 댓글 수정
 13. 공개 게시판 댓글 삭제
-
-
-
-
-
-# SKILLS
-- IDE : STS4
-- BUILD TOOLS : MAVEN
-- FRAMEWORK : SPRING BOOT
-- SERVER : TOMCAT
-- LANGUAGE : JAVA
-- CLIENT : HTTP Requests/Response
-- CLIENT API : Restful API
-- CLIENT TESTING : Insomnia, SWAGGER
-- SEQURITY : JASYPT Library, Spring Security
-- DATA API : Query DSL
-- DATABASE : MYSQL with AWS(Main DB), Redis(Cache)
-- TESTING : JUNIT, Mockito
-- TEST COVERAGE : JACOCO
