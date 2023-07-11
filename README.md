@@ -13,7 +13,7 @@
 
 
 # USER INTERFACE
-<img ![GIFMaker_me](https://github.com/mokjaemin/Mok1/assets/95067670/a9e65172-e096-445d-a441-c7b7b32288cf)> 
+![GIFMaker_me](https://github.com/mokjaemin/Mok1/assets/95067670/a9e65172-e096-445d-a441-c7b7b32288cf)> 
 
 # PROTOTYPE
 https://www.figma.com/proto/p667iVrA2n38Qvr8l64xaQ/Graduation-Project?node-id=6-49&scaling=scale-down&page-id=0%3A1&starting-point-node-id=6%3A15
