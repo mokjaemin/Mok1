@@ -36,15 +36,15 @@
 https://www.figma.com/proto/p667iVrA2n38Qvr8l64xaQ/Graduation-Project?node-id=6-49&scaling=scale-down&page-id=0%3A1&starting-point-node-id=6%3A15
 
 
-# API 명세서
+# API SPECIFICATION
 https://docs.google.com/document/d/13W18PYfz040IY35pNc1uI9T5nt0C9nzI4S5q_MH0USw/edit
 
 
-# DATABASE 명세서
+# DATABASE SPECIFICATION
 https://docs.google.com/document/d/1AKWyWDcy_u3G-zKH0nWjQUifhvrn_jncopUeqKt-gEQ/edit
 
 
-# Functions
+# Function
 - Member
 1. 계정 생성
 2. 로그인
