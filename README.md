@@ -80,7 +80,7 @@ https://docs.google.com/document/d/1AKWyWDcy_u3G-zKH0nWjQUifhvrn_jncopUeqKt-gEQ/
 
 
 
-# Skills AND Env
+# SKILLS
 - IDE : STS4
 - BUILD TOOLS : MAVEN
 - FRAMEWORK : SPRING BOOT
