@@ -1,7 +1,4 @@
-# PROJECT
-
-# NAME
-Make a restaurant reservation
+# PROJECT : Make a restaurant reservation
 
 
 # DESCRIPTION
@@ -33,6 +30,20 @@ Make a restaurant reservation
 - DATABASE : MYSQL with AWS(Main DB), Redis(Cache)
 - TESTING : JUNIT, Mockito
 - TEST COVERAGE : JACOCO
+
+# TRAITS
+- MVC STRUCTURE, SINGLETON PATTERN를 활용해 구조 체계화 및 인스턴스 최소화
+- AOP를 통한 유의미한 로그 관리
+- JASYPT을 통한 내부보안
+- JWT, Spring Security를 통한 인증/인가 및 내부 용량 효율화
+- MailSender로 보안 강화
+- QueryDSL의 컴파일을 통한 오류 감소 및 인스턴스 최소화
+- Swagger를 활용한 API 관리문서 간편 제
+- RestFul API를 활용하여 일련의 규칙을 통해 주소 간소화
+- Mysql을 활용하여 인덱싱, 조인 등으로 성능 향상
+- AWS를 활용하여 환경 개선
+- Redis를 활용하여 캐시를 통해 속도 향상
+- 사진/동영상 저장시 다른 저장공간을 사용해 용량 사용 개선
 
 
 # PROTOTYPE
