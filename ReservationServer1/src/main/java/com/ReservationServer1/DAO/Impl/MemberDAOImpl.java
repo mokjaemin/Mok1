@@ -81,7 +81,8 @@ public class MemberDAOImpl implements MemberDAO {
       throw new MessageException("존재하지 않는 아이디 입니다.");
     }
     String encoded_pwd = passwordEncoder.encode(userPwd);
-    queryFactory.update(memberEntity).set(memberEntity.userPwd, encoded_pwd).execute();
+    queryFactory.update(memberEntity).set(memberEntity.userPwd, encoded_pwd)
+    .where(memberEntity.userId.eq(userId)).execute();
     return "success";
   }
 
@@ -99,7 +100,8 @@ public class MemberDAOImpl implements MemberDAO {
         .set(memberEntity.userName, modifyMemberDTO.getUserName())
         .set(memberEntity.userEmail, modifyMemberDTO.getUserEmail())
         .set(memberEntity.userAddress, modifyMemberDTO.getUserAddress())
-        .set(memberEntity.userNumber, modifyMemberDTO.getUserNumber()).execute();
+        .set(memberEntity.userNumber, modifyMemberDTO.getUserNumber())
+        .where(memberEntity.userId.eq(userId)).execute();
     return "success";
   }
 
@@ -110,9 +112,10 @@ public class MemberDAOImpl implements MemberDAO {
     String get_pwd = queryFactory.select(memberEntity.userPwd).from(memberEntity)
         .where(memberEntity.userId.eq(userId)).fetchFirst();
     if (get_pwd == null) {
-      throw new MessageException("해당 아이디가 존재하지 않습니다.");
+      throw new MessageException("존재하지 않는 아이디 입니다.");
     }
-    if (!passwordEncoder.matches(userPwd, get_pwd)) {
+    String encoded_pwd = passwordEncoder.encode(userPwd);
+    if (!passwordEncoder.matches(get_pwd, encoded_pwd)) {
       throw new MessageException("비밀번호가 일치하지 않습니다.");
     }
     queryFactory.delete(memberEntity).where(memberEntity.userId.eq(userId)).execute();

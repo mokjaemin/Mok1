@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,16 +15,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 import com.ReservationServer1.DAO.Impl.MemberDAOImpl;
 import com.ReservationServer1.data.DTO.member.LoginDTO;
+import com.ReservationServer1.data.DTO.member.ModifyMemberDTO;
 import com.ReservationServer1.data.Entity.member.MemberEntity;
 import com.ReservationServer1.exception.MessageException;
+import com.querydsl.jpa.impl.JPADeleteClause;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.querydsl.jpa.impl.JPAUpdateClause;
 import jakarta.persistence.EntityManager;
 
-@Transactional
 public class MemberDAOTest {
 
   @Mock
@@ -40,6 +42,13 @@ public class MemberDAOTest {
 
   @Mock
   private JPAQuery<MemberEntity> jpaQuery;
+
+  @Mock
+  private JPAUpdateClause jpaUpdateClause;
+
+  @Mock
+  private JPADeleteClause jpaDeleteClause;
+
 
   @BeforeEach
   public void setup() {
@@ -237,6 +246,203 @@ public class MemberDAOTest {
 
 
   // 4. Modify Pwd Member
+  @Test
+  @DisplayName("비밀번호 수정 성공")
+  public void modPwdMemberSuccess() {
+    // given
+    String userId = "testId";
+    String userPwd = "testPwd";
+    String encodedPwd = "encodedPwd";
+
+    doReturn(jpaQuery).when(queryFactory).selectOne();
+    doReturn(jpaQuery).when(jpaQuery).from(memberEntity);
+    doReturn(jpaQuery).when(jpaQuery).where(memberEntity.userId.eq(userId));
+    doReturn(jpaQuery).when(jpaQuery).limit(1);
+    doReturn(1).when(jpaQuery).fetchOne();
+
+    doReturn(encodedPwd).when(passwordEncoder).encode(userPwd);
+
+    doReturn(jpaUpdateClause).when(queryFactory).update(memberEntity);
+    doReturn(jpaUpdateClause).when(jpaUpdateClause).set(memberEntity.userPwd, encodedPwd);
+
+
+    // when
+    String result = memberDAOImpl.modPwdMember(userId, userPwd);
+
+
+    // then
+    assertEquals(result, "success");
+    verify(jpaUpdateClause).execute();
+  }
+
+  @Test
+  @DisplayName("비밀번호 수정 실패 : 존재하지 않는 아이디")
+  public void modPwdMemberFailById() {
+    // given
+    String userId = "testId";
+    String userPwd = "testPwd";
+
+    doReturn(jpaQuery).when(queryFactory).selectOne();
+    doReturn(jpaQuery).when(jpaQuery).from(memberEntity);
+    doReturn(jpaQuery).when(jpaQuery).where(memberEntity.userId.eq(userId));
+    doReturn(jpaQuery).when(jpaQuery).limit(1);
+    doReturn(null).when(jpaQuery).fetchOne();
+
+
+
+    // then && when
+    MessageException message = assertThrows(MessageException.class, () -> {
+      memberDAOImpl.modPwdMember(userId, userPwd);
+    });
+    String expected = "존재하지 않는 아이디 입니다.";
+    assertEquals(expected, message.getMessage());
+
+  }
+
+
+
   // 5. Modify Info Member
+  @Test
+  @DisplayName("회원정보 수정 성공")
+  public void modInfoMemberSuccess() {
+    // given
+    String userId = "testId";
+    ModifyMemberDTO sample = ModifyMemberDTO.sample();
+    String encodedPwd = "encodedPwd";
+
+    doReturn(jpaQuery).when(queryFactory).selectOne();
+    doReturn(jpaQuery).when(jpaQuery).from(memberEntity);
+    doReturn(jpaQuery).when(jpaQuery).where(memberEntity.userId.eq(userId));
+    doReturn(jpaQuery).when(jpaQuery).limit(1);
+    doReturn(1).when(jpaQuery).fetchOne();
+
+    doReturn(encodedPwd).when(passwordEncoder).encode(sample.getUserPwd());
+    doReturn(jpaUpdateClause).when(queryFactory).update(memberEntity);
+    doReturn(jpaUpdateClause).when(jpaUpdateClause).set(memberEntity.userPwd, encodedPwd);
+    doReturn(jpaUpdateClause).when(jpaUpdateClause).set(memberEntity.userAddress,
+        sample.getUserAddress());
+    doReturn(jpaUpdateClause).when(jpaUpdateClause).set(memberEntity.userEmail,
+        sample.getUserEmail());
+    doReturn(jpaUpdateClause).when(jpaUpdateClause).set(memberEntity.userName,
+        sample.getUserName());
+    doReturn(jpaUpdateClause).when(jpaUpdateClause).set(memberEntity.userNumber,
+        sample.getUserNumber());
+
+
+    // when
+    String result = memberDAOImpl.modInfoMember(userId, sample);
+
+
+    // then
+    assertEquals(result, "success");
+    verify(jpaUpdateClause).execute();
+  }
+
+
+  @Test
+  @DisplayName("회원정보 수정 실패 : 존재하지 않는 아이디")
+  public void modInfoMemberFailById() {
+    // given
+    String userId = "testId";
+    ModifyMemberDTO sample = ModifyMemberDTO.sample();
+
+    doReturn(jpaQuery).when(queryFactory).selectOne();
+    doReturn(jpaQuery).when(jpaQuery).from(memberEntity);
+    doReturn(jpaQuery).when(jpaQuery).where(memberEntity.userId.eq(userId));
+    doReturn(jpaQuery).when(jpaQuery).limit(1);
+    doReturn(null).when(jpaQuery).fetchOne();
+
+
+    // then && when
+    MessageException message = assertThrows(MessageException.class, () -> {
+      memberDAOImpl.modInfoMember(userId, sample);
+    });
+    String expected = "존재하지 않는 아이디 입니다.";
+    assertEquals(expected, message.getMessage());
+  }
+
+
+
   // 6. Delete Member
+  @Test
+  @DisplayName("회원정보 삭제 성공")
+  public void delMemberSuccess() {
+    // given
+    String userId = "testId";
+    String userPwd = "testPwd";
+    String encodedPwd = "encodedPwd";
+    String getPwd = "testPwd";
+
+    doReturn(jpaQuery).when(queryFactory).select(memberEntity.userPwd);
+    doReturn(jpaQuery).when(jpaQuery).from(memberEntity);
+    doReturn(jpaQuery).when(jpaQuery).where(memberEntity.userId.eq(userId));
+    doReturn(jpaQuery).when(jpaQuery).limit(1);
+    doReturn(getPwd).when(jpaQuery).fetchOne();
+
+    doReturn(encodedPwd).when(passwordEncoder).encode(userPwd);
+    doReturn(true).when(passwordEncoder).matches(getPwd, encodedPwd);
+
+    doReturn(jpaDeleteClause).when(queryFactory).delete(memberEntity);
+    doReturn(jpaDeleteClause).when(jpaDeleteClause).where(memberEntity.userId.eq(userId));
+
+
+    // when
+    String result = memberDAOImpl.delMember(userId, userPwd);
+
+
+    // then
+    assertEquals(result, "success");
+    verify(jpaDeleteClause).execute();
+  }
+
+
+  @Test
+  @DisplayName("회원정보 삭제 실패 : 존재하지 않는 아이디")
+  public void delMemberFailById() {
+    // given
+    String userId = "testId";
+    String userPwd = "testPwd";
+
+    doReturn(jpaQuery).when(queryFactory).select(memberEntity.userPwd);
+    doReturn(jpaQuery).when(jpaQuery).from(memberEntity);
+    doReturn(jpaQuery).when(jpaQuery).where(memberEntity.userId.eq(userId));
+    doReturn(jpaQuery).when(jpaQuery).limit(1);
+    doReturn(null).when(jpaQuery).fetchOne();
+
+
+    // then && when
+    MessageException message = assertThrows(MessageException.class, () -> {
+      memberDAOImpl.delMember(userId, userPwd);
+    });
+    String expected = "존재하지 않는 아이디 입니다.";
+    assertEquals(expected, message.getMessage());
+  }
+
+
+  @Test
+  @DisplayName("회원정보 삭제 실패 : 존재하지 않는 아이디")
+  public void delMemberFailByPwd() {
+    // given
+    String userId = "testId";
+    String userPwd = "testPwd";
+    String encodedPwd = "encodedPwd";
+    String getPwd = "wrongPwd";
+
+    doReturn(jpaQuery).when(queryFactory).select(memberEntity.userPwd);
+    doReturn(jpaQuery).when(jpaQuery).from(memberEntity);
+    doReturn(jpaQuery).when(jpaQuery).where(memberEntity.userId.eq(userId));
+    doReturn(jpaQuery).when(jpaQuery).limit(1);
+    doReturn(getPwd).when(jpaQuery).fetchOne();
+    
+    doReturn(encodedPwd).when(passwordEncoder).encode(userPwd);
+    doReturn(false).when(passwordEncoder).matches(getPwd, encodedPwd);
+
+
+    // then && when
+    MessageException message = assertThrows(MessageException.class, () -> {
+      memberDAOImpl.delMember(userId, userPwd);
+    });
+    String expected = "비밀번호가 일치하지 않습니다.";
+    assertEquals(expected, message.getMessage());
+  }
 }
