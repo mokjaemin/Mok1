@@ -46,7 +46,7 @@
 - 사진/동영상 저장시 다른 저장공간을 사용해 용량 사용 개선
 - JUNIT, Mokito를 통한 테스팅
 
-# Details (개선 Blog)
+# Details
 - https://mokjaemin88.tistory.com/category/Trouble%20Shooting
 
 
