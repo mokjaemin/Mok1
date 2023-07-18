@@ -48,7 +48,7 @@
 
 # Details
 - 개선 내용 정리본
-https://mokjaemin88.tistory.com/category/Trouble%20Shooting
+- https://mokjaemin88.tistory.com/category/Trouble%20Shooting
 
 
 # PROTOTYPE
