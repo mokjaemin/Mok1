@@ -46,6 +46,10 @@
 - 사진/동영상 저장시 다른 저장공간을 사용해 용량 사용 개선
 - JUNIT, Mokito를 통한 테스팅
 
+# Details
+- 개선 내용 정리본
+https://mokjaemin88.tistory.com/category/Trouble%20Shooting
+
 
 # PROTOTYPE
 https://www.figma.com/proto/p667iVrA2n38Qvr8l64xaQ/Graduation-Project?node-id=6-49&scaling=scale-down&page-id=0%3A1&starting-point-node-id=6%3A15
