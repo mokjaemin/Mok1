@@ -1,6 +1,7 @@
 package com.ReservationServer1.data.Entity.store;
 
 import java.util.Set;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -34,7 +35,7 @@ public class StoreTimeInfoEntity {
   private String intervalTime;
   private int storeId;
   
-  @OneToMany(mappedBy = "storeTimeInfoEntity", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "storeTimeInfoEntity", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   private Set<StoreTimeInfoMapEntity> breakTime;
     
 

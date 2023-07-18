@@ -20,7 +20,7 @@ import lombok.ToString;
 public class ModifyMemberDTO {
 
   private static final ModifyMemberDTO sample = ModifyMemberDTO.builder().userPwd("testPwd")
-      .userName("testName").userAddress("testAddress").userEmail("testEmail").build();
+      .userName("testName").userNumber("testNumber").userAddress("testAddress").userEmail("testEmail").build();
 
   @NotNull
   private String userPwd;

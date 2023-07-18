@@ -3,6 +3,7 @@ package com.ReservationServer1.data.Entity.POR;
 import org.springframework.beans.BeanUtils;
 import com.ReservationServer1.data.DTO.POR.ReservationDTO;
 import com.ReservationServer1.data.Entity.BaseEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -36,7 +37,7 @@ public class StoreReservationEntity extends BaseEntity{
   private String time;
   private String storeTable;
   
-  @OneToOne(mappedBy = "storeReservationEntity", fetch = FetchType.LAZY)
+  @OneToOne(mappedBy = "storeReservationEntity", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   private StoreOrdersEntity child;
   
   

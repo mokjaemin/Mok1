@@ -31,6 +31,7 @@ import jakarta.validation.Valid;
 @RestController("MemberController")
 @RequestMapping("/member")
 public class MemberController {
+  
 
   private final MemberService memberService;
   public MemberController(MemberService memberService) {
@@ -117,8 +118,10 @@ public class MemberController {
     return ResponseEntity.status(HttpStatus.OK).body(memberService.delMember(authentication.getName(), new_userPwd));
   }
   
+  
+  // 테스트 코드 없음
   @GetMapping
-  @Operation(summary = "회원정보 아이별 검색 요청", description = "해당 아이디 정보를 출력합니다.", tags = {"Member Controller"})
+  @Operation(summary = "회원정보 아이디별 검색 요청", description = "해당 아이디 정보를 출력합니다.", tags = {"Member Controller"})
   @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),

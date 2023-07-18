@@ -20,7 +20,6 @@ import lombok.RequiredArgsConstructor;
 public class JwtFilter extends OncePerRequestFilter {
   
   
-//  private final MemberService memberService;
   private final String secretKey;
   
   
@@ -53,13 +52,13 @@ public class JwtFilter extends OncePerRequestFilter {
     
     
     // userId, credentials, roll
-    UsernamePasswordAuthenticationToken authenticationToken =
+    UsernamePasswordAuthenticationToken authentication =
         new UsernamePasswordAuthenticationToken(userId, "", Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + userRole)));
     
 
     // Detail Build
-    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+    SecurityContextHolder.getContext().setAuthentication(authentication);
     filterChain.doFilter(request, response);
   }
 

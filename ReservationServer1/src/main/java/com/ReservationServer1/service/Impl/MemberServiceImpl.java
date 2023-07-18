@@ -20,8 +20,8 @@ public class MemberServiceImpl implements MemberService {
   private String secretKey;
 
   private final JavaMailSender emailSender;
-  private final Environment env;
   private final MemberDAO memberDAO;
+  private final Environment env;
   private final Long expiredLoginMs = 1000 * 60 * 30l; // 30분
   private final Long expiredPwdMs = 1000 * 60 * 5l; // 5분
 
@@ -32,6 +32,10 @@ public class MemberServiceImpl implements MemberService {
     this.env = env;
   }
 
+  public void setTestSecretKey(String key) {
+    this.secretKey = key;
+  }
+  
 
   @Override
   public String registerMember(MemberDTO member) {
@@ -74,7 +78,8 @@ public class MemberServiceImpl implements MemberService {
     return memberDAO.delMember(userId, userPwd);
   }
 
-
+  
+  // 테스팅 안함
   @Override
   public MemberEntity getMember(String userId) {
     return memberDAO.getMember(userId);

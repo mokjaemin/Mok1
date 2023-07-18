@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * GitHub : https://github.com/ulisesbocchio/jasypt-spring-boot
- */
+
 @Configuration
 public class JasyptConfig {
   
@@ -18,7 +16,7 @@ public class JasyptConfig {
   
   
   @Bean(name = "jasyptStringEncryptor")
-  public StringEncryptor stringEncryptor() {
+  StringEncryptor stringEncryptor() {
     PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
     SimpleStringPBEConfig config = new SimpleStringPBEConfig();
     config.setPassword(password); // 암호화할 때 사용하는 키

@@ -251,7 +251,7 @@ public class storePORLogAOP {
     return result;
   }
   
-  @Around("execution(* com.ReservationServer1.Service.Impl.StorePORServiceImpl.getCouponClient(..))")
+  @Around("execution(* com.ReservationServer1.service.Impl.StorePORServiceImpl.getCouponClient(..))")
   public Object getCouponClientService(ProceedingJoinPoint joinPoint) throws Throwable {
     logger.info("[StorePORService] getCouponClient(회원별 쿠폰 출력) 호출");
     Object result = joinPoint.proceed();
@@ -259,7 +259,7 @@ public class storePORLogAOP {
     return result;
   }
   
-  @Around("execution(* com.ReservationServer1.Service.Impl.StorePORServiceImpl.getCouponOwner(..))")
+  @Around("execution(* com.ReservationServer1.service.Impl.StorePORServiceImpl.getCouponOwner(..))")
   public Object getCouponOwnerService(ProceedingJoinPoint joinPoint) throws Throwable {
     logger.info("[StorePORService] getCouponOwner(가게별 쿠폰 출력) 호출");
     Object result = joinPoint.proceed();

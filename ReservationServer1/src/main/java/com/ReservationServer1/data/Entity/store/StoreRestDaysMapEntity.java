@@ -1,8 +1,5 @@
 package com.ReservationServer1.data.Entity.store;
 
-
-
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

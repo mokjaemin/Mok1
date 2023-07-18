@@ -45,6 +45,17 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope> <!-- test 시에만 사용 -->
 		</dependency>
+		<!--Spring Security Test-->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+		</dependency>
+		<!-- H2 Database -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 		<!-- tomcat server -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

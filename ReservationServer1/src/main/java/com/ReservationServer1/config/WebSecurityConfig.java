@@ -4,15 +4,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import com.ReservationServer1.exception.MessageException;
 import lombok.RequiredArgsConstructor;
 
 
@@ -85,7 +81,8 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.PUT, "/por/pay/bigomment").hasAuthority("ROLE_OWNER")
         .requestMatchers(HttpMethod.DELETE, "/por/pay/bigcomment").hasAuthority("ROLE_OWNER")
         // Store Board
-        .requestMatchers(HttpMethod.POST, "/board").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.POST, "/board")
+        .hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.PUT, "/board").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.DELETE, "/board").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.GET, "/board").hasAuthority("ROLE_USER")

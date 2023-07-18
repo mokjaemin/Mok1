@@ -83,6 +83,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
           .where(storeRestDaysMapEntity.storeRestDaysEntity.daysId.eq(days_id)
               .and(storeRestDaysMapEntity.date.eq(day)))
           .execute();
+      
       Integer exist_check = queryFactory.selectOne().from(storeRestDaysMapEntity)
           .where(storeRestDaysMapEntity.storeRestDaysEntity.daysId.eq(days_id)).fetchFirst();
       // 만약 자식 테이블 비었다면 해당 부모테이블도 삭제
