@@ -2,6 +2,7 @@ package com.ReservationServer1.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -15,7 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import com.ReservationServer1.DAO.Impl.MemberDAOImpl;
+import com.ReservationServer1.DAO.MemberDAO;
 import com.ReservationServer1.data.DTO.member.LoginDTO;
 import com.ReservationServer1.data.DTO.member.MemberDTO;
 import com.ReservationServer1.data.DTO.member.ModifyMemberDTO;
@@ -30,7 +31,7 @@ public class MemberServiceTest {
   private MemberServiceImpl memberServiceImpl;
 
   @Mock
-  private MemberDAOImpl memberDAOImpl;
+  private MemberDAO memberDAO;
 
   @Mock
   private Environment env;
@@ -53,9 +54,8 @@ public class MemberServiceTest {
   void registerMemberSuccess() throws Exception {
     // given
     MemberDTO sample = MemberDTO.sample();
-    MemberEntity entity = new MemberEntity(sample);
     String response = "success";
-    doReturn(response).when(memberDAOImpl).registerMember(entity);
+    doReturn(response).when(memberDAO).registerMember(any(MemberEntity.class));
 
     // when
     String result = memberServiceImpl.registerMember(sample);
@@ -64,7 +64,7 @@ public class MemberServiceTest {
     assertThat(result.equals(response));
 
     // verify
-    verify(memberDAOImpl, times(1)).registerMember(any(MemberEntity.class));
+    verify(memberDAO, times(1)).registerMember(any(MemberEntity.class));
   }
 
 
@@ -85,7 +85,7 @@ public class MemberServiceTest {
     assertThat(userRole.equals("USER"));
 
     // verify
-    verify(memberDAOImpl, times(1)).loginMember(any(LoginDTO.class));
+    verify(memberDAO, times(1)).loginMember(any(LoginDTO.class));
   }
 
   // 3. Find Pwd Member
@@ -111,7 +111,7 @@ public class MemberServiceTest {
     assertThat(userRole.equals("PWD"));
 
     // verify
-    verify(memberDAOImpl, times(1)).findPwdMember(sampleId, sampleEmail);
+    verify(memberDAO, times(1)).findPwdMember(sampleId, sampleEmail);
     verify(emailSender, times(1)).send(message);
   }
 
@@ -125,7 +125,7 @@ public class MemberServiceTest {
     String userId = "testId";
     String userPwd = "testPwd";
     String response = "success";
-    doReturn(response).when(memberDAOImpl).modPwdMember(userId, userPwd);
+    doReturn(response).when(memberDAO).modPwdMember(anyString(), anyString());
 
     // when
     String result = memberServiceImpl.modPwdMember(userId, userPwd);
@@ -134,7 +134,7 @@ public class MemberServiceTest {
     assertThat(result.equals(response));
 
     // verify
-    verify(memberDAOImpl, times(1)).modPwdMember(userId, userPwd);
+    verify(memberDAO, times(1)).modPwdMember(userId, userPwd);
   }
 
 
@@ -146,7 +146,7 @@ public class MemberServiceTest {
     String userId = "testId";
     ModifyMemberDTO sample = ModifyMemberDTO.sample();
     String response = "success";
-    doReturn(response).when(memberDAOImpl).modInfoMember(userId, sample);
+    doReturn(response).when(memberDAO).modInfoMember(anyString(), any(ModifyMemberDTO.class));
 
     // when
     String result = memberServiceImpl.modInfoMember(userId, sample);
@@ -155,7 +155,7 @@ public class MemberServiceTest {
     assertThat(result.equals(response));
 
     // verify
-    verify(memberDAOImpl, times(1)).modInfoMember(userId, sample);
+    verify(memberDAO, times(1)).modInfoMember(userId, sample);
   }
 
   // 6. Delete Member
@@ -166,7 +166,7 @@ public class MemberServiceTest {
     String userId = "testId";
     String userPwd = "testPwd";
     String response = "success";
-    doReturn(response).when(memberDAOImpl).delMember(userId, userPwd);
+    doReturn(response).when(memberDAO).delMember(anyString(), anyString());
 
     // when
     String result = memberServiceImpl.delMember(userId, userPwd);
@@ -175,7 +175,7 @@ public class MemberServiceTest {
     assertThat(result.equals(response));
 
     // verify
-    verify(memberDAOImpl, times(1)).delMember(userId, userPwd);
+    verify(memberDAO, times(1)).delMember(userId, userPwd);
   }
 
 

@@ -37,6 +37,9 @@ public class StoreDAOImpl implements StoreDAO {
         .where(storeEntity.country.eq(country).and(storeEntity.city.eq(city))
             .and(storeEntity.dong.eq(dong)).and(storeEntity.type.eq(type)))
         .limit(size).offset(page * size).fetch();
+    if(storeInfo == null) {
+      throw new MessageException("등록된 정보가 없습니다.");
+    }
     HashMap<String, Integer> result = new HashMap<>();
     for(StoreEntity info : storeInfo) {
       result.put(info.getStoreName(), info.getStoreId());
@@ -48,9 +51,6 @@ public class StoreDAOImpl implements StoreDAO {
   public String loginStore(int storeId) {
     String ownerId = queryFactory.select(storeEntity.ownerId).from(storeEntity)
         .where(storeEntity.storeId.eq(storeId)).fetchFirst();
-    if (ownerId == null) {
-      throw new MessageException("권한이 없습니다.");
-    }
     return ownerId;
   }
 

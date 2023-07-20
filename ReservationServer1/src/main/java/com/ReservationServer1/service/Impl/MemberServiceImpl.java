@@ -31,9 +31,9 @@ public class MemberServiceImpl implements MemberService {
     this.emailSender = emailSender;
     this.env = env;
   }
-
-  public void setTestSecretKey(String key) {
-    this.secretKey = key;
+  
+  public void setTestSecretKey(String secretKey) {
+    this.secretKey = secretKey;
   }
   
 

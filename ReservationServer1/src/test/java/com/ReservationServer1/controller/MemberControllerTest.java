@@ -2,6 +2,7 @@ package com.ReservationServer1.controller;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -20,7 +21,7 @@ import com.ReservationServer1.data.DTO.member.FindPwdDTO;
 import com.ReservationServer1.data.DTO.member.LoginDTO;
 import com.ReservationServer1.data.DTO.member.MemberDTO;
 import com.ReservationServer1.data.DTO.member.ModifyMemberDTO;
-import com.ReservationServer1.service.Impl.MemberServiceImpl;
+import com.ReservationServer1.service.MemberService;
 import com.ReservationServer1.utils.JWTutil;
 import com.google.gson.Gson;
 
@@ -30,7 +31,7 @@ public class MemberControllerTest {
 
 
   @MockBean
-  private MemberServiceImpl memberServiceImpl;
+  private MemberService memberService;
 
   @Autowired
   private MockMvc mockMvc;
@@ -45,7 +46,7 @@ public class MemberControllerTest {
     // given
     MemberDTO sample = MemberDTO.sample();
     String response = "success";
-    doReturn(response).when(memberServiceImpl).registerMember(any(MemberDTO.class));
+    doReturn(response).when(memberService).registerMember(any(MemberDTO.class));
 
     // when
     ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/member")
@@ -57,7 +58,7 @@ public class MemberControllerTest {
   }
 
   @Test
-  @DisplayName("회원 가입 실패 : MemberDTO 잘못된 양식")
+  @DisplayName("회원 가입 실패 : MemberDTO 잘못된 입력")
   @WithMockUser
   void registerMemberFail() throws Exception {
     // given
@@ -81,7 +82,7 @@ public class MemberControllerTest {
     // given
     LoginDTO sample = LoginDTO.sample();
     String token = JWTutil.createJWT(sample.getUserId(), "USER", "test", 10);
-    doReturn(token).when(memberServiceImpl).loginMember(any(LoginDTO.class));
+    doReturn(token).when(memberService).loginMember(any(LoginDTO.class));
 
     // when
     ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/member/login")
@@ -93,7 +94,7 @@ public class MemberControllerTest {
   }
 
   @Test
-  @DisplayName("로그인 실패 : LoginDTO 잘못된 양식")
+  @DisplayName("로그인 실패 : LoginDTO 잘못된 입력")
   @WithMockUser
   void loginMemberFail() throws Exception {
     // given
@@ -116,8 +117,8 @@ public class MemberControllerTest {
     // given
     FindPwdDTO sample = FindPwdDTO.sample();
     String token = JWTutil.createJWT(sample.getUserId(), "PWD", "test", 10);
-    doReturn(token).when(memberServiceImpl).findPwdMember(sample.getUserId(),
-        sample.getUserEmail());
+    doReturn(token).when(memberService).findPwdMember(anyString(),
+        anyString());
 
     // when
     ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/member/auth/pwd")
@@ -130,7 +131,7 @@ public class MemberControllerTest {
 
 
   @Test
-  @DisplayName("비밀번호 찾기 인증 실패 : FindPwdDTO 잘못된 양식")
+  @DisplayName("비밀번호 찾기 인증 실패 : FindPwdDTO 잘못된 입력")
   @WithMockUser
   void findPwdMemberFail() throws Exception {
     // given
@@ -147,14 +148,12 @@ public class MemberControllerTest {
   // 4. Modify Pwd
   @Test
   @DisplayName("비밀번호 변경 성공")
-  @WithMockUser(username = "userId")
+  @WithMockUser
   void modPwdMemberSuccess() throws Exception {
     // given
-    String userId = "userId";
-    String userPwd = "userPwd";
     String response = "success";
     String jsonBody = "{\"userPwd\": \"userPwd\"}";
-    doReturn(response).when(memberServiceImpl).modPwdMember(userId, userPwd);
+    doReturn(response).when(memberService).modPwdMember(anyString(), anyString());
 
 
     // when
@@ -170,13 +169,12 @@ public class MemberControllerTest {
   // 5. Modify Info
   @Test
   @DisplayName("회원정보 변경 성공")
-  @WithMockUser(username = "userId")
+  @WithMockUser
   void modInfoMemberSuccess() throws Exception {
     // given
-    String userId = "userId";
     ModifyMemberDTO sample = ModifyMemberDTO.sample();
     String response = "success";
-    doReturn(response).when(memberServiceImpl).modInfoMember(userId, sample);
+    doReturn(response).when(memberService).modInfoMember(anyString(), any(ModifyMemberDTO.class));
 
 
     // when
@@ -189,14 +187,13 @@ public class MemberControllerTest {
   }
 
   @Test
-  @DisplayName("회원정보 변경 실패 : 잘못된 ModifyMemberDTO 양식")
-  @WithMockUser(username = "userId")
+  @DisplayName("회원정보 변경 실패 : 잘못된 ModifyMemberDTO 입력")
+  @WithMockUser
   void modInfoMemberFail() throws Exception {
     // given
-    String userId = "userId";
     ModifyMemberDTO sample = new ModifyMemberDTO();
     String response = "success";
-    doReturn(response).when(memberServiceImpl).modInfoMember(userId, sample);
+    doReturn(response).when(memberService).modInfoMember(anyString(), any(ModifyMemberDTO.class));
 
 
     // when
@@ -214,11 +211,9 @@ public class MemberControllerTest {
   @WithMockUser(username = "userId")
   void deleteMemberSuccess() throws Exception {
     // given
-    String userId = "userId";
-    String userPwd = "userPwd";
     String response = "success";
     String jsonBody = "{\"userPwd\": \"userPwd\"}";
-    doReturn(response).when(memberServiceImpl).delMember(userId, userPwd);
+    doReturn(response).when(memberService).delMember(anyString(), anyString());
 
 
     // when

@@ -29,18 +29,23 @@ public class StoreServiceImpl implements StoreService {
     this.storeListCache = storeListCache;
   }
 
+  public void setTestSecretKey(String secretKey) {
+    this.secretKey = secretKey;
+  }
+
   @Override
   public String registerStore(StoreDTO storeDTO) {
     return storeDAO.registerStore(new StoreEntity(storeDTO));
   }
 
   @Override
-  public HashMap<String, Integer> getStoreList(String country, String city, String dong, String type, int page,
-      int size) {
+  public HashMap<String, Integer> getStoreList(String country, String city, String dong,
+      String type, int page, int size) {
     String address = country + city + dong + type + page + size;
     Optional<StoreListDTO> storeList = storeListCache.findById(address);
     if (storeList.isEmpty() == true) {
-      HashMap<String, Integer> new_storeList = storeDAO.getStoreList(country, city, dong, type, page, size);
+      HashMap<String, Integer> new_storeList =
+          storeDAO.getStoreList(country, city, dong, type, page, size);
       StoreListDTO storeListDTO = new StoreListDTO(address, new_storeList);
       storeListCache.save(storeListDTO);
       return new_storeList;
