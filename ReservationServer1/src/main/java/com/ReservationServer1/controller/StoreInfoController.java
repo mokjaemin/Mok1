@@ -66,7 +66,7 @@ public class StoreInfoController {
     return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.getDayOff(storeId));
   }
 
-  //
+
   @DeleteMapping("/day")
   @Operation(summary = "가게 쉬는날 삭제 요청", description = "가게 쉬는날 정보가 삭제됩니다.",
       tags = {"Store Info Controller"})
@@ -74,12 +74,12 @@ public class StoreInfoController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> deleteDayOff(@Valid @RequestBody StoreRestDayDTO restDayDTO,
+  public ResponseEntity<String> deleteDayOff(@RequestParam int storeId,
       Authentication authentication) {
-    if (!String.valueOf(restDayDTO.getStoreId()).equals(authentication.getName())) {
+    if (!String.valueOf(storeId).equals(authentication.getName())) {
       return ResponseEntity.status(HttpStatus.OK).body("권한이 없습니다.");
     }
-    return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.deleteDayOff(restDayDTO));
+    return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.deleteDayOff(storeId));
   }
 
 
@@ -223,8 +223,7 @@ public class StoreInfoController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<List<StoreFoodsInfoResultDTO>> getFoodsInfo(@RequestParam int storeId,
-      Authentication authentication) {
+  public ResponseEntity<List<StoreFoodsInfoResultDTO>> getFoodsInfo(@RequestParam int storeId) {
     return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.getFoodsInfo(storeId));
   }
 
@@ -261,5 +260,6 @@ public class StoreInfoController {
     return ResponseEntity.status(HttpStatus.OK)
         .body(storeInfoService.deleteFoodsInfo(storeId, foodName));
   }
+
 
 }

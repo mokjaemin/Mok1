@@ -1,5 +1,7 @@
 package com.ReservationServer1.data.Entity.store;
 
+import org.springframework.beans.BeanUtils;
+import com.ReservationServer1.data.DTO.store.StoreTableInfoDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,15 +25,19 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = false)
 @Table(name = "StoreTableInfo")
 public class StoreTableInfoEntity {
-  
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long tableId;
-  
+
   private int storeId;
-  
+
   private int count;
-  
+
   private String imageURL;
-  
+
+  public StoreTableInfoEntity(StoreTableInfoDTO storeTableInfoDTO) {
+    BeanUtils.copyProperties(storeTableInfoDTO, this);
+  }
+
 }

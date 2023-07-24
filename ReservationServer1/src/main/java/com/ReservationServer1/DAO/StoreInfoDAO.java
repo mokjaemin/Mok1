@@ -10,7 +10,7 @@ public interface StoreInfoDAO {
 
   String registerDayOff(StoreRestDayDTO restDayDTO);
   List<String> getDayOff(int storeId);
-  String deleteDayOff(StoreRestDayDTO restDayDTO);
+  String deleteDayOff(int storeId);
   
   String registerTimeInfo(StoreTimeInfoDTO storeTimeInfoDTO);
   StoreTimeInfoDTO getTimeInfo(int storeId);

@@ -64,7 +64,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
         queryFactory.selectDistinct(storeRestDaysMapEntity.date).from(storeRestDaysMapEntity)
             .leftJoin(storeRestDaysMapEntity.storeRestDaysEntity, storeRestDaysEntity)
             .where(storeRestDaysEntity.storeId.eq(storeId)).fetch();
-    if(resultList == null) {
+    if (resultList == null) {
       throw new MessageException("정보가 등록되지 않았습니다.");
     }
     return resultList.stream().sorted().collect(Collectors.toList());
@@ -72,25 +72,13 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 
 
   @Override
-  public String deleteDayOff(StoreRestDayDTO restDayDTO) {
-    int storeId = restDayDTO.getStoreId();
-    Set<String> date = restDayDTO.getDate();
-    for (String day : date) {
-      Long days_id = queryFactory.select(storeRestDaysEntity.daysId).from(storeRestDaysEntity)
-          .where(storeRestDaysEntity.storeId.eq(storeId)).fetchFirst();
-
-      queryFactory.delete(storeRestDaysMapEntity)
-          .where(storeRestDaysMapEntity.storeRestDaysEntity.daysId.eq(days_id)
-              .and(storeRestDaysMapEntity.date.eq(day)))
-          .execute();
-      
-      Integer exist_check = queryFactory.selectOne().from(storeRestDaysMapEntity)
-          .where(storeRestDaysMapEntity.storeRestDaysEntity.daysId.eq(days_id)).fetchFirst();
-      // 만약 자식 테이블 비었다면 해당 부모테이블도 삭제
-      if (exist_check == null) {
-        queryFactory.delete(storeRestDaysEntity).where(storeRestDaysEntity.daysId.eq(days_id)).execute();
-      }
-    }
+  public String deleteDayOff(int storeId) {
+    Long days_id = queryFactory.select(storeRestDaysEntity.daysId).from(storeRestDaysEntity)
+        .where(storeRestDaysEntity.storeId.eq(storeId)).fetchFirst();
+    queryFactory.delete(storeRestDaysMapEntity)
+        .where(storeRestDaysMapEntity.storeRestDaysEntity.daysId.eq(days_id)).execute();
+    queryFactory.delete(storeRestDaysEntity).where(storeRestDaysEntity.storeId.eq(storeId))
+        .execute();
     return "success";
   }
 
@@ -150,6 +138,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
   }
 
 
+
   @Override
   public String modTimeInfo(StoreTimeInfoDTO storeTimeInfoDTO) {
 
@@ -160,40 +149,35 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
     if (p_entity == null) {
       throw new MessageException("정보가 존재하지 않습니다.");
     }
+
+    // 자식 엔터티 삭제 및 추가
+    queryFactory.delete(storeTimeInfoMapEntity)
+        .where(storeTimeInfoMapEntity.storeTimeInfoEntity.eq(p_entity)).execute();
+
+    Set<StoreTimeInfoMapEntity> childs = new HashSet<>();
+    for (String breakTime : storeTimeInfoDTO.getBreakTime()) {
+      StoreTimeInfoMapEntity child =
+          StoreTimeInfoMapEntity.builder().time(breakTime).storeTimeInfoEntity(p_entity).build();
+      entityManager.persist(child);
+      childs.add(child);
+    }
+
     p_entity.setStartTime(storeTimeInfoDTO.getStartTime());
     p_entity.setEndTime(storeTimeInfoDTO.getEndTime());
     p_entity.setIntervalTime(storeTimeInfoDTO.getIntervalTime());
+    p_entity.setBreakTime(childs);
 
-    // 자식 엔터티 수정
-    List<StoreTimeInfoMapEntity> breakTimeList =
-        queryFactory.selectDistinct(storeTimeInfoMapEntity).from(storeTimeInfoMapEntity)
-            .leftJoin(storeTimeInfoMapEntity.storeTimeInfoEntity, storeTimeInfoEntity)
-            .where(storeTimeInfoEntity.storeId.eq(storeId)).fetch();
-    List<String> new_times = storeTimeInfoDTO.getBreakTime();
-    int count = 0;
-    for (StoreTimeInfoMapEntity c_entity : breakTimeList) {
-      c_entity.setTime(new_times.get(count));
-      count += 1;
-    }
-
-    // 추가적인 데이터에 대해서는 새로 생성해서 추가
-    if (count < new_times.size()) {
-      while (count < new_times.size()) {
-        StoreTimeInfoMapEntity storeTimeInfoMapEntity = StoreTimeInfoMapEntity.builder()
-            .time(new_times.get(count)).storeTimeInfoEntity(p_entity).build();
-        entityManager.persist(storeTimeInfoMapEntity);
-        count += 1;
-      }
-    }
     return "success";
   }
 
 
   @Override
   public String deleteTimeInfo(int storeId) {
+    Long times_id = queryFactory.select(storeTimeInfoEntity.timesId).from(storeTimeInfoEntity)
+        .where(storeTimeInfoEntity.storeId.eq(storeId)).fetchFirst();
     queryFactory.delete(storeTimeInfoMapEntity)
-        .where(storeTimeInfoMapEntity.storeTimeInfoEntity.storeId.eq(storeId)).execute();
-    queryFactory.delete(storeTimeInfoEntity).where(storeTimeInfoEntity.storeId.eq(storeId))
+        .where(storeTimeInfoMapEntity.storeTimeInfoEntity.timesId.eq(times_id)).execute();
+    queryFactory.delete(storeTimeInfoEntity).where(storeTimeInfoEntity.timesId.eq(times_id))
         .execute();
     return "success";
   }
@@ -259,8 +243,9 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 
   @Override
   public String deleteFoodsInfo(int storeId, String foodName) {
-    queryFactory.delete(storeFoodsInfoEntity).where(storeFoodsInfoEntity.storeId.eq(storeId)
-        .and(storeFoodsInfoEntity.foodName.eq(foodName))).execute();
+    queryFactory.delete(storeFoodsInfoEntity).where(
+        storeFoodsInfoEntity.storeId.eq(storeId).and(storeFoodsInfoEntity.foodName.eq(foodName)))
+        .execute();
     return "success";
   }
 }

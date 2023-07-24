@@ -21,10 +21,14 @@ public class StoreTableInfoDTO {
 
   @NotNull
   private int storeId;
-  
+
   @NotNull
   private int count;
-  
+
   private MultipartFile tableImage;
-  
+
+  public static StoreTableInfoDTO sample() {
+    return StoreTableInfoDTO.builder().storeId(0).count(1).tableImage(null).build();
+  }
+
 }

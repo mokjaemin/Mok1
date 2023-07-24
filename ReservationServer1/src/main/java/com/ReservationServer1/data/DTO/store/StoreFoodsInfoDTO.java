@@ -21,15 +21,21 @@ public class StoreFoodsInfoDTO {
 
   @NotNull
   private int storeId;
-  
+
   @NotNull
   private String foodName;
-  
+
   @NotNull
   private String foodDescription;
-  
+
   @NotNull
   private int foodPrice;
-  
+
   private MultipartFile foodImage;
+
+
+  public static StoreFoodsInfoDTO sample() {
+    return StoreFoodsInfoDTO.builder().storeId(0).foodName("foodName")
+        .foodDescription("foodDescription").foodPrice(0).build();
+  }
 }

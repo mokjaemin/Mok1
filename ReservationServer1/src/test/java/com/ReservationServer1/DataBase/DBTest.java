@@ -33,13 +33,14 @@ public class DBTest {
 
 
   @Autowired
-  TestEntityManager testEntityManager;
+  private TestEntityManager testEntityManager;
 
-  JPAQueryFactory queryFactory;
+  private JPAQueryFactory queryFactory;
 
-  EntityManager em;
+  private EntityManager em;
 
-  BCryptPasswordEncoder passwordEncoder;
+  private BCryptPasswordEncoder passwordEncoder;
+
   
 
 
@@ -299,15 +300,6 @@ public class DBTest {
 
   }
 
-
-  // 3. StoreListDTO : Cache
-  @Test
-  @DisplayName("StoreListDTO : SAVE DTO : 가게 리스트 캐시 저장")
-  public void testSaveStoreListDTOSuccess() {
-    
-    // 추후에
-
-  }
-
+  
 
 }

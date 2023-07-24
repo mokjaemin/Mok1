@@ -28,6 +28,7 @@ public class StoreInfoServiceImpl implements StoreInfoService {
   private static final String DIR_FOODS = "/Users/mokjaemin/Desktop/Mok1/storeFoods";
   private final StoreInfoDAO storeInfoDAO;
 
+
   public StoreInfoServiceImpl(StoreInfoDAO storeInfoDAO) {
     this.storeInfoDAO = storeInfoDAO;
   }
@@ -44,8 +45,8 @@ public class StoreInfoServiceImpl implements StoreInfoService {
 
   //
   @Override
-  public String deleteDayOff(StoreRestDayDTO restDayDTO) {
-    return storeInfoDAO.deleteDayOff(restDayDTO);
+  public String deleteDayOff(int storeId) {
+    return storeInfoDAO.deleteDayOff(storeId);
   }
 
   @Override

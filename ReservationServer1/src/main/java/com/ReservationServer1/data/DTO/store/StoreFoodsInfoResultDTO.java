@@ -17,7 +17,7 @@ import lombok.ToString;
 @Builder
 @EqualsAndHashCode
 public class StoreFoodsInfoResultDTO {
-  
+
   @NotNull
   private int storeId;
 
@@ -26,9 +26,14 @@ public class StoreFoodsInfoResultDTO {
 
   @NotNull
   private String foodDescription;
-  
+
   @NotNull
   private int foodPrice;
 
   private String encoded_image;
+
+  public static StoreFoodsInfoResultDTO sample() {
+    return StoreFoodsInfoResultDTO.builder().storeId(0).foodName("foodName")
+        .foodDescription("foodDescription").foodPrice(0).encoded_image("imageString").build();
+  }
 }

@@ -14,7 +14,7 @@ public interface StoreInfoService {
 
   List<String> getDayOff(int storeId);
 
-  String deleteDayOff(StoreRestDayDTO restDayDTO);
+  String deleteDayOff(int storeId);
 
 
   // TIME INFO

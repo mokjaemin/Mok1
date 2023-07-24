@@ -1,6 +1,8 @@
 package com.ReservationServer1.data.Entity.store;
 
 import java.util.Set;
+import org.springframework.beans.BeanUtils;
+import com.ReservationServer1.data.DTO.store.StoreTimeInfoDTO;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -34,6 +36,10 @@ public class StoreTimeInfoEntity {
   private String endTime;
   private String intervalTime;
   private int storeId;
+  
+  public StoreTimeInfoEntity(StoreTimeInfoDTO storeTimeInfoDTO) {
+    BeanUtils.copyProperties(storeTimeInfoDTO, this);
+  }
   
   @OneToMany(mappedBy = "storeTimeInfoEntity", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   private Set<StoreTimeInfoMapEntity> breakTime;
