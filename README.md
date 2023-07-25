@@ -19,16 +19,16 @@
 # ENV
 - IDE : STS4
 - BUILD TOOLS : MAVEN
-- FRAMEWORK : SPRING BOOT
+- FRAMEWORK : SPRING BOOT 3.0.5
 - SERVER : TOMCAT
-- LANGUAGE : JAVA
+- LANGUAGE : JAVA 17
 - CLIENT : HTTP Requests/Response
 - CLIENT API : Restful API
 - CLIENT TESTING : Insomnia, SWAGGER
 - SEQURITY : JASYPT Library, Spring Security, JWT
 - DATA API : Query DSL
-- DATABASE : MYSQL with AWS(Main DB), Redis(Cache)
-- TESTING : JUNIT, Mockito
+- DATABASE : MYSQL with AWS(Main DB), Redis(Cache), H2(Testing)
+- TESTING : JUNIT5, Mockito
 - TEST COVERAGE : JACOCO
 
 # TRAITS
@@ -44,7 +44,10 @@
 - AWS를 활용하여 환경 개선
 - Redis를 활용하여 캐시를 통해 속도 향상
 - 사진/동영상 저장시 다른 저장공간을 사용해 용량 사용 개선
-- JUNIT, Mokito를 통한 테스팅
+- JUNIT, Mokito를 통한 테스팅 ()%
+
+# Test Coverage
+- 준비중
 
 # Trouble Shooting
 - https://mokjaemin88.tistory.com/category/Trouble%20Shooting
