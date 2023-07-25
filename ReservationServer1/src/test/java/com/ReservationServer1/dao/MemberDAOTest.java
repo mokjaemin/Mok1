@@ -264,6 +264,7 @@ public class MemberDAOTest {
 
     doReturn(jpaUpdateClause).when(queryFactory).update(memberEntity);
     doReturn(jpaUpdateClause).when(jpaUpdateClause).set(memberEntity.userPwd, encodedPwd);
+    doReturn(jpaUpdateClause).when(jpaUpdateClause).where(memberEntity.userId.eq(userId));
 
 
     // when
@@ -317,6 +318,7 @@ public class MemberDAOTest {
     doReturn(1).when(jpaQuery).fetchOne();
 
     doReturn(encodedPwd).when(passwordEncoder).encode(sample.getUserPwd());
+
     doReturn(jpaUpdateClause).when(queryFactory).update(memberEntity);
     doReturn(jpaUpdateClause).when(jpaUpdateClause).set(memberEntity.userPwd, encodedPwd);
     doReturn(jpaUpdateClause).when(jpaUpdateClause).set(memberEntity.userAddress,
@@ -327,6 +329,7 @@ public class MemberDAOTest {
         sample.getUserName());
     doReturn(jpaUpdateClause).when(jpaUpdateClause).set(memberEntity.userNumber,
         sample.getUserNumber());
+    doReturn(jpaUpdateClause).when(jpaUpdateClause).where(memberEntity.userId.eq(userId));
 
 
     // when
@@ -433,7 +436,7 @@ public class MemberDAOTest {
     doReturn(jpaQuery).when(jpaQuery).where(memberEntity.userId.eq(userId));
     doReturn(jpaQuery).when(jpaQuery).limit(1);
     doReturn(getPwd).when(jpaQuery).fetchOne();
-    
+
     doReturn(encodedPwd).when(passwordEncoder).encode(userPwd);
     doReturn(false).when(passwordEncoder).matches(getPwd, encodedPwd);
 

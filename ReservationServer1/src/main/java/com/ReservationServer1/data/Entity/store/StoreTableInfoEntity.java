@@ -35,6 +35,7 @@ public class StoreTableInfoEntity {
   private int count;
 
   private String imageURL;
+  
 
   public StoreTableInfoEntity(StoreTableInfoDTO storeTableInfoDTO) {
     BeanUtils.copyProperties(storeTableInfoDTO, this);
