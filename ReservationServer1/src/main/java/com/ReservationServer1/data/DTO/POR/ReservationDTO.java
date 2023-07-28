@@ -31,5 +31,9 @@ public class ReservationDTO {
   @NotNull
   private String storeTable;
   
+  public static ReservationDTO sample() {
+    return ReservationDTO.builder().storeId(0).date("1월1일").time("1시").storeTable("1번").build();
+  }
+  
 
 }

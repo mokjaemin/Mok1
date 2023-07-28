@@ -25,4 +25,11 @@ public class OrderDTO {
   @NotNull
   private HashMap<String, Integer> orderInfo;
   
+  public static OrderDTO sample() {
+    HashMap<String, Integer> testInfo = new HashMap<>();
+    testInfo.put("foodName1", 1);
+    testInfo.put("foodName2", 2);
+    return OrderDTO.builder().storeId(0).orderInfo(testInfo).build();
+  }
+  
 }

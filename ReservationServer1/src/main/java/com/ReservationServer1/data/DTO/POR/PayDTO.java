@@ -27,4 +27,8 @@ public class PayDTO {
   @NotNull
   private int amount;
   
+  public static PayDTO sample() {
+    return PayDTO.builder().reservationId(0L).storeId(0).amount(0).build();
+  }
+  
 }
