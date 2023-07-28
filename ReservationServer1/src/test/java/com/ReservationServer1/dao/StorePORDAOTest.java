@@ -1,6 +1,7 @@
 package com.ReservationServer1.dao;
 
 
+import static com.ReservationServer1.data.Entity.POR.QStoreCouponEntity.storeCouponEntity;
 import static com.ReservationServer1.data.Entity.POR.QStoreOrdersEntity.storeOrdersEntity;
 import static com.ReservationServer1.data.Entity.POR.QStoreOrdersMapEntity.storeOrdersMapEntity;
 import static com.ReservationServer1.data.Entity.POR.QStorePayEntity.storePayEntity;
@@ -15,6 +16,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +26,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import com.ReservationServer1.DAO.Impl.StorePORDAOImpl;
 import com.ReservationServer1.data.DTO.POR.OrderDTO;
+import com.ReservationServer1.data.DTO.POR.PayDTO;
 import com.ReservationServer1.data.DTO.POR.ReservationDTO;
+import com.ReservationServer1.data.Entity.POR.StoreCouponEntity;
 import com.ReservationServer1.data.Entity.POR.StoreOrdersEntity;
 import com.ReservationServer1.data.Entity.POR.StoreOrdersMapEntity;
 import com.ReservationServer1.data.Entity.POR.StorePayEntity;
@@ -58,6 +62,9 @@ public class StorePORDAOTest {
 
   @Mock
   private JPAQuery<StorePayEntity> jpaQueryPay;
+
+  @Mock
+  private JPAQuery<StoreCouponEntity> jpaQueryCoupon;
 
   @Mock
   private JPADeleteClause jpaDeleteClause;
@@ -446,5 +453,555 @@ public class StorePORDAOTest {
         .and(storeOrdersMapEntity.foodName.eq(foodName)));
     verify(jpaDeleteClause, times(1)).execute();
   }
+
+
+
+  // 8. Register Pay
+  @Test
+  @DisplayName("가게 결제 등록 성공 : 기존 쿠폰 증가")
+  public void registerPaySuccess() {
+    // given
+    String response = "success";
+    PayDTO sample = PayDTO.sample();
+    StoreReservationEntity result = new StoreReservationEntity();
+    result.setChild(new StoreOrdersEntity());
+    result.setUserId("userId");
+    StorePayEntity entity = StorePayEntity.builder().amount(sample.getAmount()).build();
+    entity.setStoreOrdersEntity(result.getChild());
+    result.getChild().setPayment(entity);
+
+
+    doReturn(jpaQueryReservation).when(queryFactory).select(storeReservationEntity);
+    doReturn(jpaQueryReservation).when(jpaQueryReservation).from(storeReservationEntity);
+    doReturn(jpaQueryOrders).when(jpaQueryReservation).leftJoin(storeReservationEntity.child,
+        storeOrdersEntity);
+    doReturn(jpaQueryReservation).when(jpaQueryOrders)
+        .where(storeReservationEntity.reservationId.eq(sample.getReservationId()));
+    doReturn(jpaQueryReservation).when(jpaQueryReservation).limit(1);
+    doReturn(result).when(jpaQueryReservation).fetchOne();
+
+    doNothing().when(entityManager).persist(any(StorePayEntity.class));
+
+    StoreCouponEntity coupon = new StoreCouponEntity();
+    coupon.setAmount(0);
+
+    doReturn(jpaQueryCoupon).when(queryFactory).select(storeCouponEntity);
+    doReturn(jpaQueryCoupon).when(jpaQueryCoupon).from(storeCouponEntity);
+    doReturn(jpaQueryCoupon).when(jpaQueryCoupon).where(storeCouponEntity.userId
+        .eq(result.getUserId()).and(storeCouponEntity.storeId.eq(sample.getStoreId())));
+    doReturn(jpaQueryCoupon).when(jpaQueryCoupon).limit(1);
+    doReturn(coupon).when(jpaQueryCoupon).fetchOne();
+
+    doNothing().when(entityManager).persist(any(StoreCouponEntity.class));
+
+
+    // when
+    String final_result = storePORDAOImpl.registerPay(sample);
+
+    // then
+    assertEquals(response, final_result);
+
+
+    // verify
+    verify(entityManager, times(1)).persist(any(StorePayEntity.class));
+    verify(entityManager, never()).persist(any(StoreCouponEntity.class));
+
+  }
+
+  @Test
+  @DisplayName("가게 결제 등록 성공 : 새로운 쿠폰 생성")
+  public void registerPaySuccess1() {
+    // given
+    String response = "success";
+    PayDTO sample = PayDTO.sample();
+    StoreReservationEntity result = new StoreReservationEntity();
+    result.setChild(new StoreOrdersEntity());
+    result.setUserId("userId");
+    StorePayEntity entity = StorePayEntity.builder().amount(sample.getAmount()).build();
+    entity.setStoreOrdersEntity(result.getChild());
+    result.getChild().setPayment(entity);
+
+
+    doReturn(jpaQueryReservation).when(queryFactory).select(storeReservationEntity);
+    doReturn(jpaQueryReservation).when(jpaQueryReservation).from(storeReservationEntity);
+    doReturn(jpaQueryOrders).when(jpaQueryReservation).leftJoin(storeReservationEntity.child,
+        storeOrdersEntity);
+    doReturn(jpaQueryReservation).when(jpaQueryOrders)
+        .where(storeReservationEntity.reservationId.eq(sample.getReservationId()));
+    doReturn(jpaQueryReservation).when(jpaQueryReservation).limit(1);
+    doReturn(result).when(jpaQueryReservation).fetchOne();
+
+    doNothing().when(entityManager).persist(any(StorePayEntity.class));
+
+
+    doReturn(jpaQueryCoupon).when(queryFactory).select(storeCouponEntity);
+    doReturn(jpaQueryCoupon).when(jpaQueryCoupon).from(storeCouponEntity);
+    doReturn(jpaQueryCoupon).when(jpaQueryCoupon).where(storeCouponEntity.userId
+        .eq(result.getUserId()).and(storeCouponEntity.storeId.eq(sample.getStoreId())));
+    doReturn(jpaQueryCoupon).when(jpaQueryCoupon).limit(1);
+    doReturn(null).when(jpaQueryCoupon).fetchOne();
+
+    doNothing().when(entityManager).persist(any(StoreCouponEntity.class));
+
+
+    // when
+    String final_result = storePORDAOImpl.registerPay(sample);
+
+    // then
+    assertEquals(response, final_result);
+
+
+    // verify
+    verify(entityManager, times(1)).persist(any(StorePayEntity.class));
+    verify(entityManager, times(1)).persist(any(StoreCouponEntity.class));
+
+  }
+
+  // 9. Delete Pay
+  @Test
+  @DisplayName("가게 결제 삭제 성공")
+  public void deletePaySuccess() {
+    // given
+    String response = "success";
+    Long reservationId = 0L;
+    StoreReservationEntity result1 = new StoreReservationEntity();
+    StoreOrdersEntity result2 = new StoreOrdersEntity();
+    StorePayEntity result3 = new StorePayEntity();
+    result3.setPaymentId(0L);
+    result2.setPayment(result3);
+    result1.setChild(result2);
+    result1.setUserId("userId");
+    result1.setStoreId(0);
+
+
+    doReturn(jpaQueryReservation).when(queryFactory).select(storeReservationEntity);
+    doReturn(jpaQueryReservation).when(jpaQueryReservation).from(storeReservationEntity);
+    doReturn(jpaQueryOrders).when(jpaQueryReservation).leftJoin(storeReservationEntity.child,
+        storeOrdersEntity);
+    doReturn(jpaQueryOrders).when(jpaQueryOrders).fetchJoin();
+    doReturn(jpaQueryPay).when(jpaQueryOrders).leftJoin(storeOrdersEntity.payment, storePayEntity);
+    doReturn(jpaQueryPay).when(jpaQueryPay).fetchJoin();
+    doReturn(jpaQueryReservation).when(jpaQueryPay)
+        .where(storeReservationEntity.reservationId.eq(reservationId));
+    doReturn(jpaQueryReservation).when(jpaQueryReservation).limit(1);
+    doReturn(result1).when(jpaQueryReservation).fetchOne();
+
+
+    doReturn(jpaDeleteClause).when(queryFactory).delete(storePayEntity);
+    doReturn(jpaDeleteClause).when(jpaDeleteClause)
+        .where(storePayEntity.paymentId.eq(result1.getChild().getPayment().getPaymentId()));
+
+
+
+    StoreCouponEntity coupon = new StoreCouponEntity();
+    coupon.setAmount(1);
+
+    doReturn(jpaQueryCoupon).when(queryFactory).select(storeCouponEntity);
+    doReturn(jpaQueryCoupon).when(jpaQueryCoupon).from(storeCouponEntity);
+    doReturn(jpaQueryCoupon).when(jpaQueryCoupon).where(storeCouponEntity.userId
+        .eq(result1.getUserId()).and(storeCouponEntity.storeId.eq(result1.getStoreId())));
+    doReturn(jpaQueryCoupon).when(jpaQueryCoupon).limit(1);
+    doReturn(coupon).when(jpaQueryCoupon).fetchOne();
+
+
+
+    // when
+    String final_result = storePORDAOImpl.deletePay(reservationId);
+
+
+    // then
+    assertEquals(response, final_result);
+  }
+
+
+  // 10. Register Comment
+  @Test
+  @DisplayName("가게 댓글 등록 성공")
+  public void registerCommentSuccess() {
+    // given
+    long reservationId = 0L;
+    String comment = "comment";
+    String userId = "userId";
+    String response = "success";
+
+    StoreReservationEntity result = new StoreReservationEntity();
+    StoreOrdersEntity result2 = new StoreOrdersEntity();
+    StorePayEntity result3 = new StorePayEntity();
+    result3.setPaymentId(0L);
+    result2.setPayment(result3);
+    result.setChild(result2);
+    result.setUserId(userId);
+
+
+    doReturn(jpaQueryReservation).when(queryFactory).select(storeReservationEntity);
+    doReturn(jpaQueryReservation).when(jpaQueryReservation).from(storeReservationEntity);
+    doReturn(jpaQueryOrders).when(jpaQueryReservation).leftJoin(storeReservationEntity.child,
+        storeOrdersEntity);
+    doReturn(jpaQueryOrders).when(jpaQueryOrders).fetchJoin();
+    doReturn(jpaQueryPay).when(jpaQueryOrders).leftJoin(storeOrdersEntity.payment, storePayEntity);
+    doReturn(jpaQueryPay).when(jpaQueryPay).fetchJoin();
+    doReturn(jpaQueryReservation).when(jpaQueryPay)
+        .where(storeReservationEntity.reservationId.eq(reservationId));
+    doReturn(jpaQueryReservation).when(jpaQueryReservation).limit(1);
+    doReturn(result).when(jpaQueryReservation).fetchOne();
+
+
+    // when
+    String final_result = storePORDAOImpl.registerComment(reservationId, comment, userId);
+
+
+    // then
+    assertEquals(response, final_result);
+  }
+
+  @Test
+  @DisplayName("가게 댓글 등록 실패 : 권한 없음")
+  public void registerCommentFail() {
+    // given
+    long reservationId = 0L;
+    String comment = "comment";
+    String userId = "userId";
+
+    StoreReservationEntity result = new StoreReservationEntity();
+    StoreOrdersEntity result2 = new StoreOrdersEntity();
+    StorePayEntity result3 = new StorePayEntity();
+    result3.setPaymentId(0L);
+    result2.setPayment(result3);
+    result.setChild(result2);
+    result.setUserId("diffUserId");
+
+
+    doReturn(jpaQueryReservation).when(queryFactory).select(storeReservationEntity);
+    doReturn(jpaQueryReservation).when(jpaQueryReservation).from(storeReservationEntity);
+    doReturn(jpaQueryOrders).when(jpaQueryReservation).leftJoin(storeReservationEntity.child,
+        storeOrdersEntity);
+    doReturn(jpaQueryOrders).when(jpaQueryOrders).fetchJoin();
+    doReturn(jpaQueryPay).when(jpaQueryOrders).leftJoin(storeOrdersEntity.payment, storePayEntity);
+    doReturn(jpaQueryPay).when(jpaQueryPay).fetchJoin();
+    doReturn(jpaQueryReservation).when(jpaQueryPay)
+        .where(storeReservationEntity.reservationId.eq(reservationId));
+    doReturn(jpaQueryReservation).when(jpaQueryReservation).limit(1);
+    doReturn(result).when(jpaQueryReservation).fetchOne();
+
+
+    // then && when
+    MessageException message = assertThrows(MessageException.class, () -> {
+      storePORDAOImpl.registerComment(reservationId, comment, userId);
+    });
+    String expected = "권한이 없습니다.";
+    assertEquals(expected, message.getMessage());
+  }
+
+
+  // 11. Delete Comment
+  @Test
+  @DisplayName("가게 댓글 삭제 성공")
+  public void deleteCommentSuccess() {
+    // given
+    long reservationId = 0L;
+    String userId = "userId";
+    String response = "success";
+
+    StoreReservationEntity result = new StoreReservationEntity();
+    StoreOrdersEntity result2 = new StoreOrdersEntity();
+    StorePayEntity result3 = new StorePayEntity();
+    result3.setPaymentId(0L);
+    result2.setPayment(result3);
+    result.setChild(result2);
+    result.setUserId(userId);
+
+
+    doReturn(jpaQueryReservation).when(queryFactory).select(storeReservationEntity);
+    doReturn(jpaQueryReservation).when(jpaQueryReservation).from(storeReservationEntity);
+    doReturn(jpaQueryOrders).when(jpaQueryReservation).leftJoin(storeReservationEntity.child,
+        storeOrdersEntity);
+    doReturn(jpaQueryOrders).when(jpaQueryOrders).fetchJoin();
+    doReturn(jpaQueryPay).when(jpaQueryOrders).leftJoin(storeOrdersEntity.payment, storePayEntity);
+    doReturn(jpaQueryPay).when(jpaQueryPay).fetchJoin();
+    doReturn(jpaQueryReservation).when(jpaQueryPay)
+        .where(storeReservationEntity.reservationId.eq(reservationId));
+    doReturn(jpaQueryReservation).when(jpaQueryReservation).limit(1);
+    doReturn(result).when(jpaQueryReservation).fetchOne();
+
+
+    // when
+    String final_result = storePORDAOImpl.deleteComment(reservationId, userId);
+
+
+    // then
+    assertEquals(response, final_result);
+  }
+
+
+  @Test
+  @DisplayName("가게 댓글 삭제 실패 : 권한 없음")
+  public void deleteCommentFail() {
+    // given
+    long reservationId = 0L;
+    String userId = "userId";
+
+    StoreReservationEntity result = new StoreReservationEntity();
+    StoreOrdersEntity result2 = new StoreOrdersEntity();
+    StorePayEntity result3 = new StorePayEntity();
+    result3.setPaymentId(0L);
+    result2.setPayment(result3);
+    result.setChild(result2);
+    result.setUserId("diffUserId");
+
+
+    doReturn(jpaQueryReservation).when(queryFactory).select(storeReservationEntity);
+    doReturn(jpaQueryReservation).when(jpaQueryReservation).from(storeReservationEntity);
+    doReturn(jpaQueryOrders).when(jpaQueryReservation).leftJoin(storeReservationEntity.child,
+        storeOrdersEntity);
+    doReturn(jpaQueryOrders).when(jpaQueryOrders).fetchJoin();
+    doReturn(jpaQueryPay).when(jpaQueryOrders).leftJoin(storeOrdersEntity.payment, storePayEntity);
+    doReturn(jpaQueryPay).when(jpaQueryPay).fetchJoin();
+    doReturn(jpaQueryReservation).when(jpaQueryPay)
+        .where(storeReservationEntity.reservationId.eq(reservationId));
+    doReturn(jpaQueryReservation).when(jpaQueryReservation).limit(1);
+    doReturn(result).when(jpaQueryReservation).fetchOne();
+
+
+    // then && when
+    MessageException message = assertThrows(MessageException.class, () -> {
+      storePORDAOImpl.deleteComment(reservationId, userId);
+    });
+    String expected = "권한이 없습니다.";
+    assertEquals(expected, message.getMessage());
+  }
+
+  // 12. Register Big Comment
+  @Test
+  @DisplayName("가게 대댓글 등록 성공")
+  public void registerBigCommentSuccess() {
+    // given
+    long reservationId = 0L;
+    String bigcomment = "comment";
+    int storeId = 0;
+    String response = "success";
+
+    StoreReservationEntity result = new StoreReservationEntity();
+    StoreOrdersEntity result2 = new StoreOrdersEntity();
+    StorePayEntity result3 = new StorePayEntity();
+    result3.setPaymentId(0L);
+    result2.setPayment(result3);
+    result.setChild(result2);
+    result.setStoreId(storeId);
+
+
+    doReturn(jpaQueryReservation).when(queryFactory).select(storeReservationEntity);
+    doReturn(jpaQueryReservation).when(jpaQueryReservation).from(storeReservationEntity);
+    doReturn(jpaQueryOrders).when(jpaQueryReservation).leftJoin(storeReservationEntity.child,
+        storeOrdersEntity);
+    doReturn(jpaQueryOrders).when(jpaQueryOrders).fetchJoin();
+    doReturn(jpaQueryPay).when(jpaQueryOrders).leftJoin(storeOrdersEntity.payment, storePayEntity);
+    doReturn(jpaQueryPay).when(jpaQueryPay).fetchJoin();
+    doReturn(jpaQueryReservation).when(jpaQueryPay)
+        .where(storeReservationEntity.reservationId.eq(reservationId));
+    doReturn(jpaQueryReservation).when(jpaQueryReservation).limit(1);
+    doReturn(result).when(jpaQueryReservation).fetchOne();
+
+
+    // when
+    String final_result = storePORDAOImpl.registerBigComment(reservationId, bigcomment, storeId);
+
+
+    // then
+    assertEquals(response, final_result);
+  }
+
+  @Test
+  @DisplayName("가게 대댓글 등록 실패 : 권한 없음")
+  public void registerBigCommentFail() {
+    // given
+    long reservationId = 0L;
+    String comment = "comment";
+    int storeId = 0;
+
+    StoreReservationEntity result = new StoreReservationEntity();
+    StoreOrdersEntity result2 = new StoreOrdersEntity();
+    StorePayEntity result3 = new StorePayEntity();
+    result3.setPaymentId(0L);
+    result2.setPayment(result3);
+    result.setChild(result2);
+    result.setStoreId(1);
+
+
+    doReturn(jpaQueryReservation).when(queryFactory).select(storeReservationEntity);
+    doReturn(jpaQueryReservation).when(jpaQueryReservation).from(storeReservationEntity);
+    doReturn(jpaQueryOrders).when(jpaQueryReservation).leftJoin(storeReservationEntity.child,
+        storeOrdersEntity);
+    doReturn(jpaQueryOrders).when(jpaQueryOrders).fetchJoin();
+    doReturn(jpaQueryPay).when(jpaQueryOrders).leftJoin(storeOrdersEntity.payment, storePayEntity);
+    doReturn(jpaQueryPay).when(jpaQueryPay).fetchJoin();
+    doReturn(jpaQueryReservation).when(jpaQueryPay)
+        .where(storeReservationEntity.reservationId.eq(reservationId));
+    doReturn(jpaQueryReservation).when(jpaQueryReservation).limit(1);
+    doReturn(result).when(jpaQueryReservation).fetchOne();
+
+
+    // then && when
+    MessageException message = assertThrows(MessageException.class, () -> {
+      storePORDAOImpl.registerBigComment(reservationId, comment, storeId);
+    });
+    String expected = "권한이 없습니다.";
+    assertEquals(expected, message.getMessage());
+  }
+
+
+  // 13. Delete Big Comment
+  @Test
+  @DisplayName("가게 대댓글 삭제 성공")
+  public void deleteBigCommentSuccess() {
+    // given
+    long reservationId = 0L;
+    int storeId = 0;
+    String response = "success";
+
+    StoreReservationEntity result = new StoreReservationEntity();
+    StoreOrdersEntity result2 = new StoreOrdersEntity();
+    StorePayEntity result3 = new StorePayEntity();
+    result3.setPaymentId(0L);
+    result2.setPayment(result3);
+    result.setChild(result2);
+    result.setStoreId(storeId);
+
+
+    doReturn(jpaQueryReservation).when(queryFactory).select(storeReservationEntity);
+    doReturn(jpaQueryReservation).when(jpaQueryReservation).from(storeReservationEntity);
+    doReturn(jpaQueryOrders).when(jpaQueryReservation).leftJoin(storeReservationEntity.child,
+        storeOrdersEntity);
+    doReturn(jpaQueryOrders).when(jpaQueryOrders).fetchJoin();
+    doReturn(jpaQueryPay).when(jpaQueryOrders).leftJoin(storeOrdersEntity.payment, storePayEntity);
+    doReturn(jpaQueryPay).when(jpaQueryPay).fetchJoin();
+    doReturn(jpaQueryReservation).when(jpaQueryPay)
+        .where(storeReservationEntity.reservationId.eq(reservationId));
+    doReturn(jpaQueryReservation).when(jpaQueryReservation).limit(1);
+    doReturn(result).when(jpaQueryReservation).fetchOne();
+
+
+    // when
+    String final_result = storePORDAOImpl.deleteBigComment(reservationId, storeId);
+
+
+    // then
+    assertEquals(response, final_result);
+  }
+
+
+  @Test
+  @DisplayName("가게 대댓글 삭제 실패 : 권한 없음")
+  public void deleteBigCommentFail() {
+    // given
+    long reservationId = 0L;
+    int storeId = 0;
+
+    StoreReservationEntity result = new StoreReservationEntity();
+    StoreOrdersEntity result2 = new StoreOrdersEntity();
+    StorePayEntity result3 = new StorePayEntity();
+    result3.setPaymentId(0L);
+    result2.setPayment(result3);
+    result.setChild(result2);
+    result.setStoreId(1);
+
+
+    doReturn(jpaQueryReservation).when(queryFactory).select(storeReservationEntity);
+    doReturn(jpaQueryReservation).when(jpaQueryReservation).from(storeReservationEntity);
+    doReturn(jpaQueryOrders).when(jpaQueryReservation).leftJoin(storeReservationEntity.child,
+        storeOrdersEntity);
+    doReturn(jpaQueryOrders).when(jpaQueryOrders).fetchJoin();
+    doReturn(jpaQueryPay).when(jpaQueryOrders).leftJoin(storeOrdersEntity.payment, storePayEntity);
+    doReturn(jpaQueryPay).when(jpaQueryPay).fetchJoin();
+    doReturn(jpaQueryReservation).when(jpaQueryPay)
+        .where(storeReservationEntity.reservationId.eq(reservationId));
+    doReturn(jpaQueryReservation).when(jpaQueryReservation).limit(1);
+    doReturn(result).when(jpaQueryReservation).fetchOne();
+
+
+    // then && when
+    MessageException message = assertThrows(MessageException.class, () -> {
+      storePORDAOImpl.deleteBigComment(reservationId, storeId);
+    });
+    String expected = "권한이 없습니다.";
+    assertEquals(expected, message.getMessage());
+  }
+
+  // 14. Get Coupon For Client
+  @Test
+  @DisplayName("유저별 쿠폰 출력 성공")
+  public void getCouponUserSuccess() {
+    // given
+    int storeId = 0;
+    String userId = "userId";
+    StoreCouponEntity result = new StoreCouponEntity();
+    result.setAmount(0);
+
+    doReturn(jpaQueryCoupon).when(queryFactory).select(storeCouponEntity);
+    doReturn(jpaQueryCoupon).when(jpaQueryCoupon).from(storeCouponEntity);
+    doReturn(jpaQueryCoupon).when(jpaQueryCoupon)
+        .where(storeCouponEntity.storeId.eq(storeId).and(storeCouponEntity.userId.eq(userId)));
+    doReturn(jpaQueryCoupon).when(jpaQueryCoupon).limit(1);
+    doReturn(result).when(jpaQueryCoupon).fetchOne();
+
+
+    // when
+    int response = storePORDAOImpl.getCouponClient(storeId, userId);
+
+
+    // then
+    assertEquals(response, result.getAmount());
+
+  }
+
+  // 15. Get Coupon For Store
+  @Test
+  @DisplayName("가게별 쿠폰 출력 성공")
+  public void getCouponStoreSuccess() {
+    // given
+    int storeId = 0;
+    List<StoreCouponEntity> entity = new ArrayList<>();
+    StoreCouponEntity coupon = StoreCouponEntity.builder().amount(1).userId("userId").build();
+    HashMap<String, Integer> result = new HashMap<>();
+    for (StoreCouponEntity now : entity) {
+      result.put(now.getUserId(), now.getAmount());
+    }
+
+    doReturn(jpaQueryCoupon).when(queryFactory).select(storeCouponEntity);
+    doReturn(jpaQueryCoupon).when(jpaQueryCoupon).from(storeCouponEntity);
+    doReturn(jpaQueryCoupon).when(jpaQueryCoupon).where(storeCouponEntity.storeId.eq(storeId));
+    doReturn(entity).when(jpaQueryCoupon).fetch();
+
+
+    // when
+    HashMap<String, Integer> response = storePORDAOImpl.getCouponOwner(storeId);
+
+
+    // then
+    assertEquals(response, result);
+
+  }
+
+
+  @Test
+  @DisplayName("가게별 쿠폰 출력 실패 : 정보 없음")
+  public void getCouponStoreFail() {
+    // given
+    int storeId = 0;
+
+    doReturn(jpaQueryCoupon).when(queryFactory).select(storeCouponEntity);
+    doReturn(jpaQueryCoupon).when(jpaQueryCoupon).from(storeCouponEntity);
+    doReturn(jpaQueryCoupon).when(jpaQueryCoupon).where(storeCouponEntity.storeId.eq(storeId));
+    doReturn(null).when(jpaQueryCoupon).fetch();
+
+
+    // then && when
+    MessageException message = assertThrows(MessageException.class, () -> {
+      storePORDAOImpl.getCouponOwner(storeId);
+    });
+    String expected = "정보가 존재하지 않습니다.";
+    assertEquals(expected, message.getMessage());
+
+  }
+
 
 }
