@@ -2,6 +2,11 @@ package com.ReservationServer1.DataBase;
 
 
 
+import static com.ReservationServer1.data.Entity.POR.QStoreCouponEntity.storeCouponEntity;
+import static com.ReservationServer1.data.Entity.POR.QStoreOrdersEntity.storeOrdersEntity;
+import static com.ReservationServer1.data.Entity.POR.QStoreOrdersMapEntity.storeOrdersMapEntity;
+import static com.ReservationServer1.data.Entity.POR.QStorePayEntity.storePayEntity;
+import static com.ReservationServer1.data.Entity.POR.QStoreReservationEntity.storeReservationEntity;
 import static com.ReservationServer1.data.Entity.member.QMemberEntity.memberEntity;
 import static com.ReservationServer1.data.Entity.store.QStoreEntity.storeEntity;
 import static com.ReservationServer1.data.Entity.store.QStoreFoodsInfoEntity.storeFoodsInfoEntity;
@@ -16,6 +21,8 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,10 +34,17 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
+import com.ReservationServer1.data.DTO.POR.OrderDTO;
+import com.ReservationServer1.data.DTO.POR.ReservationDTO;
 import com.ReservationServer1.data.DTO.store.StoreFoodsInfoDTO;
 import com.ReservationServer1.data.DTO.store.StoreRestDayDTO;
 import com.ReservationServer1.data.DTO.store.StoreTableInfoDTO;
 import com.ReservationServer1.data.DTO.store.StoreTimeInfoDTO;
+import com.ReservationServer1.data.Entity.POR.StoreCouponEntity;
+import com.ReservationServer1.data.Entity.POR.StoreOrdersEntity;
+import com.ReservationServer1.data.Entity.POR.StoreOrdersMapEntity;
+import com.ReservationServer1.data.Entity.POR.StorePayEntity;
+import com.ReservationServer1.data.Entity.POR.StoreReservationEntity;
 import com.ReservationServer1.data.Entity.member.MemberEntity;
 import com.ReservationServer1.data.Entity.store.StoreEntity;
 import com.ReservationServer1.data.Entity.store.StoreFoodsInfoEntity;
@@ -878,5 +892,889 @@ public class DBTest {
   }
 
 
+  // 7. Store Reservation Entity : StorePORDAOImpl
+  @Test
+  @DisplayName("StoreReservationEntity : PERSIST : 가게 예약정보 등록 성공")
+  public void testPersistReservationSuccess() {
+    // given
+    ReservationDTO reservationDTO = ReservationDTO.sample();
+    String userId = "userId";
+    StoreReservationEntity entity = new StoreReservationEntity(reservationDTO);
+    entity.setUserId(userId);
+
+    // when - 영속화
+    em.persist(entity);
+    em.flush();
+    em.clear();
+
+
+    // then - DB에 데이터는 1개
+    Long count = queryFactory.select(storeReservationEntity.count()).from(storeReservationEntity)
+        .fetch().get(0);
+    assertThat(count, equalTo(1L));
+  }
+
+  @Test
+  @DisplayName("StoreReservationEntity : SELECT, UPDATE : 가게 예약정보 조회 후 변경 성공")
+  public void testUpdateReservationSuccess() {
+    // given
+    ReservationDTO reservationDTO = ReservationDTO.sample();
+    String userId = "userId";
+    StoreReservationEntity entity = new StoreReservationEntity(reservationDTO);
+    entity.setUserId(userId);
+
+    // when - 영속화, 조회, 변경
+    em.persist(entity);
+    em.flush();
+    em.clear();
+
+    StoreReservationEntity new_entity = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).where(storeReservationEntity.storeId
+            .eq(reservationDTO.getStoreId()).and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+    new_entity.setDate("날짜");
+    new_entity.setTime("시간");
+    new_entity.setStoreTable("테이블");
+
+    em.flush();
+    em.clear();
+
+
+    // then - 재 조회 후 검증
+    StoreReservationEntity final_entity = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).where(storeReservationEntity.storeId
+            .eq(reservationDTO.getStoreId()).and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+    assertEquals(final_entity.getDate(), "날짜");
+    assertEquals(final_entity.getTime(), "시간");
+    assertEquals(final_entity.getStoreTable(), "테이블");
+
+  }
+
+
+  @Test
+  @DisplayName("StoreReservationEntity : SELECT BY STORE ID, USER ID : 가게 예약정보 가게아이디, 회원아이디로 조회")
+  public void testGetReservationByIDSuccess() {
+    // given
+    ReservationDTO reservationDTO = ReservationDTO.sample();
+    String userId = "userId";
+    int storeId = 0;
+    StoreReservationEntity entity = new StoreReservationEntity(reservationDTO);
+    entity.setUserId(userId);
+    entity.setStoreId(storeId);
+
+    // when - 영속화, 조회, 변경
+    em.persist(entity);
+    em.flush();
+    em.clear();
+
+
+    // when - 조회
+    StoreReservationEntity result = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).leftJoin(storeReservationEntity.child, storeOrdersEntity)
+        .fetchJoin().leftJoin(storeOrdersEntity.payment, storePayEntity).fetchJoin()
+        .leftJoin(storeOrdersEntity.childSet, storeOrdersMapEntity).fetchJoin()
+        .where(storeReservationEntity.storeId.eq(storeId)
+            .and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+
+
+    // then - 검증
+    assertEquals(result.getUserId(), userId);
+    assertThat(result.getStoreId(), is(storeId));
+  }
+
+  @Test
+  @DisplayName("StoreReservationEntity : DELETE : 가게 예약정보 삭제")
+  public void testDeleteReservationByIDSuccess() {
+    // given
+    ReservationDTO reservationDTO = ReservationDTO.sample();
+    String userId = "userId";
+    int storeId = 0;
+    StoreReservationEntity entity = new StoreReservationEntity(reservationDTO);
+    entity.setUserId(userId);
+    entity.setStoreId(storeId);
+
+    // when - 영속화, 조회, 변경
+    em.persist(entity);
+    em.flush();
+    em.clear();
+
+
+    // when
+    queryFactory.delete(storeReservationEntity).where(
+        storeReservationEntity.storeId.eq(storeId).and(storeReservationEntity.userId.eq(userId)))
+        .execute();
+
+    // then - 데이터가 없어야 함.
+    Long count = queryFactory.select(storeReservationEntity.count()).from(storeReservationEntity)
+        .fetch().get(0);
+    assertThat(count, equalTo(0L));
+  }
+
+
+  // 8. StoreOrdersEntity, StoreOrdersMapEntity : StorePORDAOImpl
+  @Test
+  @DisplayName("StoreOrdersEntity, StoreOrdersMapEntity : PERSIST : 예약 정보 조회 후 주문 정보 삽입")
+  public void testRegisterOrderSuccess() {
+    // given
+
+    // 1. ReservationEntity 저장
+    ReservationDTO reservationDTO = ReservationDTO.sample();
+    String userId = "userId";
+    int storeId = 0;
+    StoreReservationEntity entity = new StoreReservationEntity(reservationDTO);
+    entity.setUserId(userId);
+    entity.setStoreId(storeId);
+
+    // when - 영속화, 조회, 변경
+    em.persist(entity);
+    em.flush();
+    em.clear();
+
+
+    // 2. 저장한 엔터티 불러와 OrdersEntity 연결후 저장
+    StoreReservationEntity grandfa = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).where(storeReservationEntity.storeId
+            .eq(reservationDTO.getStoreId()).and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+
+    StoreOrdersEntity father = new StoreOrdersEntity(grandfa);
+    em.persist(father);
+
+
+    // 3. OrdersMap까지 저장 후 모두 연결
+    OrderDTO orderDTO = OrderDTO.sample();
+    List<StoreOrdersMapEntity> childs = new ArrayList<>();
+    for (String foodName : orderDTO.getOrderInfo().keySet()) {
+      StoreOrdersMapEntity child =
+          new StoreOrdersMapEntity(foodName, orderDTO.getOrderInfo().get(foodName), father);
+      em.persist(child);
+      childs.add(child);
+    }
+    father.setChildSet(childs);
+    grandfa.setChild(father);
+
+    em.flush();
+    em.clear();
+
+
+    // when - 모두 조회
+    StoreReservationEntity result = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).leftJoin(storeReservationEntity.child, storeOrdersEntity)
+        .fetchJoin().leftJoin(storeOrdersEntity.childSet, storeOrdersMapEntity).fetchJoin()
+        .where(storeReservationEntity.storeId.eq(storeId)
+            .and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+
+
+    // then - 모두 연결 되어있음
+    assertEquals(result.getChild().getOrdersId(), father.getOrdersId());
+    assertEquals(result.getChild().getChildSet().get(0).getFoodName(), childs.get(0).getFoodName());
+
+  }
+
+  @Test
+  @DisplayName("StoreOrdersEntity, StoreOrdersMapEntity : UPDATE : 예약 정보 조회 후 주문 정보 수정")
+  public void testUpdateOrderSuccess() {
+    // given
+
+    // 1. ReservationEntity 저장
+    ReservationDTO reservationDTO = ReservationDTO.sample();
+    String userId = "userId";
+    int storeId = 0;
+    StoreReservationEntity entity = new StoreReservationEntity(reservationDTO);
+    entity.setUserId(userId);
+    entity.setStoreId(storeId);
+
+    // when - 영속화, 조회, 변경
+    em.persist(entity);
+    em.flush();
+    em.clear();
+
+
+    // 2. 저장한 엔터티 불러와 OrdersEntity 연결후 저장
+    StoreReservationEntity grandfa = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).where(storeReservationEntity.storeId
+            .eq(reservationDTO.getStoreId()).and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+
+    StoreOrdersEntity father = new StoreOrdersEntity(grandfa);
+    em.persist(father);
+
+
+    // 3. OrdersMap까지 저장 후 모두 연결
+    OrderDTO orderDTO = OrderDTO.sample();
+    List<StoreOrdersMapEntity> childs = new ArrayList<>();
+    for (String foodName : orderDTO.getOrderInfo().keySet()) {
+      StoreOrdersMapEntity child =
+          new StoreOrdersMapEntity(foodName, orderDTO.getOrderInfo().get(foodName), father);
+      em.persist(child);
+      childs.add(child);
+    }
+    father.setChildSet(childs);
+    grandfa.setChild(father);
+
+    em.flush();
+    em.clear();
+
+
+    // when - 모두 조회 후 수정
+    StoreReservationEntity result = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).leftJoin(storeReservationEntity.child, storeOrdersEntity)
+        .fetchJoin().leftJoin(storeOrdersEntity.childSet, storeOrdersMapEntity).fetchJoin()
+        .where(storeReservationEntity.storeId.eq(orderDTO.getStoreId())
+            .and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+
+    List<StoreOrdersMapEntity> childsSet = result.getChild().getChildSet();
+    for (StoreOrdersMapEntity child : childsSet) {
+      for (String foodName : orderDTO.getOrderInfo().keySet()) {
+        if (child.getFoodName().equals(foodName)) {
+          child.setFoodCount(0);
+        }
+      }
+    }
+
+
+    // then - 변경이 잘 되어있음, 변경내용 foodCount 체크
+    assertThat(result.getChild().getChildSet().get(0).getFoodCount(), is(0));
+    assertThat(result.getChild().getChildSet().get(1).getFoodCount(), is(0));
+
+  }
+
+
+  @Test
+  @DisplayName("StoreOrdersEntity, StoreOrdersMapEntity : DELETE : 예약 정보 조회 후 주문 정보 삭제")
+  public void testDeleteOrderSuccess() {
+    // given
+
+    // 1. ReservationEntity 저장
+    ReservationDTO reservationDTO = ReservationDTO.sample();
+    String userId = "userId";
+    int storeId = 0;
+    StoreReservationEntity entity = new StoreReservationEntity(reservationDTO);
+    entity.setUserId(userId);
+    entity.setStoreId(storeId);
+
+    // when - 영속화, 조회, 변경
+    em.persist(entity);
+    em.flush();
+    em.clear();
+
+
+    // 2. 저장한 엔터티 불러와 OrdersEntity 연결후 저장
+    StoreReservationEntity grandfa = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).where(storeReservationEntity.storeId
+            .eq(reservationDTO.getStoreId()).and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+
+    StoreOrdersEntity father = new StoreOrdersEntity(grandfa);
+    em.persist(father);
+
+
+    // 3. OrdersMap까지 저장 후 모두 연결
+    OrderDTO orderDTO = OrderDTO.sample();
+    List<StoreOrdersMapEntity> childs = new ArrayList<>();
+    for (String foodName : orderDTO.getOrderInfo().keySet()) {
+      StoreOrdersMapEntity child =
+          new StoreOrdersMapEntity(foodName, orderDTO.getOrderInfo().get(foodName), father);
+      em.persist(child);
+      childs.add(child);
+    }
+    father.setChildSet(childs);
+    grandfa.setChild(father);
+
+    em.flush();
+    em.clear();
+
+
+    // when - 모두 조회 후 삭제 - 특정음식 주문 건 삭제
+    StoreReservationEntity result = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).leftJoin(storeReservationEntity.child, storeOrdersEntity)
+        .fetchJoin().leftJoin(storeOrdersEntity.childSet, storeOrdersMapEntity).fetchJoin()
+        .where(storeReservationEntity.storeId.eq(orderDTO.getStoreId())
+            .and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+
+    queryFactory
+        .delete(storeOrdersMapEntity).where(storeOrdersMapEntity.storeOrdersEntity.ordersId
+            .eq(result.getChild().getOrdersId()).and(storeOrdersMapEntity.foodName.eq("foodName1")))
+        .execute();
+
+    em.flush();
+    em.clear();
+
+
+    // then - 삭제 적용 여부 확인 : 2개에서 1개로 삭제
+    StoreReservationEntity new_result = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).leftJoin(storeReservationEntity.child, storeOrdersEntity)
+        .fetchJoin().leftJoin(storeOrdersEntity.childSet, storeOrdersMapEntity).fetchJoin()
+        .where(storeReservationEntity.storeId.eq(orderDTO.getStoreId())
+            .and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+    assertThat(new_result.getChild().getChildSet().size(), is(1));
+
+  }
+
+
+  // 9. StorePayEntity, StoreCouponEntity : StorePORDAOImpl
+  @Test
+  @DisplayName("StorePayEntity, StoreCouponEntity : PERSIST : 결제 등록 및 쿠폰 증가")
+  public void testRegisterPaySuccess() {
+    // given
+
+    // 1. ReservationEntity 저장
+    ReservationDTO reservationDTO = ReservationDTO.sample();
+    String userId = "userId";
+    int storeId = 0;
+    StoreReservationEntity entity = new StoreReservationEntity(reservationDTO);
+    entity.setUserId(userId);
+    entity.setStoreId(storeId);
+
+    // when - 영속화, 조회, 변경
+    em.persist(entity);
+    em.flush();
+    em.clear();
+
+
+    // 2. 저장한 엔터티 불러와 PayEntity 연결후 저장
+    StoreReservationEntity grandfa = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).where(storeReservationEntity.storeId
+            .eq(reservationDTO.getStoreId()).and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+
+    StoreOrdersEntity father = new StoreOrdersEntity(grandfa);
+    em.persist(father);
+
+
+    // 3. Pay까지 저장 후 모두 연결
+    StorePayEntity child = new StorePayEntity();
+    child.setAmount(10000);
+    child.setStoreOrdersEntity(father);
+    em.persist(child);
+    father.setPayment(child);
+    grandfa.setChild(father);
+
+
+    // 4. 쿠폰 증가
+    StoreCouponEntity coupon = queryFactory.select(storeCouponEntity).from(storeCouponEntity)
+        .where(storeCouponEntity.userId.eq(userId).and(storeCouponEntity.storeId.eq(storeId)))
+        .fetchFirst();
+    if (coupon == null) {
+      StoreCouponEntity newCoupon =
+          StoreCouponEntity.builder().storeId(storeId).userId(userId).amount(1).build();
+      em.persist(newCoupon);
+    } else {
+      coupon.setAmount(coupon.getAmount() + 1);
+    }
+
+    em.flush();
+    em.clear();
+
+
+    // when - 모두 조회
+    StoreReservationEntity result = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).leftJoin(storeReservationEntity.child, storeOrdersEntity)
+        .fetchJoin().leftJoin(storeOrdersEntity.payment, storePayEntity).fetchJoin()
+        .where(storeReservationEntity.storeId.eq(grandfa.getStoreId())
+            .and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+
+    StoreCouponEntity new_coupon = queryFactory.select(storeCouponEntity).from(storeCouponEntity)
+        .where(storeCouponEntity.userId.eq(userId).and(storeCouponEntity.storeId.eq(storeId)))
+        .fetchFirst();
+
+
+    // then - 모두 연결 되어있고 쿠폰도 잘 증가됨
+    assertEquals(result.getChild().getPayment().getAmount(), child.getAmount());
+    assertThat(new_coupon.getAmount(), is(1));
+
+
+  }
+
+  @Test
+  @DisplayName("StorePayEntity, StoreCouponEntity : Delete : 결제 취소 및 쿠폰 증가")
+  public void testDeletePaySuccess() {
+    // given
+
+    // 1. ReservationEntity 저장
+    ReservationDTO reservationDTO = ReservationDTO.sample();
+    String userId = "userId";
+    int storeId = 0;
+    StoreReservationEntity entity = new StoreReservationEntity(reservationDTO);
+    entity.setUserId(userId);
+    entity.setStoreId(storeId);
+
+    // when - 영속화, 조회, 변경
+    em.persist(entity);
+    em.flush();
+    em.clear();
+
+
+    // 2. 저장한 엔터티 불러와 PayEntity 연결후 저장
+    StoreReservationEntity grandfa = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).where(storeReservationEntity.storeId
+            .eq(reservationDTO.getStoreId()).and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+
+    StoreOrdersEntity father = new StoreOrdersEntity(grandfa);
+    em.persist(father);
+
+
+    // 3. Pay까지 저장 후 모두 연결
+    StorePayEntity child = new StorePayEntity();
+    child.setAmount(10000);
+    child.setStoreOrdersEntity(father);
+    em.persist(child);
+    father.setPayment(child);
+    grandfa.setChild(father);
+
+
+    // 4. 쿠폰 증가
+    StoreCouponEntity coupon = queryFactory.select(storeCouponEntity).from(storeCouponEntity)
+        .where(storeCouponEntity.userId.eq(userId).and(storeCouponEntity.storeId.eq(storeId)))
+        .fetchFirst();
+    if (coupon == null) {
+      StoreCouponEntity newCoupon =
+          StoreCouponEntity.builder().storeId(storeId).userId(userId).amount(1).build();
+      em.persist(newCoupon);
+    } else {
+      coupon.setAmount(coupon.getAmount() + 1);
+    }
+
+    em.flush();
+    em.clear();
+
+
+    // 5. 주문 삭제 및 쿠폰 감소
+    StoreReservationEntity result1 = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).leftJoin(storeReservationEntity.child, storeOrdersEntity)
+        .fetchJoin().leftJoin(storeOrdersEntity.payment, storePayEntity).fetchJoin()
+        .where(storeReservationEntity.reservationId.eq(grandfa.getReservationId())).fetchFirst();
+
+
+    queryFactory.delete(storePayEntity)
+        .where(storePayEntity.paymentId.eq(grandfa.getChild().getPayment().getPaymentId()))
+        .execute();
+
+    // 쿠폰 감소
+    StoreCouponEntity coupon1 = queryFactory
+        .select(storeCouponEntity).from(storeCouponEntity).where(storeCouponEntity.userId
+            .eq(result1.getUserId()).and(storeCouponEntity.storeId.eq(result1.getStoreId())))
+        .fetchFirst();
+    coupon1.setAmount(coupon1.getAmount() - 1);
+
+    em.flush();
+    em.clear();
+
+    // when - 모두 조회
+    StoreReservationEntity result = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).leftJoin(storeReservationEntity.child, storeOrdersEntity)
+        .fetchJoin().leftJoin(storeOrdersEntity.payment, storePayEntity).fetchJoin()
+        .where(storeReservationEntity.storeId.eq(grandfa.getStoreId())
+            .and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+
+    StoreCouponEntity new_coupon = queryFactory.select(storeCouponEntity).from(storeCouponEntity)
+        .where(storeCouponEntity.userId.eq(userId).and(storeCouponEntity.storeId.eq(storeId)))
+        .fetchFirst();
+
+
+    // then - 모두 삭제 되어있고 쿠폰도 잘 감소됨
+    assertEquals(result.getChild().getPayment(), null);
+    assertThat(new_coupon.getAmount(), is(0));
+
+
+  }
+
+  @Test
+  @DisplayName("StorePayEntity, StoreCouponEntity : Register Comment : 댓글 등록")
+  public void testRegisterPayCommentSuccess() {
+    // given
+
+    // 1. ReservationEntity 저장
+    ReservationDTO reservationDTO = ReservationDTO.sample();
+    String userId = "userId";
+    int storeId = 0;
+    StoreReservationEntity entity = new StoreReservationEntity(reservationDTO);
+    entity.setUserId(userId);
+    entity.setStoreId(storeId);
+
+    // when - 영속화, 조회, 변경
+    em.persist(entity);
+    em.flush();
+    em.clear();
+
+
+    // 2. 저장한 엔터티 불러와 PayEntity 연결후 저장
+    StoreReservationEntity grandfa = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).where(storeReservationEntity.storeId
+            .eq(reservationDTO.getStoreId()).and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+
+    StoreOrdersEntity father = new StoreOrdersEntity(grandfa);
+    em.persist(father);
+
+
+    // 3. Pay까지 저장 후 모두 연결, 댓글도 작성
+    StorePayEntity child = new StorePayEntity();
+    child.setAmount(10000);
+    child.setComment("comment");
+    child.setStoreOrdersEntity(father);
+    em.persist(child);
+    father.setPayment(child);
+    grandfa.setChild(father);
+
+
+
+    em.flush();
+    em.clear();
+
+    // when - 모두 조회
+    StoreReservationEntity result = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).leftJoin(storeReservationEntity.child, storeOrdersEntity)
+        .fetchJoin().leftJoin(storeOrdersEntity.payment, storePayEntity).fetchJoin()
+        .where(storeReservationEntity.storeId.eq(grandfa.getStoreId())
+            .and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+
+
+    // then - 모두 삭제 되어있고 쿠폰도 잘 감소됨
+    assertEquals(result.getChild().getPayment().getComment(), "comment");
+
+
+  }
+
+  @Test
+  @DisplayName("StorePayEntity, StoreCouponEntity : Delete Comment : 댓글 삭제")
+  public void testDeletePayCommentSuccess() {
+    // given
+
+    // 1. ReservationEntity 저장
+    ReservationDTO reservationDTO = ReservationDTO.sample();
+    String userId = "userId";
+    int storeId = 0;
+    StoreReservationEntity entity = new StoreReservationEntity(reservationDTO);
+    entity.setUserId(userId);
+    entity.setStoreId(storeId);
+
+    // when - 영속화, 조회, 변경
+    em.persist(entity);
+    em.flush();
+    em.clear();
+
+
+    // 2. 저장한 엔터티 불러와 PayEntity 연결후 저장
+    StoreReservationEntity grandfa = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).where(storeReservationEntity.storeId
+            .eq(reservationDTO.getStoreId()).and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+
+    StoreOrdersEntity father = new StoreOrdersEntity(grandfa);
+    em.persist(father);
+
+
+    // 3. Pay까지 저장 후 모두 연결, 댓글도 작성
+    StorePayEntity child = new StorePayEntity();
+    child.setAmount(10000);
+    child.setComment("comment");
+    child.setStoreOrdersEntity(father);
+    em.persist(child);
+    father.setPayment(child);
+    grandfa.setChild(father);
+
+
+
+    em.flush();
+    em.clear();
+
+    // when - 모두 조회
+    StoreReservationEntity result = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).leftJoin(storeReservationEntity.child, storeOrdersEntity)
+        .fetchJoin().leftJoin(storeOrdersEntity.payment, storePayEntity).fetchJoin()
+        .where(storeReservationEntity.storeId.eq(grandfa.getStoreId())
+            .and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+
+    // 댓글 삭제
+    result.getChild().getPayment().setComment(null);
+
+    em.flush();
+    em.clear();
+
+
+    // then - 모두 삭제 되어있고 쿠폰도 잘 감소됨
+    StoreReservationEntity final_result = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).leftJoin(storeReservationEntity.child, storeOrdersEntity)
+        .fetchJoin().leftJoin(storeOrdersEntity.payment, storePayEntity).fetchJoin()
+        .where(storeReservationEntity.storeId.eq(grandfa.getStoreId())
+            .and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+    assertEquals(final_result.getChild().getPayment().getComment(), null);
+  }
+
+  @Test
+  @DisplayName("StorePayEntity, StoreCouponEntity : Register Big Comment : 대댓글 등록")
+  public void testRegisterPayBigCommentSuccess() {
+    // given
+
+    // 1. ReservationEntity 저장
+    ReservationDTO reservationDTO = ReservationDTO.sample();
+    String userId = "userId";
+    int storeId = 0;
+    StoreReservationEntity entity = new StoreReservationEntity(reservationDTO);
+    entity.setUserId(userId);
+    entity.setStoreId(storeId);
+
+    // when - 영속화, 조회, 변경
+    em.persist(entity);
+    em.flush();
+    em.clear();
+
+
+    // 2. 저장한 엔터티 불러와 PayEntity 연결후 저장
+    StoreReservationEntity grandfa = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).where(storeReservationEntity.storeId
+            .eq(reservationDTO.getStoreId()).and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+
+    StoreOrdersEntity father = new StoreOrdersEntity(grandfa);
+    em.persist(father);
+
+
+    // 3. Pay까지 저장 후 모두 연결, 대댓글도 작성
+    StorePayEntity child = new StorePayEntity();
+    child.setAmount(10000);
+    child.setBigComment("bigcomment");
+    child.setStoreOrdersEntity(father);
+    em.persist(child);
+    father.setPayment(child);
+    grandfa.setChild(father);
+
+
+
+    em.flush();
+    em.clear();
+
+    // when - 모두 조회
+    StoreReservationEntity result = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).leftJoin(storeReservationEntity.child, storeOrdersEntity)
+        .fetchJoin().leftJoin(storeOrdersEntity.payment, storePayEntity).fetchJoin()
+        .where(storeReservationEntity.storeId.eq(grandfa.getStoreId())
+            .and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+
+
+    // then - 대댓글이 잘 변경됨
+    assertEquals(result.getChild().getPayment().getBigComment(), "bigcomment");
+
+
+  }
+
+  @Test
+  @DisplayName("StorePayEntity, StoreCouponEntity : Delete Big Comment : 대댓글 삭제")
+  public void testDeletePayBigCommentSuccess() {
+    // given
+
+    // 1. ReservationEntity 저장
+    ReservationDTO reservationDTO = ReservationDTO.sample();
+    String userId = "userId";
+    int storeId = 0;
+    StoreReservationEntity entity = new StoreReservationEntity(reservationDTO);
+    entity.setUserId(userId);
+    entity.setStoreId(storeId);
+
+    // when - 영속화, 조회, 변경
+    em.persist(entity);
+    em.flush();
+    em.clear();
+
+
+    // 2. 저장한 엔터티 불러와 PayEntity 연결후 저장
+    StoreReservationEntity grandfa = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).where(storeReservationEntity.storeId
+            .eq(reservationDTO.getStoreId()).and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+
+    StoreOrdersEntity father = new StoreOrdersEntity(grandfa);
+    em.persist(father);
+
+
+    // 3. Pay까지 저장 후 모두 연결, 대댓글도 작성
+    StorePayEntity child = new StorePayEntity();
+    child.setAmount(10000);
+    child.setBigComment("bigcomment");
+    child.setStoreOrdersEntity(father);
+    em.persist(child);
+    father.setPayment(child);
+    grandfa.setChild(father);
+
+
+
+    em.flush();
+    em.clear();
+
+    // when - 모두 조회
+    StoreReservationEntity result = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).leftJoin(storeReservationEntity.child, storeOrdersEntity)
+        .fetchJoin().leftJoin(storeOrdersEntity.payment, storePayEntity).fetchJoin()
+        .where(storeReservationEntity.storeId.eq(grandfa.getStoreId())
+            .and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+
+    // 대댓글 삭제
+    result.getChild().getPayment().setBigComment(null);
+
+    em.flush();
+    em.clear();
+
+
+    // then - 대댓글이 잘 삭제됨
+    StoreReservationEntity final_result = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).leftJoin(storeReservationEntity.child, storeOrdersEntity)
+        .fetchJoin().leftJoin(storeOrdersEntity.payment, storePayEntity).fetchJoin()
+        .where(storeReservationEntity.storeId.eq(grandfa.getStoreId())
+            .and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+    assertEquals(final_result.getChild().getPayment().getBigComment(), null);
+  }
+
+
+
+  @Test
+  @DisplayName("StorePayEntity, StoreCouponEntity : SELECT COUPON BY USER : 유저별 가게 쿠폰 수")
+  public void testGetCouponByClientSuccess() {
+    // given
+
+    // 1. ReservationEntity 저장
+    ReservationDTO reservationDTO = ReservationDTO.sample();
+    String userId = "userId";
+    int storeId = 0;
+    StoreReservationEntity entity = new StoreReservationEntity(reservationDTO);
+    entity.setUserId(userId);
+    entity.setStoreId(storeId);
+
+    // when - 영속화, 조회, 변경
+    em.persist(entity);
+    em.flush();
+    em.clear();
+
+
+    // 2. 저장한 엔터티 불러와 PayEntity 연결후 저장
+    StoreReservationEntity grandfa = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).where(storeReservationEntity.storeId
+            .eq(reservationDTO.getStoreId()).and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+
+    StoreOrdersEntity father = new StoreOrdersEntity(grandfa);
+    em.persist(father);
+
+
+    // 3. Pay까지 저장 후 모두 연결
+    StorePayEntity child = new StorePayEntity();
+    child.setAmount(10000);
+    child.setStoreOrdersEntity(father);
+    em.persist(child);
+    father.setPayment(child);
+    grandfa.setChild(father);
+
+
+    // 4. 쿠폰 증가
+    StoreCouponEntity coupon = queryFactory.select(storeCouponEntity).from(storeCouponEntity)
+        .where(storeCouponEntity.userId.eq(userId).and(storeCouponEntity.storeId.eq(storeId)))
+        .fetchFirst();
+    if (coupon == null) {
+      StoreCouponEntity newCoupon =
+          StoreCouponEntity.builder().storeId(storeId).userId(userId).amount(1).build();
+      em.persist(newCoupon);
+    } else {
+      coupon.setAmount(coupon.getAmount() + 1);
+    }
+
+    em.flush();
+    em.clear();
+
+
+    // when - 개인별 쿠폰 조회
+    StoreCouponEntity new_coupon = queryFactory.select(storeCouponEntity).from(storeCouponEntity)
+        .where(storeCouponEntity.storeId.eq(storeId).and(storeCouponEntity.userId.eq(userId)))
+        .fetchFirst();
+
+
+    // then - 모두 연결 되어있고 쿠폰도 잘 증가됨
+    assertThat(new_coupon.getAmount(), is(1));
+
+  }
+
+
+  @Test
+  @DisplayName("StorePayEntity, StoreCouponEntity : SELECT COUPON BY OWNER : 가게별 쿠폰 수")
+  public void testGetCouponByOwnerSuccess() {
+    // given
+
+    // 1. ReservationEntity 저장
+    ReservationDTO reservationDTO = ReservationDTO.sample();
+    String userId = "userId";
+    int storeId = 0;
+    StoreReservationEntity entity = new StoreReservationEntity(reservationDTO);
+    entity.setUserId(userId);
+    entity.setStoreId(storeId);
+
+    // when - 영속화, 조회, 변경
+    em.persist(entity);
+    em.flush();
+    em.clear();
+
+
+    // 2. 저장한 엔터티 불러와 PayEntity 연결후 저장
+    StoreReservationEntity grandfa = queryFactory.select(storeReservationEntity)
+        .from(storeReservationEntity).where(storeReservationEntity.storeId
+            .eq(reservationDTO.getStoreId()).and(storeReservationEntity.userId.eq(userId)))
+        .fetchFirst();
+
+    StoreOrdersEntity father = new StoreOrdersEntity(grandfa);
+    em.persist(father);
+
+
+    // 3. Pay까지 저장 후 모두 연결
+    StorePayEntity child = new StorePayEntity();
+    child.setAmount(10000);
+    child.setStoreOrdersEntity(father);
+    em.persist(child);
+    father.setPayment(child);
+    grandfa.setChild(father);
+
+
+    // 4. 쿠폰 증가
+    StoreCouponEntity coupon = queryFactory.select(storeCouponEntity).from(storeCouponEntity)
+        .where(storeCouponEntity.userId.eq(userId).and(storeCouponEntity.storeId.eq(storeId)))
+        .fetchFirst();
+    if (coupon == null) {
+      StoreCouponEntity newCoupon =
+          StoreCouponEntity.builder().storeId(storeId).userId(userId).amount(1).build();
+      em.persist(newCoupon);
+    } else {
+      coupon.setAmount(coupon.getAmount() + 1);
+    }
+
+    em.flush();
+    em.clear();
+
+
+    // when - 가게별 쿠폰 조회
+    List<StoreCouponEntity> result = queryFactory.select(storeCouponEntity).from(storeCouponEntity)
+        .where(storeCouponEntity.storeId.eq(storeId)).fetch();
+    HashMap<String, Integer> map = new HashMap<>();
+    for (StoreCouponEntity now : result) {
+      map.put(now.getUserId(), now.getAmount());
+    }
+
+
+    // then - 모두 잘 조회됨
+    assertThat(result.size(), is(1));
+    assertThat(map.size(), is(1));
+
+  }
 
 }
