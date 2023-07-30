@@ -20,11 +20,11 @@ import lombok.ToString;
 public class BoardResultDTO {
 
   private Long boardId;
-  
+
   private int storeId;
 
   private String userId;
-  
+
   private String title;
 
   private String content;
@@ -34,4 +34,10 @@ public class BoardResultDTO {
   private double rating;
 
   private String foodImage;
+
+
+  public static BoardResultDTO sample() {
+    return BoardResultDTO.builder().boardId(0L).userId("userId").title("title").content("content")
+        .comment("comment").rating(5.0).foodImage("foodImage").build();
+  }
 }

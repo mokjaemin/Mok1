@@ -32,5 +32,9 @@ public class BoardDTO {
   private double rating;
   
   private MultipartFile foodImage;
+  
+  public static BoardDTO sample() {
+    return BoardDTO.builder().storeId(0).title("title").content("content").rating(5.0).build();
+  }
 
 }
