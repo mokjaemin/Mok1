@@ -26,7 +26,7 @@
 - CLIENT API : Restful API
 - CLIENT TESTING : Insomnia, SWAGGER
 - SEQURITY : JASYPT Library, Spring Security, JWT
-- DATA API : Query DSL
+- DATA API : Query DSL, Hibernate
 - DATABASE : MYSQL with AWS(Main DB), Redis(Cache), H2(Testing)
 - TESTING : JUNIT5, Mockito
 - TEST COVERAGE : JACOCO
