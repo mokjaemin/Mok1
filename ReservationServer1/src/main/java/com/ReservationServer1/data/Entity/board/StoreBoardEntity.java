@@ -21,23 +21,28 @@ import lombok.ToString;
 @Builder
 @Table(name = "StoreBoard")
 public class StoreBoardEntity {
-  
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long boardId;
-  
+
   private int storeId;
-  
+
   private String userId;
-  
+
   private String title;
-  
+
   private String content;
-  
+
   private String comment;
-  
+
   private String imageURL;
-  
+
   private double rating;
+
+  public static StoreBoardEntity sample() {
+    return StoreBoardEntity.builder().boardId(0L).userId("userId").title("title").content("content")
+        .comment("comment").imageURL("url").rating(5.0).build();
+  }
 
 }

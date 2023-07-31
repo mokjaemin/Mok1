@@ -960,7 +960,6 @@ public class StorePORDAOTest {
     // given
     int storeId = 0;
     List<StoreCouponEntity> entity = new ArrayList<>();
-    StoreCouponEntity coupon = StoreCouponEntity.builder().amount(1).userId("userId").build();
     HashMap<String, Integer> result = new HashMap<>();
     for (StoreCouponEntity now : entity) {
       result.put(now.getUserId(), now.getAmount());

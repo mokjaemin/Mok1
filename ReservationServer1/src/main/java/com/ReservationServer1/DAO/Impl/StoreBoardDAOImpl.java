@@ -62,9 +62,8 @@ public class StoreBoardDAOImpl implements StoreBoardDAO {
     if (!entity.getUserId().equals(userId)) {
       throw new MessageException("권한이 없습니다.: " + userId);
     }
-    Long board_id = entity.getBoardId();
     queryFactory.delete(storeBoardEntity).where(storeBoardEntity.boardId.eq(boardId)).execute();
-    return board_id;
+    return boardId;
   }
 
   @Override
