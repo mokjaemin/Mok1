@@ -24,13 +24,22 @@ import com.ReservationServer1.service.StoreInfoService;
 @Service
 public class StoreInfoServiceImpl implements StoreInfoService {
 
-  private static final String DIR_TABLE = "/Users/mokjaemin/Desktop/Mok1/storeTable";
-  private static final String DIR_FOODS = "/Users/mokjaemin/Desktop/Mok1/storeFoods";
+  public String DIR_TABLE;
+  public String DIR_FOODS;
   private final StoreInfoDAO storeInfoDAO;
+  
+  public void setDirTable(String dir) {
+    this.DIR_TABLE = dir;
+  }
+  public void setDirFoods(String dir) {
+    this.DIR_FOODS = dir;
+  }
 
 
   public StoreInfoServiceImpl(StoreInfoDAO storeInfoDAO) {
     this.storeInfoDAO = storeInfoDAO;
+    this.DIR_TABLE = "/Users/mokjaemin/Desktop/Mok1/storeTable";
+    this.DIR_FOODS = "/Users/mokjaemin/Desktop/Mok1/storeFoods";
   }
 
   @Override
@@ -106,9 +115,10 @@ public class StoreInfoServiceImpl implements StoreInfoService {
               .count(storeTableInfoDTO.getCount()).imageURL(filePath.toString()).build();
       return storeInfoDAO.modTableInfo(storeTableInfoEntity);
     } catch (IOException e) {
-      return "File Upload Failed";
+      return "File upload failed";
     }
   }
+  
 
 
   @Override
@@ -118,7 +128,7 @@ public class StoreInfoServiceImpl implements StoreInfoService {
       Files.delete(filePath);
       return storeInfoDAO.deleteTableInfo(storeId);
     } catch (IOException e) {
-      return "File Delete Failed";
+      return "File Deleted failed";
     }
   }
 

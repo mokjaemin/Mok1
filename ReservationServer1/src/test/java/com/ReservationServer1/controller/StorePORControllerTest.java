@@ -285,6 +285,30 @@ public class StorePORControllerTest {
     verify(storePORService).deletePay(reservationId);
   }
 
+  @Test
+  @DisplayName("가게 결제 삭제 실패 : 권한 없음")
+  @WithMockUser(username = "0")
+  void deletePayFail() throws Exception {
+    // given
+    int storeId = 1;
+    Long reservationId = 0L;
+    String response = "권한이 없습니다.";
+
+    // when
+    ResultActions resultActions =
+        mockMvc.perform(MockMvcRequestBuilders.delete("/por/pay").with(csrf())
+            .contentType(MediaType.APPLICATION_JSON).param("storeId", String.valueOf(storeId))
+            .param("reservationId", String.valueOf(reservationId)));
+
+    // then
+    resultActions.andExpect(status().isOk())
+        .andExpect(MockMvcResultMatchers.content().string(equalTo(response)));
+
+    // verify
+    verify(storePORService, never()).deletePay(anyLong());
+
+  }
+
 
   // 10. Register Store Pay Comment
   @Test

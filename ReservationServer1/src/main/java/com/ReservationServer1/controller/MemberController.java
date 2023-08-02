@@ -5,18 +5,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.ReservationServer1.data.DTO.member.FindPwdDTO;
 import com.ReservationServer1.data.DTO.member.LoginDTO;
 import com.ReservationServer1.data.DTO.member.MemberDTO;
 import com.ReservationServer1.data.DTO.member.ModifyMemberDTO;
-import com.ReservationServer1.data.Entity.member.MemberEntity;
 import com.ReservationServer1.service.MemberService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -118,17 +115,6 @@ public class MemberController {
     return ResponseEntity.status(HttpStatus.OK).body(memberService.delMember(authentication.getName(), new_userPwd));
   }
   
-  
-  // 테스트 코드 없음
-  @GetMapping
-  @Operation(summary = "회원정보 아이디별 검색 요청", description = "해당 아이디 정보를 출력합니다.", tags = {"Member Controller"})
-  @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
-      @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
-      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
-      @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<MemberEntity> getMember(@Valid @RequestParam String userId) throws IOException{
-    return ResponseEntity.status(HttpStatus.OK).body(memberService.getMember(userId));
-  }
   
 
 }

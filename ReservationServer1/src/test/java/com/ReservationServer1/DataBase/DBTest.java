@@ -7,6 +7,7 @@ import static com.ReservationServer1.data.Entity.POR.QStoreOrdersEntity.storeOrd
 import static com.ReservationServer1.data.Entity.POR.QStoreOrdersMapEntity.storeOrdersMapEntity;
 import static com.ReservationServer1.data.Entity.POR.QStorePayEntity.storePayEntity;
 import static com.ReservationServer1.data.Entity.POR.QStoreReservationEntity.storeReservationEntity;
+import static com.ReservationServer1.data.Entity.board.QStoreBoardEntity.storeBoardEntity;
 import static com.ReservationServer1.data.Entity.member.QMemberEntity.memberEntity;
 import static com.ReservationServer1.data.Entity.store.QStoreEntity.storeEntity;
 import static com.ReservationServer1.data.Entity.store.QStoreFoodsInfoEntity.storeFoodsInfoEntity;
@@ -36,6 +37,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import com.ReservationServer1.data.DTO.POR.OrderDTO;
 import com.ReservationServer1.data.DTO.POR.ReservationDTO;
+import com.ReservationServer1.data.DTO.board.BoardDTO;
 import com.ReservationServer1.data.DTO.store.StoreFoodsInfoDTO;
 import com.ReservationServer1.data.DTO.store.StoreRestDayDTO;
 import com.ReservationServer1.data.DTO.store.StoreTableInfoDTO;
@@ -45,6 +47,7 @@ import com.ReservationServer1.data.Entity.POR.StoreOrdersEntity;
 import com.ReservationServer1.data.Entity.POR.StoreOrdersMapEntity;
 import com.ReservationServer1.data.Entity.POR.StorePayEntity;
 import com.ReservationServer1.data.Entity.POR.StoreReservationEntity;
+import com.ReservationServer1.data.Entity.board.StoreBoardEntity;
 import com.ReservationServer1.data.Entity.member.MemberEntity;
 import com.ReservationServer1.data.Entity.store.StoreEntity;
 import com.ReservationServer1.data.Entity.store.StoreFoodsInfoEntity;
@@ -1776,5 +1779,183 @@ public class DBTest {
     assertThat(map.size(), is(1));
 
   }
+
+
+  // 10. StoreBoardEntity : StoreBoardDAOImpl
+  @Test
+  @DisplayName("StoreBoardEntity : PERSIST, UPDATE : 게시판 글 등록 및 수정")
+  public void testRegisterBoardSuccess() {
+    // given
+
+    // 1. 게시판 등록 및 저장
+    String userId = "userId";
+    String new_imageURL = "imageURL";
+    String new_title = "title";
+    String new_content = "content";
+    Double new_rating = 5.0;
+    BoardDTO boardDTO = BoardDTO.sample();
+    StoreBoardEntity entity =
+        StoreBoardEntity.builder().storeId(boardDTO.getStoreId()).title(boardDTO.getTitle())
+            .content(boardDTO.getContent()).userId(userId).rating(boardDTO.getRating()).build();
+    em.persist(entity);
+    entity.setImageURL(new_imageURL);
+    entity.setTitle(new_title);
+    entity.setContent(new_content);
+    entity.setRating(new_rating);
+
+
+    em.flush();
+    em.clear();
+
+
+    // when - 조회
+    StoreBoardEntity new_entity = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
+        .where(storeBoardEntity.boardId.eq(entity.getBoardId())).fetchFirst();
+
+
+    // then
+    assertEquals(new_entity.getTitle(), new_title);
+    assertEquals(new_entity.getContent(), new_content);
+    assertEquals(new_entity.getImageURL(), new_imageURL);
+    assertThat(new_entity.getRating(), is(new_rating));
+
+  }
+
+
+  @Test
+  @DisplayName("StoreBoardEntity : DELETE : 게시판 글 삭제")
+  public void testDeleteBoardSuccess() {
+    // given
+
+    // 1. 게시판 등록 및 저장
+    String userId = "userId";
+    BoardDTO boardDTO = BoardDTO.sample();
+    StoreBoardEntity entity =
+        StoreBoardEntity.builder().storeId(boardDTO.getStoreId()).title(boardDTO.getTitle())
+            .content(boardDTO.getContent()).userId(userId).rating(boardDTO.getRating()).build();
+    em.persist(entity);
+    em.flush();
+    em.clear();
+
+
+    // 2. 삭제
+    queryFactory.delete(storeBoardEntity).where(storeBoardEntity.boardId.eq(entity.getBoardId()))
+        .execute();
+
+    // when - 조회
+    StoreBoardEntity new_entity = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
+        .where(storeBoardEntity.boardId.eq(entity.getBoardId())).fetchFirst();
+
+
+    // then
+    assertEquals(new_entity, null);
+
+  }
+
+
+  @Test
+  @DisplayName("StoreBoardEntity : SELECT : 게시판 글 조회(가게 아이디, 유저 아이디로 조회)")
+  public void testGetBoardSuccess() {
+    // given
+
+    // 1. 게시판 등록 및 저장
+    String userId = "userId";
+    BoardDTO boardDTO = BoardDTO.sample();
+    StoreBoardEntity entity =
+        StoreBoardEntity.builder().storeId(boardDTO.getStoreId()).title(boardDTO.getTitle())
+            .content(boardDTO.getContent()).userId(userId).rating(boardDTO.getRating()).build();
+    em.persist(entity);
+    em.flush();
+    em.clear();
+
+
+    // when - 조회
+    List<StoreBoardEntity> resultStore = queryFactory.select(storeBoardEntity)
+        .from(storeBoardEntity).where(storeBoardEntity.storeId.eq(boardDTO.getStoreId())).fetch();
+
+    List<StoreBoardEntity> resultUser = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
+        .where(storeBoardEntity.userId.eq(userId)).fetch();
+
+
+    // then
+    assertThat(resultStore.size(), is(1));
+    assertThat(resultUser.size(), is(1));
+    assertEquals(resultStore, resultUser);
+
+  }
+
+
+  @Test
+  @DisplayName("StoreBoardEntity Comment : PERSIST, UPDATE, DELETE : 게시판 글 댓글 등록, 수정, 삭제")
+  public void testRegisterBoardCommentSuccess() {
+    // given
+
+    // 1. 게시판 등록 및 저장
+    String userId = "userId";
+    String new_imageURL = "imageURL";
+    String new_title = "title";
+    String new_content = "content";
+    Double new_rating = 5.0;
+    BoardDTO boardDTO = BoardDTO.sample();
+    StoreBoardEntity entity =
+        StoreBoardEntity.builder().storeId(boardDTO.getStoreId()).title(boardDTO.getTitle())
+            .content(boardDTO.getContent()).userId(userId).rating(boardDTO.getRating()).build();
+    em.persist(entity);
+    entity.setImageURL(new_imageURL);
+    entity.setTitle(new_title);
+    entity.setContent(new_content);
+    entity.setRating(new_rating);
+
+
+    em.flush();
+    em.clear();
+
+
+    // 2. 조회
+    StoreBoardEntity entity1 = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
+        .where(storeBoardEntity.boardId.eq(entity.getBoardId())).fetchFirst();
+
+
+    // 3. 댓글 등록 및 수정
+    String comment = "comment";
+    entity1.setComment(comment);
+    em.flush();
+    em.clear();
+
+
+    // 4. 재조회
+    StoreBoardEntity entity2 = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
+        .where(storeBoardEntity.boardId.eq(entity.getBoardId())).fetchFirst();
+
+    assertEquals(entity2.getComment(), comment);
+
+
+    // 5. 수정
+    String new_comment = "new_comment";
+    entity2.setComment(new_comment);
+    em.flush();
+    em.clear();
+
+
+    // 6. 재조회
+    StoreBoardEntity entity3 = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
+        .where(storeBoardEntity.boardId.eq(entity.getBoardId())).fetchFirst();
+
+    assertEquals(entity3.getComment(), new_comment);
+
+
+    // 7. 삭제
+    entity3.setComment(null);
+    em.flush();
+    em.clear();
+
+    // 8. 재조회
+    StoreBoardEntity entity4 = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
+        .where(storeBoardEntity.boardId.eq(entity.getBoardId())).fetchFirst();
+
+    assertEquals(entity4.getComment(), null);
+
+  }
+
 
 }

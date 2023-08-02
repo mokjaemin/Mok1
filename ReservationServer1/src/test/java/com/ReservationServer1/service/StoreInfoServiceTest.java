@@ -1,17 +1,24 @@
 package com.ReservationServer1.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,6 +35,7 @@ import com.ReservationServer1.data.DTO.store.StoreTableInfoDTO;
 import com.ReservationServer1.data.DTO.store.StoreTimeInfoDTO;
 import com.ReservationServer1.data.Entity.store.StoreFoodsInfoEntity;
 import com.ReservationServer1.data.Entity.store.StoreTableInfoEntity;
+import com.ReservationServer1.exception.MessageException;
 import com.ReservationServer1.service.Impl.StoreInfoServiceImpl;
 
 
@@ -42,8 +50,8 @@ public class StoreInfoServiceTest {
   private StoreInfoDAO storeInfoDAO;
 
 
-  private static final String DIR_TABLE = "/Users/mokjaemin/Desktop/Mok1/storeTable";
-  private static final String DIR_FOODS = "/Users/mokjaemin/Desktop/Mok1/storeFoods";
+  private static final String DIR_TEST = "/Users/mokjaemin/Desktop/Mok1/test";
+
 
 
   // 1. Register Member
@@ -59,7 +67,7 @@ public class StoreInfoServiceTest {
     String result = storeInfoServiceImpl.registerDayOff(sample);
 
     // then
-    assertThat(result.equals(response));
+    assertEquals(result, response);
 
     // verify
     verify(storeInfoDAO, times(1)).registerDayOff(any(StoreRestDayDTO.class));
@@ -81,7 +89,7 @@ public class StoreInfoServiceTest {
     List<String> result = storeInfoServiceImpl.getDayOff(storeId);
 
     // then
-    assertThat(result.equals(response));
+    assertEquals(result, response);
 
     // verify
     verify(storeInfoDAO, times(1)).getDayOff(anyInt());
@@ -101,7 +109,7 @@ public class StoreInfoServiceTest {
     String result = storeInfoServiceImpl.deleteDayOff(storeId);
 
     // then
-    assertThat(result.equals(response));
+    assertEquals(result, response);
 
     // verify
     verify(storeInfoDAO, times(1)).deleteDayOff(anyInt());
@@ -122,7 +130,7 @@ public class StoreInfoServiceTest {
     String result = storeInfoServiceImpl.registerTimeInfo(sample);
 
     // then
-    assertThat(result.equals(response));
+    assertEquals(result, response);
 
     // verify
     verify(storeInfoDAO, times(1)).registerTimeInfo(any(StoreTimeInfoDTO.class));
@@ -142,7 +150,7 @@ public class StoreInfoServiceTest {
     StoreTimeInfoDTO result = storeInfoServiceImpl.getTimeInfo(storeId);
 
     // then
-    assertThat(result.equals(response));
+    assertEquals(result, response);
 
     // verify
     verify(storeInfoDAO, times(1)).getTimeInfo(anyInt());
@@ -163,7 +171,7 @@ public class StoreInfoServiceTest {
     String result = storeInfoServiceImpl.modTimeInfo(sample);
 
     // then
-    assertThat(result.equals(response));
+    assertEquals(result, response);
 
     // verify
     verify(storeInfoDAO, times(1)).modTimeInfo(any(StoreTimeInfoDTO.class));
@@ -183,7 +191,7 @@ public class StoreInfoServiceTest {
     String result = storeInfoServiceImpl.deleteTimeInfo(storeId);
 
     // then
-    assertThat(result.equals(response));
+    assertEquals(result, response);
 
     // verify
     verify(storeInfoDAO, times(1)).deleteTimeInfo(anyInt());
@@ -197,29 +205,65 @@ public class StoreInfoServiceTest {
   void registerTableInfoSuccess() throws Exception {
 
     // given
+    String response = "success";
     StoreTableInfoDTO sample = StoreTableInfoDTO.sample();
     MockMultipartFile tableImageFile =
         new MockMultipartFile("tableImage", "table-image.png", "image/png", new byte[0]);
     sample.setTableImage(tableImageFile);
-    Path filePath = Path.of(DIR_TABLE, String.valueOf(sample.getStoreId()) + ".png");
+    sample.setStoreId(-1);
+
+    Path filePath = Path.of(DIR_TEST, String.valueOf(sample.getStoreId()) + ".png");
     StoreTableInfoEntity entity = StoreTableInfoEntity.builder().storeId(sample.getStoreId())
         .count(sample.getCount()).imageURL(filePath.toString()).build();
-
-
-    String response = "success";
     doReturn(response).when(storeInfoDAO).registerTableInfo(entity);
 
+    // when
+    storeInfoServiceImpl.setDirTable(DIR_TEST);
+    String result = storeInfoServiceImpl.registerTableInfo(sample);
+
+    // then
+    assertEquals(result, response);
+
+    // verify
+    verify(storeInfoDAO, times(1)).registerTableInfo(any(StoreTableInfoEntity.class));
+    verify(storeInfoDAO).registerTableInfo(entity);
+
+    File uploadDir = new File(DIR_TEST);
+    assertTrue(uploadDir.exists());
+    File[] files = uploadDir.listFiles();
+    if (files != null) {
+      for (File file : files) {
+        file.delete();
+      }
+    }
+    uploadDir.delete();
+
+  }
+
+  @Test
+  @DisplayName("가게 테이블 정보 등록 실패 : 파일 복사 오류 : 권한 없는 경로")
+  void registerTableInfoFail_FileCopyError() throws Exception {
+    // given
+    String response = "File upload failed";
+    StoreTableInfoDTO sample = StoreTableInfoDTO.sample();
+    MockMultipartFile tableImageFile =
+        new MockMultipartFile("tableImage", "table-image.png", "image/png", new byte[0]);
+    sample.setStoreId(-1);
+    sample.setTableImage(tableImageFile);
+
+    String invalidDir = "/invalid/directory";
+    storeInfoServiceImpl.setDirTable(invalidDir);
 
     // when
     String result = storeInfoServiceImpl.registerTableInfo(sample);
 
     // then
-    assertThat(result.equals(response));
+    assertEquals(response, result);
 
     // verify
-    verify(storeInfoDAO, times(1)).registerTableInfo(any(StoreTableInfoEntity.class));
-    verify(storeInfoDAO).registerTableInfo(entity);
+    verify(storeInfoDAO, never()).registerTableInfo(any(StoreTableInfoEntity.class));
   }
+
 
 
   // 9. Modify Table Info
@@ -232,47 +276,149 @@ public class StoreInfoServiceTest {
     MockMultipartFile tableImageFile =
         new MockMultipartFile("tableImage", "table-image.png", "image/png", new byte[0]);
     sample.setTableImage(tableImageFile);
-
-    Path filePath = Path.of(DIR_TABLE, String.valueOf(sample.getStoreId()) + ".png");
+    Path filePath = Path.of(DIR_TEST, String.valueOf(sample.getStoreId()) + ".png");
     StoreTableInfoEntity entity = StoreTableInfoEntity.builder().storeId(sample.getStoreId())
         .count(sample.getCount()).imageURL(filePath.toString()).build();
 
 
+
     String response = "success";
+    storeInfoServiceImpl.setDirTable(DIR_TEST);
     doReturn(response).when(storeInfoDAO).modTableInfo(entity);
+
+
 
     // when
     String result = storeInfoServiceImpl.modTableInfo(sample);
 
+
+
     // then
-    assertThat(result.equals(response));
+    assertEquals(result, response);
+
+
 
     // verify
     verify(storeInfoDAO, times(1)).modTableInfo(any(StoreTableInfoEntity.class));
     verify(storeInfoDAO).modTableInfo(entity);
 
+    // 폴더 생성 여부 체크 및 삭제
+    File uploadDir = new File(DIR_TEST);
+    assertTrue(uploadDir.exists());
+    File[] files = uploadDir.listFiles();
+    if (files != null) {
+      for (File file : files) {
+        file.delete();
+      }
+    }
+    uploadDir.delete();
 
   }
+
+
+  @Test
+  @DisplayName("가게 테이블 정보 수정 실패 : 파일 복사 오류 : 권한 없는 경로")
+  void modTableInfoFail_FileCopyError() throws Exception {
+    // given
+    String response = "File upload failed";
+    StoreTableInfoDTO sample = StoreTableInfoDTO.sample();
+    MockMultipartFile tableImageFile =
+        new MockMultipartFile("tableImage", "table-image.png", "image/png", new byte[0]);
+    sample.setStoreId(-1);
+    sample.setTableImage(tableImageFile);
+
+    String invalidDir = "/invalid/directory";
+    storeInfoServiceImpl.setDirTable(invalidDir);
+
+    // when
+    String result = storeInfoServiceImpl.modTableInfo(sample);
+
+    // then
+    assertEquals(response, result);
+
+    // verify
+    verify(storeInfoDAO, never()).registerTableInfo(any(StoreTableInfoEntity.class));
+  }
+
 
   // 10. Delete Table Info
   @Test
   @DisplayName("가게 테이블 정보 삭제 성공")
   void deleteTableInfoSuccess() throws Exception {
     // given
-    int storeId = StoreTableInfoDTO.sample().getStoreId();
+
+    // 1. 사진 생성
+    StoreTableInfoDTO sample = StoreTableInfoDTO.sample();
+    MockMultipartFile tableImageFile =
+        new MockMultipartFile("tableImage", "table-image.png", "image/png", new byte[0]);
+    sample.setStoreId(-1);
+    sample.setTableImage(tableImageFile);
+
+    // 2. 폴더 생성 및 저장
+    File uploadDir = new File(DIR_TEST);
+    if (!uploadDir.exists()) {
+      uploadDir.mkdirs();
+    }
+    int storeId = sample.getStoreId();
+    Path filePath = Path.of(DIR_TEST, String.valueOf(storeId) + ".png");
+    Files.copy(sample.getTableImage().getInputStream(), filePath,
+        StandardCopyOption.REPLACE_EXISTING);
+
+
     String response = "success";
     doReturn(response).when(storeInfoDAO).deleteTableInfo(storeId);
 
-    // when
+
+    // when - 삭제
+    storeInfoServiceImpl.setDirTable(DIR_TEST);
     String result = storeInfoServiceImpl.deleteTableInfo(storeId);
 
     // then
-    assertThat(result.equals(response));
+    assertEquals(result, response);
 
     // verify
     verify(storeInfoDAO, times(1)).deleteTableInfo(anyInt());
     verify(storeInfoDAO).deleteTableInfo(storeId);
+
+    // 폴더 생성 여부 체크 및 삭제
+    File[] files = uploadDir.listFiles();
+    if (files != null) {
+      for (File file : files) {
+        file.delete();
+      }
+    }
+    uploadDir.delete();
   }
+
+
+  @Test
+  @DisplayName("가게 테이블 정보 삭제 실패 : 사진 없음, 잘못된 경로")
+  void deleteTableInfoFail() throws Exception {
+    // given
+    int storeId = StoreTableInfoDTO.sample().getStoreId();
+    String response = "File Deleted failed";
+
+    // when - 삭제
+    storeInfoServiceImpl.setDirTable(DIR_TEST);
+    String result = storeInfoServiceImpl.deleteTableInfo(storeId);
+
+    // then
+    assertEquals(result, response);
+
+    // verify
+    verify(storeInfoDAO, never()).deleteTableInfo(anyInt());
+
+    // 폴더 생성 여부 체크 및 삭제
+    File uploadDir = new File(DIR_TEST);
+    File[] files = uploadDir.listFiles();
+    if (files != null) {
+      for (File file : files) {
+        file.delete();
+      }
+    }
+    uploadDir.delete();
+  }
+
 
 
   // 11. Register Foods Info
@@ -281,14 +427,11 @@ public class StoreInfoServiceTest {
   void registerFoodsInfoSuccess() throws Exception {
 
     // given
+    // 사진 생성
     StoreFoodsInfoDTO sample = StoreFoodsInfoDTO.sample();
     MockMultipartFile tableImageFile =
         new MockMultipartFile("tableImage", "table-image.png", "image/png", new byte[0]);
     sample.setFoodImage(tableImageFile);
-    Path filePath = Path.of(DIR_FOODS,
-        String.valueOf(sample.getStoreId()) + "_" + sample.getFoodName() + ".png");
-    StoreFoodsInfoEntity entity = new StoreFoodsInfoEntity(sample);
-    entity.setImageURL(filePath.toString());
 
 
     String response = "success";
@@ -296,15 +439,54 @@ public class StoreInfoServiceTest {
 
 
     // when
+    storeInfoServiceImpl.setDirFoods(DIR_TEST);
     String result = storeInfoServiceImpl.registerFoodsInfo(sample);
 
     // then
-    assertThat(result.equals(response));
+    assertEquals(result, response);
 
     // verify
     verify(storeInfoDAO, times(1)).registerFoodsInfo(any(StoreFoodsInfoEntity.class));
-    verify(storeInfoDAO).registerFoodsInfo(entity);
+
+
+    // 폴더 생성 여부 체크 및 삭제
+    File uploadDir = new File(DIR_TEST);
+    File[] files = uploadDir.listFiles();
+    if (files != null) {
+      for (File file : files) {
+        file.delete();
+      }
+    }
+    uploadDir.delete();
   }
+
+
+  @Test
+  @DisplayName("가게 음식 정보 등록 실패 : 잘못된 경로")
+  void registerFoodsInfoFail() throws Exception {
+
+    // given
+    // 사진 생성
+    StoreFoodsInfoDTO sample = StoreFoodsInfoDTO.sample();
+    MockMultipartFile tableImageFile =
+        new MockMultipartFile("tableImage", "table-image.png", "image/png", new byte[0]);
+    sample.setFoodImage(tableImageFile);
+    String response = "File Upload Failed";
+
+
+    // when
+    String invalidDir = "/invalid/directory";
+    storeInfoServiceImpl.setDirFoods(invalidDir);
+    String result = storeInfoServiceImpl.registerFoodsInfo(sample);
+
+    // then
+    assertEquals(result, response);
+
+    // verify
+    verify(storeInfoDAO, never()).registerFoodsInfo(any(StoreFoodsInfoEntity.class));
+
+  }
+
 
 
   // 12. Modify Foods Info
@@ -317,7 +499,7 @@ public class StoreInfoServiceTest {
     MockMultipartFile tableImageFile =
         new MockMultipartFile("tableImage", "table-image.png", "image/png", new byte[0]);
     sample.setFoodImage(tableImageFile);
-    Path filePath = Path.of(DIR_FOODS,
+    Path filePath = Path.of(DIR_TEST,
         String.valueOf(sample.getStoreId()) + "_" + sample.getFoodName() + ".png");
     StoreFoodsInfoEntity entity = new StoreFoodsInfoEntity(sample);
     entity.setImageURL(filePath.toString());
@@ -328,54 +510,153 @@ public class StoreInfoServiceTest {
 
 
     // when
+    storeInfoServiceImpl.setDirFoods(DIR_TEST);
     String result = storeInfoServiceImpl.modFoodsInfo(sample);
 
     // then
-    assertThat(result.equals(response));
+    assertEquals(result, response);
 
     // verify
     verify(storeInfoDAO, times(1)).modFoodsInfo(any(StoreFoodsInfoEntity.class));
     verify(storeInfoDAO).modFoodsInfo(entity);
+
+    // 폴더 생성 여부 체크 및 삭제
+    File uploadDir = new File(DIR_TEST);
+    File[] files = uploadDir.listFiles();
+    if (files != null) {
+      for (File file : files) {
+        file.delete();
+      }
+    }
+    uploadDir.delete();
   }
 
 
-  // 13. Get Foods Info
+
   @Test
-  @DisplayName("가게 음식 정보 수정 성공")
-  void getFoodsInfoSuccess() throws Exception {
+  @DisplayName("가게 음식 정보 수정 실패 : 잘못된 경로")
+  void updateFoodsInfoFail() throws Exception {
 
     // given
-    List<StoreFoodsInfoResultDTO> result = new ArrayList<>();
-    List<StoreFoodsInfoEntity> storeFoodsInfoEntity = new ArrayList<>();
+    // 사진 생성
     StoreFoodsInfoDTO sample = StoreFoodsInfoDTO.sample();
-    StoreFoodsInfoEntity entity = new StoreFoodsInfoEntity(sample);
-    Path filePath = Path.of(DIR_FOODS,
-        String.valueOf(sample.getStoreId()) + "_" + sample.getFoodName() + ".png");
-    entity.setImageURL(filePath.toString());
-    storeFoodsInfoEntity.add(entity);
-    doReturn(storeFoodsInfoEntity).when(storeInfoDAO).getFoodsInfo(sample.getStoreId());
-    for (StoreFoodsInfoEntity now : storeFoodsInfoEntity) {
-      Path now_filePath = Path.of(now.getImageURL());
-      byte[] imageBytes = Files.readAllBytes(now_filePath);
-      String encoded_image = Base64.getEncoder().encodeToString(imageBytes);
-      StoreFoodsInfoResultDTO dto = entity.toStoreFoodsInfoResultDTO();
-      dto.setEncoded_image(encoded_image);
-      result.add(dto);
-    }
+    MockMultipartFile tableImageFile =
+        new MockMultipartFile("tableImage", "table-image.png", "image/png", new byte[0]);
+    sample.setFoodImage(tableImageFile);
+    String response = "File Upload Failed";
 
 
     // when
-    List<StoreFoodsInfoResultDTO> response = storeInfoServiceImpl.getFoodsInfo(sample.getStoreId());
-    
-    //then
-    assertThat(result.equals(response));
+    String invalidDir = "/invalid/directory";
+    storeInfoServiceImpl.setDirFoods(invalidDir);
+    String result = storeInfoServiceImpl.modFoodsInfo(sample);
+
+    // then
+    assertEquals(result, response);
 
     // verify
-    verify(storeInfoDAO, times(1)).getFoodsInfo(anyInt());
-    verify(storeInfoDAO).getFoodsInfo(sample.getStoreId());
+    verify(storeInfoDAO, never()).modFoodsInfo(any(StoreFoodsInfoEntity.class));
 
   }
 
+  // 13. Get Foods Info
+  @Test
+  @DisplayName("가게 음식 정보 출력 성공")
+  void getFoodsInfoSuccess() throws Exception {
+    // given
+    // 1. 사진 생성
+    StoreFoodsInfoDTO sample = StoreFoodsInfoDTO.sample();
+    MockMultipartFile foodImageFile =
+        new MockMultipartFile("foodImage", "food-image.png", "image/png", new byte[10]);
+    sample.setFoodImage(foodImageFile);
+
+
+    // 2. 폴더 생성 및 저장
+    File uploadDir = new File(DIR_TEST);
+    if (!uploadDir.exists()) {
+      uploadDir.mkdirs();
+    }
+    int storeId = sample.getStoreId();
+    String foodName = sample.getFoodName();
+    Path filePath = Path.of(DIR_TEST, String.valueOf(storeId) + "_" + foodName + ".png");
+    Files.copy(sample.getFoodImage().getInputStream(), filePath,
+        StandardCopyOption.REPLACE_EXISTING);
+
+
+    // 3. DAO 설정
+    List<StoreFoodsInfoEntity> response = new ArrayList<>();
+    StoreFoodsInfoEntity entity = new StoreFoodsInfoEntity();
+    entity.setImageURL(filePath.toString());
+    response.add(entity);
+    doReturn(response).when(storeInfoDAO).getFoodsInfo(storeId);
+    
+
+    // when
+    storeInfoServiceImpl.setDirFoods(DIR_TEST);
+    List<StoreFoodsInfoResultDTO> result = storeInfoServiceImpl.getFoodsInfo(storeId);
+
+
+    // then
+    assertThat(result.size(), is(1));
+    
+    
+    // 폴더 생성 여부 체크 및 삭제
+    File[] files = uploadDir.listFiles();
+    if (files != null) {
+      for (File file : files) {
+        file.delete();
+      }
+    }
+    uploadDir.delete();
+  }
+
+
+
+  @Test
+  @DisplayName("가게 음식 정보 출력 실패 : 잘못된 사진")
+  void getFoodsInfoFail() throws Exception {
+
+    // given
+    // 1. 사진 생성
+    StoreFoodsInfoDTO sample = StoreFoodsInfoDTO.sample();
+    MockMultipartFile tableImageFile =
+        new MockMultipartFile("tableImage", "table-image.png", "image/png", new byte[0]);
+    sample.setFoodImage(tableImageFile);
+
+
+    // 2. 폴더 생성 및 저장
+    File uploadDir = new File(DIR_TEST);
+    if (!uploadDir.exists()) {
+      uploadDir.mkdirs();
+    }
+    int storeId = sample.getStoreId();
+    Path filePath = Path.of(DIR_TEST, String.valueOf(storeId) + ".png");
+    Files.copy(sample.getFoodImage().getInputStream(), filePath,
+        StandardCopyOption.REPLACE_EXISTING);
+
+
+    // 3. DAO 설정
+    List<StoreFoodsInfoEntity> response = new ArrayList<>();
+    StoreFoodsInfoEntity entity = new StoreFoodsInfoEntity();
+    entity.setImageURL(DIR_TEST + String.valueOf(storeId) + "_" + sample.getFoodName() + ".png");
+    response.add(entity);
+    doReturn(response).when(storeInfoDAO).getFoodsInfo(storeId);
+
+
+
+    // when
+    storeInfoServiceImpl.setDirFoods(DIR_TEST);
+
+    // then && when
+    MessageException message = assertThrows(MessageException.class, () -> {
+      storeInfoServiceImpl.getFoodsInfo(storeId);
+    });
+    String expected = "해당 음식점 사진에 문제가 존재합니다.";
+
+    assertEquals(expected, message.getMessage());
+
+
+  }
 
 
   // 14. Delete Foods Info
@@ -383,20 +664,70 @@ public class StoreInfoServiceTest {
   @DisplayName("가게 테이블 정보 삭제 성공")
   void deleteFoodsInfoSuccess() throws Exception {
     // given
-    int storeId = StoreFoodsInfoDTO.sample().getStoreId();
-    String foodName = StoreFoodsInfoDTO.sample().getFoodName();
+    // 1. 사진 생성
+    StoreFoodsInfoDTO sample = StoreFoodsInfoDTO.sample();
+    MockMultipartFile tableImageFile =
+        new MockMultipartFile("tableImage", "table-image.png", "image/png", new byte[0]);
+    sample.setFoodImage(tableImageFile);
+
+
+    // 2. 폴더 생성 및 저장
+    File uploadDir = new File(DIR_TEST);
+    if (!uploadDir.exists()) {
+      uploadDir.mkdirs();
+    }
+    int storeId = sample.getStoreId();
+    String foodName = sample.getFoodName();
+    Path filePath = Path.of(DIR_TEST, String.valueOf(storeId) + "_" + foodName + ".png");
+    Files.copy(sample.getFoodImage().getInputStream(), filePath,
+        StandardCopyOption.REPLACE_EXISTING);
+
+
     String response = "success";
     doReturn(response).when(storeInfoDAO).deleteFoodsInfo(storeId, foodName);
 
+
     // when
+    storeInfoServiceImpl.setDirFoods(DIR_TEST);
     String result = storeInfoServiceImpl.deleteFoodsInfo(storeId, foodName);
 
+
     // then
-    assertThat(result.equals(response));
+    assertEquals(result, response);
 
     // verify
     verify(storeInfoDAO, times(1)).deleteFoodsInfo(anyInt(), anyString());
     verify(storeInfoDAO).deleteFoodsInfo(storeId, foodName);
+
+
+    // 폴더 삭제
+    File[] files = uploadDir.listFiles();
+    if (files != null) {
+      for (File file : files) {
+        file.delete();
+      }
+    }
+    uploadDir.delete();
+  }
+
+
+  @Test
+  @DisplayName("가게 테이블 정보 삭제 실패 : 잘못된 경로")
+  void deleteFoodsInfoFail() throws Exception {
+    // given
+    String response = "File Delete Failed";
+
+
+    // when
+    storeInfoServiceImpl.setDirFoods("invalid route");
+    String result = storeInfoServiceImpl.deleteFoodsInfo(0, "");
+
+
+    // then
+    assertEquals(result, response);
+
+    // verify
+    verify(storeInfoDAO, times(0)).deleteFoodsInfo(anyInt(), anyString());
   }
 
 }

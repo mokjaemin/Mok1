@@ -161,10 +161,40 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<!-- Test Coverage PlugIn -->
+			<!-- Test Coverage PlugIn <Jacoco> -->
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
+				<configuration>
+					<!-- <rules>
+						<rule>
+							<element>BUNDLE</element>
+							<limits>
+								<limit>
+									<counter>INSTRUCTION</counter>
+									<value>COVEREDRATIO</value>
+									<minimum>0.40</minimum>
+								</limit>
+							</limits>
+						</rule>
+						<rule>
+							<element>METHOD</element>
+							<limits>
+								<limit>
+									<counter>LINE</counter>
+									<value>TOTALCOUNT</value>
+									<maximum>30</maximum>
+								</limit>
+							</limits>
+						</rule>
+					</rules> -->
+					<excludes>
+						<exclude>**/AOP/*</exclude>
+						<exclude>**/interceptor/*</exclude>
+						<exclude>**/Listener/*</exclude>
+						<exclude>**/ReservationServer1Application.class</exclude>
+					</excludes>
+				</configuration>
 				<executions>
 					<execution>
 						<goals>

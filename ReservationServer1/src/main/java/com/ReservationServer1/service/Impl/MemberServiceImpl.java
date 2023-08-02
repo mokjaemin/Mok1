@@ -78,13 +78,5 @@ public class MemberServiceImpl implements MemberService {
     return memberDAO.delMember(userId, userPwd);
   }
 
-  
-  // 테스팅 안함
-  @Override
-  public MemberEntity getMember(String userId) {
-    return memberDAO.getMember(userId);
-  }
-
-
 
 }

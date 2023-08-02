@@ -122,13 +122,4 @@ public class MemberDAOImpl implements MemberDAO {
     return "success";
   }
 
-
-  @Override
-  public MemberEntity getMember(String userId) {
-    MemberEntity member = queryFactory.select(memberEntity).from(memberEntity)
-        .where(memberEntity.userId.eq(userId)).fetchFirst();
-    return member;
-  }
-
-
 }

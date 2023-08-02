@@ -15,6 +15,5 @@ public interface MemberService {
 	String modInfoMember(String userId, ModifyMemberDTO modifyMemberDTO);
 	String delMember(String userId, String userPwd);
 	
-	MemberEntity getMember(String userId);
 }
 
