@@ -352,7 +352,7 @@ public class StorePORDAOTest {
     StoreOrdersEntity orders = new StoreOrdersEntity();
     List<StoreOrdersMapEntity> ordersMap = new ArrayList<>();
     StoreOrdersMapEntity map = new StoreOrdersMapEntity();
-    map.setFoodName("foodName");
+    map.setFoodName("foodName1");
     map.setFoodCount(0);
     ordersMap.add(map);
     orders.setChildSet(ordersMap);
@@ -960,6 +960,8 @@ public class StorePORDAOTest {
     // given
     int storeId = 0;
     List<StoreCouponEntity> entity = new ArrayList<>();
+    StoreCouponEntity coupon = StoreCouponEntity.sample();
+    entity.add(coupon);
     HashMap<String, Integer> result = new HashMap<>();
     for (StoreCouponEntity now : entity) {
       result.put(now.getUserId(), now.getAmount());

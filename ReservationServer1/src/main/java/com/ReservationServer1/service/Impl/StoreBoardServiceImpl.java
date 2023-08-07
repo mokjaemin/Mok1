@@ -19,11 +19,15 @@ import com.ReservationServer1.service.StoreBoardService;
 public class StoreBoardServiceImpl implements StoreBoardService {
 
 
-  private static final String DIR_BOARD = "/Users/mokjaemin/Desktop/Mok1/storeBoard/";
+  private String DIR_BOARD = "/Users/mokjaemin/Desktop/Mok1/storeBoard/";
   private final StoreBoardDAO storeBoardDAO;
 
   public StoreBoardServiceImpl(StoreBoardDAO storeBoardDAO) {
     this.storeBoardDAO = storeBoardDAO;
+  }
+  
+  public void setDirBoard(String dir) {
+    this.DIR_BOARD = dir;
   }
 
   @Override

@@ -55,7 +55,8 @@ public class StoreServiceImpl implements StoreService {
 
   @Override
   public String loginStore(int storeId, String userId) {
-    if (storeDAO.loginStore(storeId).equals(userId)) {
+    String result = storeDAO.loginStore(storeId);
+    if (result != null && result.equals(userId)) {
       return JWTutil.createJWT(String.valueOf(storeId), "OWNER", secretKey, expiredLoginMs);
     }
     return "user";

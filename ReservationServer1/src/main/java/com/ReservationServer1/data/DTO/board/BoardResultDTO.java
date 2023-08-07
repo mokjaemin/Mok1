@@ -1,7 +1,5 @@
 package com.ReservationServer1.data.DTO.board;
 
-import org.springframework.web.multipart.MultipartFile;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;

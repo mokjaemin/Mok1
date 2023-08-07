@@ -237,8 +237,8 @@ public class StoreInfoServiceTest {
       }
     }
     uploadDir.delete();
-
   }
+
 
   @Test
   @DisplayName("가게 테이블 정보 등록 실패 : 파일 복사 오류 : 권한 없는 경로")
@@ -589,7 +589,7 @@ public class StoreInfoServiceTest {
     entity.setImageURL(filePath.toString());
     response.add(entity);
     doReturn(response).when(storeInfoDAO).getFoodsInfo(storeId);
-    
+
 
     // when
     storeInfoServiceImpl.setDirFoods(DIR_TEST);
@@ -598,8 +598,8 @@ public class StoreInfoServiceTest {
 
     // then
     assertThat(result.size(), is(1));
-    
-    
+
+
     // 폴더 생성 여부 체크 및 삭제
     File[] files = uploadDir.listFiles();
     if (files != null) {

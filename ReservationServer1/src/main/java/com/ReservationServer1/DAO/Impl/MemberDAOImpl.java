@@ -109,13 +109,12 @@ public class MemberDAOImpl implements MemberDAO {
   // 회원정보 삭제
   @Override
   public String delMember(String userId, String userPwd) {
-    String get_pwd = queryFactory.select(memberEntity.userPwd).from(memberEntity)
+    String getPwd = queryFactory.select(memberEntity.userPwd).from(memberEntity)
         .where(memberEntity.userId.eq(userId)).fetchFirst();
-    if (get_pwd == null) {
+    if (getPwd == null) {
       throw new MessageException("존재하지 않는 아이디 입니다.");
     }
-    String encoded_pwd = passwordEncoder.encode(userPwd);
-    if (!passwordEncoder.matches(get_pwd, encoded_pwd)) {
+    if (!passwordEncoder.matches(userPwd, getPwd)) {
       throw new MessageException("비밀번호가 일치하지 않습니다.");
     }
     queryFactory.delete(memberEntity).where(memberEntity.userId.eq(userId)).execute();

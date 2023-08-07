@@ -192,6 +192,7 @@
 						<exclude>**/AOP/*</exclude>
 						<exclude>**/interceptor/*</exclude>
 						<exclude>**/Listener/*</exclude>
+						<exclude>**/Q*.class</exclude>
 						<exclude>**/ReservationServer1Application.class</exclude>
 					</excludes>
 				</configuration>

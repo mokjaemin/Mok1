@@ -31,5 +31,9 @@ public class StoreCouponEntity {
   private String userId;
   
   private int amount;
+  
+  public static StoreCouponEntity sample() {
+    return StoreCouponEntity.builder().couponId(-1L).storeId(-1).userId("userId").amount(0).build();
+  }
 
 }

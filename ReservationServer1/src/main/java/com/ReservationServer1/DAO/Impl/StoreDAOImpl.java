@@ -37,9 +37,6 @@ public class StoreDAOImpl implements StoreDAO {
         .where(storeEntity.country.eq(country).and(storeEntity.city.eq(city))
             .and(storeEntity.dong.eq(dong)).and(storeEntity.type.eq(type)))
         .limit(size).offset(page * size).fetch();
-    if(storeInfo == null) {
-      throw new MessageException("등록된 정보가 없습니다.");
-    }
     HashMap<String, Integer> result = new HashMap<>();
     for(StoreEntity info : storeInfo) {
       result.put(info.getStoreName(), info.getStoreId());
