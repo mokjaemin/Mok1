@@ -47,7 +47,7 @@
 - JUNIT, Mokito를 통한 테스팅 99%
 
 # Test Coverage
-- 
+- https://docs.google.com/spreadsheets/d/1OKFicrW9nmyS5sHzxdf49Tp4WqHmk1qrBU6Q3lpNXAg/edit?usp=sharing
 
 # Trouble Shooting
 - https://mokjaemin88.tistory.com/category/Trouble%20Shooting
