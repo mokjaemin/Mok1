@@ -59,14 +59,13 @@ public class StoreBoardServiceTest {
     doReturn(boardId).when(storeBoardDAO).registerBoard(any(BoardDTO.class), anyString(),
         anyString());
 
-    String response = "success";
 
     // when
     storeBoardServiceImpl.setDirBoard(DIR_TEST);
     String result = storeBoardServiceImpl.registerBoard(sample, userId);
 
     // then
-    assertEquals(result, response);
+    assertEquals(result, boardId);
 
     // verify
     verify(storeBoardDAO, times(1)).registerBoard(any(BoardDTO.class), anyString(), anyString());
@@ -223,7 +222,7 @@ public class StoreBoardServiceTest {
 
 
   @Test
-  @DisplayName("가게 게시판 삭제 실패 : 사진 없음")
+  @DisplayName("가게 게시판 삭제 실패 : 잘못된 경로")
   void deleteBoardFail() throws Exception {
 
     // given
@@ -233,7 +232,7 @@ public class StoreBoardServiceTest {
     doReturn(boardId).when(storeBoardDAO).deleteBoard(anyLong(), anyString());
 
     // when
-    storeBoardServiceImpl.setDirBoard(DIR_TEST);
+    storeBoardServiceImpl.setDirBoard("invalidaddress");
     String result = storeBoardServiceImpl.deleteBoard(boardId, userId);
 
     // then

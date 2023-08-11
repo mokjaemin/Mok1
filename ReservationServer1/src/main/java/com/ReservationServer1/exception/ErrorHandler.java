@@ -45,7 +45,7 @@ public class ErrorHandler {
         responseHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
 
-        LOGGER.error("Member Exception, 원인 : {}", e.getMessage());
+        LOGGER.error("Check Exception, 원인 : {}", e.getMessage());
 
         Map<String, String> map = new HashMap<>();
         map.put("error type", httpStatus.getReasonPhrase());

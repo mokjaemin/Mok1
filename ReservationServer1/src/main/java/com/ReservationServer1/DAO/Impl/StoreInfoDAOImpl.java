@@ -64,7 +64,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
         queryFactory.selectDistinct(storeRestDaysMapEntity.date).from(storeRestDaysMapEntity)
             .leftJoin(storeRestDaysMapEntity.storeRestDaysEntity, storeRestDaysEntity)
             .where(storeRestDaysEntity.storeId.eq(storeId)).fetch();
-    if (resultList == null) {
+    if (resultList == null | resultList.size() == 0) {
       throw new MessageException("정보가 등록되지 않았습니다.");
     }
     return resultList.stream().sorted().collect(Collectors.toList());
@@ -220,7 +220,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
   public List<StoreFoodsInfoEntity> getFoodsInfo(int storeId) {
     List<StoreFoodsInfoEntity> result = queryFactory.select(storeFoodsInfoEntity)
         .from(storeFoodsInfoEntity).where(storeFoodsInfoEntity.storeId.eq(storeId)).fetch();
-    if (result == null) {
+    if (result == null |result.size() == 0) {
       throw new MessageException("해당 음식점은 음식을 등록하지 않았습니다.");
     }
     return result;

@@ -112,6 +112,10 @@ public class StorePORDAOImpl implements StorePORDAO {
             .and(storeReservationEntity.userId.eq(userId)))
         .fetchFirst();
 
+    if(result == null) {
+      throw new MessageException("정보가 존재하지 않습니다.");
+    }
+    
     List<StoreOrdersMapEntity> childsSet = result.getChild().getChildSet();
     for (StoreOrdersMapEntity child : childsSet) {
       for (String foodName : orderDTO.getOrderInfo().keySet()) {
@@ -249,7 +253,7 @@ public class StorePORDAOImpl implements StorePORDAO {
   public HashMap<String, Integer> getCouponOwner(int storeId) {
     List<StoreCouponEntity> entity = queryFactory.select(storeCouponEntity).from(storeCouponEntity)
         .where(storeCouponEntity.storeId.eq(storeId)).fetch();
-    if(entity == null) {
+    if(entity.size() == 0) {
       throw new MessageException("정보가 존재하지 않습니다.");
     }
     HashMap<String, Integer> result = new HashMap<>();

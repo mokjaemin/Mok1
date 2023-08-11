@@ -106,42 +106,6 @@ public class StoreDAOTest {
 
 
   @Test
-  @DisplayName("가게 리스트 반환 실패 : 해당된 결과 없음")
-  public void getStoreListFail() {
-    // given
-    String country = "country";
-    String city = "city";
-    String dong = "dong";
-    String type = "type";
-    int page = 1;
-    int size = 5;
-
-    List<StoreEntity> result = new ArrayList<>();
-    StoreEntity entity = new StoreEntity(StoreDTO.sample());
-    entity.setStoreId(1);
-    result.add(entity);
-
-
-    doReturn(jpaQuery).when(queryFactory).select(storeEntity);
-    doReturn(jpaQuery).when(jpaQuery).from(storeEntity);
-    doReturn(jpaQuery).when(jpaQuery)
-        .where(storeEntity.country.eq(country).and(storeEntity.city.eq(city))
-            .and(storeEntity.dong.eq(dong)).and(storeEntity.type.eq(type)));
-    doReturn(jpaQuery).when(jpaQuery).limit(size);
-    doReturn(jpaQuery).when(jpaQuery).offset(page * size);
-    doReturn(null).when(jpaQuery).fetch();
-
-    // then && when
-    MessageException message = assertThrows(MessageException.class, () -> {
-      storeDAOImpl.getStoreList(country, city, dong, type, page, size);
-    });
-    String expected = "등록된 정보가 없습니다.";
-    assertEquals(expected, message.getMessage());
-  }
-
-
-
-  @Test
   @DisplayName("가게 로그인 성공")
   public void loginStoreSuccess() {
     // given

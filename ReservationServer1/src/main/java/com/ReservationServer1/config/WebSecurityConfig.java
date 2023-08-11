@@ -80,9 +80,11 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.POST, "/por/pay/bigcomment").hasAuthority("ROLE_OWNER")
         .requestMatchers(HttpMethod.PUT, "/por/pay/bigomment").hasAuthority("ROLE_OWNER")
         .requestMatchers(HttpMethod.DELETE, "/por/pay/bigcomment").hasAuthority("ROLE_OWNER")
+        // Store Coupon
+        .requestMatchers(HttpMethod.GET, "/por/coupon/client").hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.GET, "/por/coupon/owner").hasAuthority("ROLE_OWNER")
         // Store Board
-        .requestMatchers(HttpMethod.POST, "/board")
-        .hasAuthority("ROLE_USER")
+        .requestMatchers(HttpMethod.POST, "/board").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.PUT, "/board").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.DELETE, "/board").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.GET, "/board").hasAuthority("ROLE_USER")

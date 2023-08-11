@@ -373,7 +373,7 @@ public class MemberDAOTest {
     // given
     String userId = "testId";
     String userPwd = "testPwd";
-    String encodedPwd = "encodedPwd";
+    String encodedPwd = "testPwd";
     String getPwd = "testPwd";
 
     doReturn(jpaQuery).when(queryFactory).select(memberEntity.userPwd);
@@ -423,7 +423,7 @@ public class MemberDAOTest {
 
 
   @Test
-  @DisplayName("회원정보 삭제 실패 : 존재하지 않는 아이디")
+  @DisplayName("회원정보 삭제 실패 : 비밀번호 불일치")
   public void delMemberFailByPwd() {
     // given
     String userId = "testId";

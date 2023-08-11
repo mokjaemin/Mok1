@@ -988,11 +988,11 @@ public class StorePORDAOTest {
   public void getCouponStoreFail() {
     // given
     int storeId = 0;
-
+    List<StoreCouponEntity> result = new ArrayList<>();
     doReturn(jpaQueryCoupon).when(queryFactory).select(storeCouponEntity);
     doReturn(jpaQueryCoupon).when(jpaQueryCoupon).from(storeCouponEntity);
     doReturn(jpaQueryCoupon).when(jpaQueryCoupon).where(storeCouponEntity.storeId.eq(storeId));
-    doReturn(null).when(jpaQueryCoupon).fetch();
+    doReturn(result).when(jpaQueryCoupon).fetch();
 
 
     // then && when

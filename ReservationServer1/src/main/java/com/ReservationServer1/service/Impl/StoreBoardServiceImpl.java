@@ -41,8 +41,9 @@ public class StoreBoardServiceImpl implements StoreBoardService {
       Path filePath = Path.of(DIR_BOARD, String.valueOf(boardId) + ".png");
       Files.copy(boardDTO.getFoodImage().getInputStream(), filePath,
           StandardCopyOption.REPLACE_EXISTING);
-      return "success";
+      return boardId;
     } catch (IOException e) {
+      System.out.println(e.getMessage());
       return "File upload failed";
     }
   }

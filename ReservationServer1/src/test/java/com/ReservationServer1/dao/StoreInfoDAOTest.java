@@ -142,13 +142,14 @@ public class StoreInfoDAOTest {
   public void getDayOffFail() {
     // given
     int storeId = 0;
+    List<String> result = new ArrayList<>();
     doReturn(jpaQueryRestDaysMap).when(queryFactory).selectDistinct(storeRestDaysMapEntity.date);
     doReturn(jpaQueryRestDaysMap).when(jpaQueryRestDaysMap).from(storeRestDaysMapEntity);
     doReturn(jpaQueryRestDaysMap).when(jpaQueryRestDaysMap)
         .leftJoin(storeRestDaysMapEntity.storeRestDaysEntity, storeRestDaysEntity);
     doReturn(jpaQueryRestDaysMap).when(jpaQueryRestDaysMap)
         .where(storeRestDaysEntity.storeId.eq(storeId));
-    doReturn(null).when(jpaQueryRestDaysMap).fetch();
+    doReturn(result).when(jpaQueryRestDaysMap).fetch();
 
     // then && when
     MessageException message = assertThrows(MessageException.class, () -> {
@@ -511,12 +512,11 @@ public class StoreInfoDAOTest {
     // given
     int storeId = 0;
     List<StoreFoodsInfoEntity> response = new ArrayList<>();
-    response.add(new StoreFoodsInfoEntity(StoreFoodsInfoDTO.sample()));
     doReturn(jpaQueryFoodsInfo).when(queryFactory).select(storeFoodsInfoEntity);
     doReturn(jpaQueryFoodsInfo).when(jpaQueryFoodsInfo).from(storeFoodsInfoEntity);
     doReturn(jpaQueryFoodsInfo).when(jpaQueryFoodsInfo)
         .where(storeFoodsInfoEntity.storeId.eq(storeId));
-    doReturn(null).when(jpaQueryFoodsInfo).fetch();
+    doReturn(response).when(jpaQueryFoodsInfo).fetch();
 
     // then && when
     MessageException message = assertThrows(MessageException.class, () -> {

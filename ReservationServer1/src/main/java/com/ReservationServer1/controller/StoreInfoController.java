@@ -108,8 +108,7 @@ public class StoreInfoController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<StoreTimeInfoDTO> getTimeInfo(@RequestParam int storeId,
-      Authentication authentication) {
+  public ResponseEntity<StoreTimeInfoDTO> getTimeInfo(@RequestParam int storeId) {
     return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.getTimeInfo(storeId));
   }
 
@@ -151,7 +150,7 @@ public class StoreInfoController {
       tags = {"Store Info Controller"})
   @ApiResponses({
       @ApiResponse(responseCode = "200", description = "OK",
-          content = @Content(schema = @Schema(implementation = StoreTimeInfoDTO.class))),
+          content = @Content(schema = @Schema(implementation = StoreTableInfoDTO.class))),
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
