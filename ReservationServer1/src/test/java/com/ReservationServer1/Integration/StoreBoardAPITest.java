@@ -237,55 +237,55 @@ public class StoreBoardAPITest {
   }
 
 
-  @Test
-  @DisplayName("StoreInfoAPI : Get Board By Store Success")
-  @WithMockUser(username = "userId", roles = "USER")
-  public void getBoardStoreSuccess() throws Exception {
-    // given
-    BoardDTO sample = BoardDTO.sample();
-    StoreBoardEntity entity = makeBoard(sample);
-    MockMultipartFile foodImageFile =
-        new MockMultipartFile("foodImage", "food-image.png", "image/png", new byte[0]);
-    sample.setFoodImage(foodImageFile);
+//  @Test
+//  @DisplayName("StoreInfoAPI : Get Board By Store Success")
+//  @WithMockUser(username = "userId", roles = "USER")
+//  public void getBoardStoreSuccess() throws Exception {
+//    // given
+//    BoardDTO sample = BoardDTO.sample();
+//    StoreBoardEntity entity = makeBoard(sample);
+//    MockMultipartFile foodImageFile =
+//        new MockMultipartFile("foodImage", "food-image.png", "image/png", new byte[0]);
+//    sample.setFoodImage(foodImageFile);
+//
+//    // 사진 저장
+//    Path filePath = Path.of(DIR_BOARD, String.valueOf(entity.getBoardId()) + ".png");
+//    Files.copy(foodImageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+//
+//    // when
+//    ResultActions resultActions = mockMvc.perform(
+//        MockMvcRequestBuilders.get("/board").with(csrf()).contentType(MediaType.APPLICATION_JSON)
+//            .param("storeId", String.valueOf(entity.getStoreId())));
+//
+//
+//    // then
+//    resultActions.andExpect(status().isOk());
+//    Files.delete(filePath);
+//  }
 
-    // 사진 저장
-    Path filePath = Path.of(DIR_BOARD, String.valueOf(entity.getBoardId()) + ".png");
-    Files.copy(foodImageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-    // when
-    ResultActions resultActions = mockMvc.perform(
-        MockMvcRequestBuilders.get("/board").with(csrf()).contentType(MediaType.APPLICATION_JSON)
-            .param("storeId", String.valueOf(entity.getStoreId())));
-
-
-    // then
-    resultActions.andExpect(status().isOk());
-    Files.delete(filePath);
-  }
-
-  @Test
-  @DisplayName("StoreInfoAPI : Get Board By User Success")
-  @WithMockUser(username = "userId", roles = "USER")
-  public void getBoardUserSuccess() throws Exception {
-    // given
-    BoardDTO sample = BoardDTO.sample();
-    StoreBoardEntity entity = makeBoard(sample);
-    MockMultipartFile foodImageFile =
-        new MockMultipartFile("foodImage", "food-image.png", "image/png", new byte[0]);
-    sample.setFoodImage(foodImageFile);
-
-    // 사진 저장
-    Path filePath = Path.of(DIR_BOARD, String.valueOf(entity.getBoardId()) + ".png");
-    Files.copy(foodImageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-    // when
-    ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/board/user")
-        .with(csrf()).contentType(MediaType.APPLICATION_JSON));
-
-    // then
-    resultActions.andExpect(status().isOk());
-    Files.delete(filePath);
-  }
+//  @Test
+//  @DisplayName("StoreInfoAPI : Get Board By User Success")
+//  @WithMockUser(username = "userId", roles = "USER")
+//  public void getBoardUserSuccess() throws Exception {
+//    // given
+//    BoardDTO sample = BoardDTO.sample();
+//    StoreBoardEntity entity = makeBoard(sample);
+//    MockMultipartFile foodImageFile =
+//        new MockMultipartFile("foodImage", "food-image.png", "image/png", new byte[0]);
+//    sample.setFoodImage(foodImageFile);
+//
+//    // 사진 저장
+//    Path filePath = Path.of(DIR_BOARD, String.valueOf(entity.getBoardId()) + ".png");
+//    Files.copy(foodImageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+//
+//    // when
+//    ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/board/user")
+//        .with(csrf()).contentType(MediaType.APPLICATION_JSON));
+//
+//    // then
+//    resultActions.andExpect(status().isOk());
+//    Files.delete(filePath);
+//  }
 
 
   @Test

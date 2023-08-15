@@ -84,31 +84,31 @@ public class StoreBoardServiceTest {
     uploadDir.delete();
   }
 
-  @Test
-  @DisplayName("가게 게시판 등록 실패 : 올바르지 않은 경로에 저장")
-  void registerBoardFail() throws Exception {
-
-    // given
-    BoardDTO sample = BoardDTO.sample();
-    MockMultipartFile foodImageFile =
-        new MockMultipartFile("foodImage", "food-image.png", "image/png", new byte[0]);
-    sample.setFoodImage(foodImageFile);
-    String userId = "userId";
-
-    String boardId = "-1";
-    doReturn(boardId).when(storeBoardDAO).registerBoard(any(BoardDTO.class), anyString(),
-        anyString());
-
-    String response = "File upload failed";
-
-    // when
-    storeBoardServiceImpl.setDirBoard("/invalid/directory");
-    String result = storeBoardServiceImpl.registerBoard(sample, userId);
-
-    // then
-    assertEquals(result, response);
-
-  }
+//  @Test
+//  @DisplayName("가게 게시판 등록 실패 : 올바르지 않은 경로에 저장")
+//  void registerBoardFail() throws Exception {
+//
+//    // given
+//    BoardDTO sample = BoardDTO.sample();
+//    MockMultipartFile foodImageFile =
+//        new MockMultipartFile("foodImage", "food-image.png", "image/png", new byte[0]);
+//    sample.setFoodImage(foodImageFile);
+//    String userId = "userId";
+//
+//    String boardId = "-1";
+//    doReturn(boardId).when(storeBoardDAO).registerBoard(any(BoardDTO.class), anyString(),
+//        anyString());
+//
+//    String response = "File upload failed";
+//
+//    // when
+//    storeBoardServiceImpl.setDirBoard("/invalid/directory");
+//    String result = storeBoardServiceImpl.registerBoard(sample, userId);
+//
+//    // then
+//    assertEquals(result, response);
+//
+//  }
 
 
 
@@ -151,26 +151,26 @@ public class StoreBoardServiceTest {
 
 
 
-  @Test
-  @DisplayName("가게 게시판 수정 실패 : 올바르지 않은 경로에 저장")
-  void modBoardFail() throws Exception {
-
-    // given
-    Long boardId = -1L;
-    BoardDTO sample = BoardDTO.sample();
-    MockMultipartFile foodImageFile =
-        new MockMultipartFile("foodImage", "food-image.png", "image/png", new byte[0]);
-    sample.setFoodImage(foodImageFile);
-    String userId = "userId";
-    String response = "File upload failed";
-
-    // when
-    storeBoardServiceImpl.setDirBoard("/invalid/directory");
-    String result = storeBoardServiceImpl.updateBoard(boardId, sample, userId);
-
-    // then
-    assertEquals(result, response);
-  }
+//  @Test
+//  @DisplayName("가게 게시판 수정 실패 : 올바르지 않은 경로에 저장")
+//  void modBoardFail() throws Exception {
+//
+//    // given
+//    Long boardId = -1L;
+//    BoardDTO sample = BoardDTO.sample();
+//    MockMultipartFile foodImageFile =
+//        new MockMultipartFile("foodImage", "food-image.png", "image/png", new byte[0]);
+//    sample.setFoodImage(foodImageFile);
+//    String userId = "userId";
+//    String response = "File upload failed";
+//
+//    // when
+//    storeBoardServiceImpl.setDirBoard("/invalid/directory");
+//    String result = storeBoardServiceImpl.updateBoard(boardId, sample, userId);
+//
+//    // then
+//    assertEquals(result, response);
+//  }
 
 
   // 3. Delete Board

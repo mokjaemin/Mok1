@@ -53,7 +53,7 @@ public class MemberServiceImpl implements MemberService {
   @Override
   public String findPwdMember(String userId, String userEmail) {
     memberDAO.findPwdMember(userId, userEmail);
-    String token = JWTutil.createJWT(userId, "PWD", secretKey, expiredPwdMs);
+    String token = JWTutil.createJWT(userId, "PWD", secretKey, expiredPwdMs); 
     SimpleMailMessage message = new SimpleMailMessage();
     message.setFrom(env.getProperty("spring.mail.username"));
     message.setTo(userEmail);

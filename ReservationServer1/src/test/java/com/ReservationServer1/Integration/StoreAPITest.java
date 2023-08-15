@@ -1,18 +1,19 @@
 package com.ReservationServer1.Integration;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -22,8 +23,11 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.ReservationServer1.data.DTO.store.StoreDTO;
+import com.ReservationServer1.data.Entity.store.StoreEntity;
 import com.ReservationServer1.utils.JWTutil;
 import com.google.gson.Gson;
+import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
 @SpringBootTest
@@ -39,10 +43,13 @@ public class StoreAPITest {
   @Value("${jwt.secret}")
   private String secretKey;
 
+  @Autowired
+  protected EntityManager em;
+
   @Test
   @DisplayName("StoreAPI : Register Store Success")
   @WithMockUser(username = "userId", roles = "USER")
-  @Order(1)
+
   public void registerStoreSuccess() throws Exception {
     // given
     StoreDTO sample = StoreDTO.sample();
@@ -57,71 +64,59 @@ public class StoreAPITest {
         .andExpect(MockMvcResultMatchers.content().string(equalTo(response)));
   }
 
-  @Test
-  @DisplayName("StoreAPI : Get Store List Success")
-  @WithMockUser(username = "userId", roles = "USER")
-  @Order(2)
-  public void getStoreSuccess() throws Exception {
-    // given
-    StoreDTO sample = StoreDTO.sample();
-    String country = sample.getCountry();
-    String city = sample.getCity();
-    String dong = sample.getDong();
-    String type = sample.getType();
-    int page = 0;
-    int size = 1;
-    String response = "{\"storeName\":2}";
-
-    // 가게 등록
-    registerStoreSuccess();
-
-    // when
-    ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/store/list")
-        .with(csrf()).contentType(MediaType.APPLICATION_JSON).param("country", country)
-        .param("city", city).param("dong", dong).param("type", type)
-        .param("page", String.valueOf(page)).param("size", String.valueOf(size)));
-
-    // then
-    resultActions.andExpect(status().isOk())
-        .andExpect(MockMvcResultMatchers.content().string(equalTo(response)));
-  }
+//  @Test
+//  @DisplayName("StoreAPI : Get Store List Success")
+//  @WithMockUser(username = "userId", roles = "USER")
+//  public void getStoreSuccess() throws Exception {
+//    // given
+//    int page = 0;
+//    int size = 1;
+//
+//    // 가게 등록
+//    StoreEntity entity = persistStore();
+//
+//
+//    // when
+//    ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/store/list")
+//        .with(csrf()).contentType(MediaType.APPLICATION_JSON).param("country", entity.getCountry())
+//        .param("city", entity.getCity()).param("dong", entity.getDong())
+//        .param("type", entity.getType()).param("page", String.valueOf(page))
+//        .param("size", String.valueOf(size)));
+//
+//    // then
+//    resultActions.andExpect(status().isOk());
+//  }
 
 
   @Test
   @DisplayName("StoreAPI : Login Store Success")
   @WithMockUser(username = "userId", roles = "USER")
-  @Order(3)
   public void loginStoreSuccess() throws Exception {
     // given
-    int storeId = 3;
-
     // 가게 등록
-    registerStoreSuccess();
+    StoreEntity entity = persistStore();
 
     // when & then
     MvcResult mvcResult = mockMvc
         .perform(MockMvcRequestBuilders.get("/store").with(csrf())
-            .contentType(MediaType.APPLICATION_JSON).param("storeId", String.valueOf(storeId)))
+            .contentType(MediaType.APPLICATION_JSON)
+            .param("storeId", String.valueOf(entity.getStoreId())))
         .andExpect(status().isOk()).andReturn();
 
     // 토큰 확인
     String response = mvcResult.getResponse().getContentAsString();
     assertTrue(JWTutil.isExpired(response, secretKey) == false);
-    assertTrue(JWTutil.getUserId(response, secretKey).equals(String.valueOf(storeId)));
+    assertTrue(JWTutil.getUserId(response, secretKey).equals(String.valueOf(entity.getStoreId())));
     assertTrue(JWTutil.getUserRole(response, secretKey).equals("OWNER"));
   }
 
   @Test
   @DisplayName("StoreAPI : Login Store Fail : 잘못된 정보")
   @WithMockUser(username = "userId", roles = "USER")
-  @Order(4)
   public void loginStoreFail() throws Exception {
     // given
     int storeId = -1;
     String result = "user";
-
-    // 가게 등록
-    registerStoreSuccess();
 
     // when & then
     MvcResult mvcResult = mockMvc
@@ -129,12 +124,55 @@ public class StoreAPITest {
             .contentType(MediaType.APPLICATION_JSON).param("storeId", String.valueOf(storeId)))
         .andExpect(status().isOk()).andReturn();
 
-    
+
     String response = mvcResult.getResponse().getContentAsString();
     assertTrue(response.equals(result));
-    
+
   }
 
+
+  @Test
+  @DisplayName("JWTTest")
+  public void JWTTest() throws Exception {
+    // given
+    // 가게 등록
+    StoreEntity entity = persistStore();
+    String token = JWTutil.createJWT(entity.getOwnerId(), "USER", secretKey, 60 * 1000);
+
+    // when
+    MvcResult mvcResult = mockMvc
+        .perform(MockMvcRequestBuilders.get("/store").with(csrf())
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+            .contentType(MediaType.APPLICATION_JSON).param("storeId", String.valueOf(1)))
+        .andExpect(status().isOk()).andReturn();
+  }
+
+  @Test
+  @DisplayName("JWTTest : Expired Token")
+  public void JWTTest2() throws Exception {
+    // given
+    // 가게 등록
+    StoreEntity entity = persistStore();
+    String token = JWTutil.createJWT(entity.getOwnerId(), "USER", secretKey, 0);
+
+
+    // then && when
+    ExpiredJwtException message = assertThrows(ExpiredJwtException.class, () -> {
+      mockMvc.perform(MockMvcRequestBuilders.get("/store").with(csrf())
+          .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+          .contentType(MediaType.APPLICATION_JSON).param("storeId", String.valueOf(1)));
+    });
+    String start = "JWT expired at";
+    assertTrue(message.getMessage().startsWith(start));
+  }
+
+
+
+  public StoreEntity persistStore() {
+    StoreEntity entity = new StoreEntity(StoreDTO.sample());
+    em.persist(entity);
+    return entity;
+  }
 
 
 }

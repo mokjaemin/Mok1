@@ -42,6 +42,7 @@ class MemberAPITest {
 
   @Value("${jwt.secret}")
   private String secretKey;
+  
 
 
   @Test

@@ -21,7 +21,7 @@ import lombok.ToString;
 public class StoreDTO {
 
   private static final StoreDTO sample =
-      StoreDTO.builder().storeName("storeName").ownerId("ownerId").country("country").city("city")
+      StoreDTO.builder().storeName("storeName").ownerId("userId").country("country").city("city")
           .dong("dong").type("type").couponInfo("couponInfo").build();
 
 

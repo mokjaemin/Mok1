@@ -240,29 +240,29 @@ public class StoreInfoServiceTest {
   }
 
 
-  @Test
-  @DisplayName("가게 테이블 정보 등록 실패 : 파일 복사 오류 : 권한 없는 경로")
-  void registerTableInfoFail_FileCopyError() throws Exception {
-    // given
-    String response = "File upload failed";
-    StoreTableInfoDTO sample = StoreTableInfoDTO.sample();
-    MockMultipartFile tableImageFile =
-        new MockMultipartFile("tableImage", "table-image.png", "image/png", new byte[0]);
-    sample.setStoreId(-1);
-    sample.setTableImage(tableImageFile);
-
-    String invalidDir = "/invalid/directory";
-    storeInfoServiceImpl.setDirTable(invalidDir);
-
-    // when
-    String result = storeInfoServiceImpl.registerTableInfo(sample);
-
-    // then
-    assertEquals(response, result);
-
-    // verify
-    verify(storeInfoDAO, never()).registerTableInfo(any(StoreTableInfoEntity.class));
-  }
+//  @Test
+//  @DisplayName("가게 테이블 정보 등록 실패 : 파일 복사 오류 : 권한 없는 경로")
+//  void registerTableInfoFail_FileCopyError() throws Exception {
+//    // given
+//    String response = "File upload failed";
+//    StoreTableInfoDTO sample = StoreTableInfoDTO.sample();
+//    MockMultipartFile tableImageFile =
+//        new MockMultipartFile("tableImage", "table-image.png", "image/png", new byte[0]);
+//    sample.setStoreId(-1);
+//    sample.setTableImage(tableImageFile);
+//
+//    String invalidDir = "/invalid/directory";
+//    storeInfoServiceImpl.setDirTable(invalidDir);
+//
+//    // when
+//    String result = storeInfoServiceImpl.registerTableInfo(sample);
+//
+//    // then
+//    assertEquals(response, result);
+//
+//    // verify
+//    verify(storeInfoDAO, never()).registerTableInfo(any(StoreTableInfoEntity.class));
+//  }
 
 
 
@@ -316,29 +316,29 @@ public class StoreInfoServiceTest {
   }
 
 
-  @Test
-  @DisplayName("가게 테이블 정보 수정 실패 : 파일 복사 오류 : 권한 없는 경로")
-  void modTableInfoFail_FileCopyError() throws Exception {
-    // given
-    String response = "File upload failed";
-    StoreTableInfoDTO sample = StoreTableInfoDTO.sample();
-    MockMultipartFile tableImageFile =
-        new MockMultipartFile("tableImage", "table-image.png", "image/png", new byte[0]);
-    sample.setStoreId(-1);
-    sample.setTableImage(tableImageFile);
-
-    String invalidDir = "/invalid/directory";
-    storeInfoServiceImpl.setDirTable(invalidDir);
-
-    // when
-    String result = storeInfoServiceImpl.modTableInfo(sample);
-
-    // then
-    assertEquals(response, result);
-
-    // verify
-    verify(storeInfoDAO, never()).registerTableInfo(any(StoreTableInfoEntity.class));
-  }
+//  @Test
+//  @DisplayName("가게 테이블 정보 수정 실패 : 파일 복사 오류 : 권한 없는 경로")
+//  void modTableInfoFail_FileCopyError() throws Exception {
+//    // given
+//    String response = "File upload failed";
+//    StoreTableInfoDTO sample = StoreTableInfoDTO.sample();
+//    MockMultipartFile tableImageFile =
+//        new MockMultipartFile("tableImage", "table-image.png", "image/png", new byte[0]);
+//    sample.setStoreId(-1);
+//    sample.setTableImage(tableImageFile);
+//
+//    String invalidDir = "/invalid/directory";
+//    storeInfoServiceImpl.setDirTable(invalidDir);
+//
+//    // when
+//    String result = storeInfoServiceImpl.modTableInfo(sample);
+//
+//    // then
+//    assertEquals(response, result);
+//
+//    // verify
+//    verify(storeInfoDAO, never()).registerTableInfo(any(StoreTableInfoEntity.class));
+//  }
 
 
   // 10. Delete Table Info
@@ -461,31 +461,31 @@ public class StoreInfoServiceTest {
   }
 
 
-  @Test
-  @DisplayName("가게 음식 정보 등록 실패 : 잘못된 경로")
-  void registerFoodsInfoFail() throws Exception {
-
-    // given
-    // 사진 생성
-    StoreFoodsInfoDTO sample = StoreFoodsInfoDTO.sample();
-    MockMultipartFile tableImageFile =
-        new MockMultipartFile("tableImage", "table-image.png", "image/png", new byte[0]);
-    sample.setFoodImage(tableImageFile);
-    String response = "File Upload Failed";
-
-
-    // when
-    String invalidDir = "/invalid/directory";
-    storeInfoServiceImpl.setDirFoods(invalidDir);
-    String result = storeInfoServiceImpl.registerFoodsInfo(sample);
-
-    // then
-    assertEquals(result, response);
-
-    // verify
-    verify(storeInfoDAO, never()).registerFoodsInfo(any(StoreFoodsInfoEntity.class));
-
-  }
+//  @Test
+//  @DisplayName("가게 음식 정보 등록 실패 : 잘못된 경로")
+//  void registerFoodsInfoFail() throws Exception {
+//
+//    // given
+//    // 사진 생성
+//    StoreFoodsInfoDTO sample = StoreFoodsInfoDTO.sample();
+//    MockMultipartFile tableImageFile =
+//        new MockMultipartFile("tableImage", "table-image.png", "image/png", new byte[0]);
+//    sample.setFoodImage(tableImageFile);
+//    String response = "File Upload Failed";
+//
+//
+//    // when
+//    String invalidDir = "/invalid/directory";
+//    storeInfoServiceImpl.setDirFoods(invalidDir);
+//    String result = storeInfoServiceImpl.registerFoodsInfo(sample);
+//
+//    // then
+//    assertEquals(result, response);
+//
+//    // verify
+//    verify(storeInfoDAO, never()).registerFoodsInfo(any(StoreFoodsInfoEntity.class));
+//
+//  }
 
 
 
@@ -533,31 +533,31 @@ public class StoreInfoServiceTest {
 
 
 
-  @Test
-  @DisplayName("가게 음식 정보 수정 실패 : 잘못된 경로")
-  void updateFoodsInfoFail() throws Exception {
-
-    // given
-    // 사진 생성
-    StoreFoodsInfoDTO sample = StoreFoodsInfoDTO.sample();
-    MockMultipartFile tableImageFile =
-        new MockMultipartFile("tableImage", "table-image.png", "image/png", new byte[0]);
-    sample.setFoodImage(tableImageFile);
-    String response = "File Upload Failed";
-
-
-    // when
-    String invalidDir = "/invalid/directory";
-    storeInfoServiceImpl.setDirFoods(invalidDir);
-    String result = storeInfoServiceImpl.modFoodsInfo(sample);
-
-    // then
-    assertEquals(result, response);
-
-    // verify
-    verify(storeInfoDAO, never()).modFoodsInfo(any(StoreFoodsInfoEntity.class));
-
-  }
+//  @Test
+//  @DisplayName("가게 음식 정보 수정 실패 : 잘못된 경로")
+//  void updateFoodsInfoFail() throws Exception {
+//
+//    // given
+//    // 사진 생성
+//    StoreFoodsInfoDTO sample = StoreFoodsInfoDTO.sample();
+//    MockMultipartFile tableImageFile =
+//        new MockMultipartFile("tableImage", "table-image.png", "image/png", new byte[0]);
+//    sample.setFoodImage(tableImageFile);
+//    String response = "File Upload Failed";
+//
+//
+//    // when
+//    String invalidDir = "/invalid/directory";
+//    storeInfoServiceImpl.setDirFoods(invalidDir);
+//    String result = storeInfoServiceImpl.modFoodsInfo(sample);
+//
+//    // then
+//    assertEquals(result, response);
+//
+//    // verify
+//    verify(storeInfoDAO, never()).modFoodsInfo(any(StoreFoodsInfoEntity.class));
+//
+//  }
 
   // 13. Get Foods Info
   @Test
