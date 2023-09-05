@@ -30,6 +30,7 @@
 - DATABASE : MYSQL with AWS(Main DB), Redis(Cache), H2(Testing)
 - TESTING : JUNIT5, Mockito
 - TEST COVERAGE : JACOCO
+- DEPLOYMENT : Docker, Amazon EC2
 
 # TRAITS
 - MVC STRUCTURE, SINGLETON PATTERN를 활용해 구조 체계화 및 인스턴스 최소화
@@ -40,13 +41,10 @@
 - Mysql의 인덱싱, 조인 등으로 성능 향상
 - Redis를 활용하여 캐시를 통해 속도 향상
 - JUNIT, Mokito를 통한 테스팅 99%
-- AWS를 활용하여 환경 개선
+- AWS, Docker, Amazon EC2로 클라우드 환경 구축
 
 # Test Coverage
 - https://docs.google.com/spreadsheets/d/1OKFicrW9nmyS5sHzxdf49Tp4WqHmk1qrBU6Q3lpNXAg/edit?usp=sharing
-
-# Trouble Shooting
-- https://mokjaemin88.tistory.com/category/Trouble%20Shooting
 
 # PROTOTYPE
 - https://www.figma.com/proto/p667iVrA2n38Qvr8l64xaQ/Graduation-Project?node-id=6-49&scaling=scale-down&page-id=0%3A1&starting-point-node-id=6%3A15
@@ -57,6 +55,8 @@
 # DATABASE SPECIFICATION
 - https://docs.google.com/document/d/1AKWyWDcy_u3G-zKH0nWjQUifhvrn_jncopUeqKt-gEQ/edit
 
+# Trouble Shooting
+- https://mokjaemin88.tistory.com/category/Trouble%20Shooting
 
 # Function
 - Member
