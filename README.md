@@ -25,7 +25,6 @@
 - LANGUAGE : JAVA 17
 - CLIENT : HTTP Requests/Response
 - CLIENT API : Restful API
-- CLIENT TESTING : Insomnia, SWAGGER
 - SEQURITY : JASYPT Library, Spring Security, JWT
 - DATA API : Query DSL, Hibernate
 - DATABASE : MYSQL with AWS(Main DB), Redis(Cache), H2(Testing)
@@ -34,18 +33,14 @@
 
 # TRAITS
 - MVC STRUCTURE, SINGLETON PATTERN를 활용해 구조 체계화 및 인스턴스 최소화
-- AOP를 통한 유의미한 로그 관리
-- JASYPT을 통한 내부보안
-- JWT, Spring Security를 통한 인증/인가 및 내부 용량 효율화
-- MailSender로 보안 강화
-- QueryDSL의 컴파일을 통한 오류 감소 및 인스턴스 최소화
-- Swagger를 활용한 API 관리문서 간편 제
+- JWT, Spring Security를 통한 인증/인가 및 내부 용량 효율화 및 JASYPT을 통한 내부보안
+- QueryDSL의 컴파일 처리로 오류 감소 및 인스턴스 최소화
+- Swagger를 활용한 API 관리문서 간편 제작
 - RestFul API를 활용하여 일련의 규칙을 통해 주소 간소화
-- Mysql을 활용하여 인덱싱, 조인 등으로 성능 향상
-- AWS를 활용하여 환경 개선
+- Mysql의 인덱싱, 조인 등으로 성능 향상
 - Redis를 활용하여 캐시를 통해 속도 향상
-- 사진/동영상 저장시 다른 저장공간을 사용해 용량 사용 개선
 - JUNIT, Mokito를 통한 테스팅 99%
+- AWS를 활용하여 환경 개선
 
 # Test Coverage
 - https://docs.google.com/spreadsheets/d/1OKFicrW9nmyS5sHzxdf49Tp4WqHmk1qrBU6Q3lpNXAg/edit?usp=sharing
@@ -53,14 +48,11 @@
 # Trouble Shooting
 - https://mokjaemin88.tistory.com/category/Trouble%20Shooting
 
-
 # PROTOTYPE
 - https://www.figma.com/proto/p667iVrA2n38Qvr8l64xaQ/Graduation-Project?node-id=6-49&scaling=scale-down&page-id=0%3A1&starting-point-node-id=6%3A15
 
-
 # API SPECIFICATION
 - https://docs.google.com/document/d/13W18PYfz040IY35pNc1uI9T5nt0C9nzI4S5q_MH0USw/edit
-
 
 # DATABASE SPECIFICATION
 - https://docs.google.com/document/d/1AKWyWDcy_u3G-zKH0nWjQUifhvrn_jncopUeqKt-gEQ/edit
