@@ -1,23 +1,23 @@
 # PROJECT : Make a restaurant reservation
 
 
-# DESCRIPTION
+## DESCRIPTION
 - 해당 프로젝트는 음식점 예약 서버 프로젝트입니다.
 - 음식점이 닫았거나 만석인 상황을 마주친 경우가 많을 것입니다.
 - 이를 해결하기 위해 미리 좌석이 있는지 확인하고 시간, 장소, 테이블 등 예약이 가능합니다.
 
 
-# FOR
+## FOR
 - 음식점을 갔다가 음식점이 닫거나 만석이라 불편을 겪으신 분
 - 중요한 약속이 있어 음식점 예약을 간편하게 하고 싶은 분
 - 음식점 고객들을 편리하게 관리하고 싶은 모든 가게 사장님들
 
 
-# USER INTERFACE ( CLICK BELOW )
+## USER INTERFACE ( CLICK BELOW )
 [![Video Label](http://img.youtube.com/vi/4kFZOOxNqD0/0.jpg)](https://youtu.be/4kFZOOxNqD0)
 
 
-# ENV
+## ENV
 - IDE : STS4
 - BUILD TOOLS : MAVEN
 - FRAMEWORK : SPRING BOOT 3.0.5
@@ -32,7 +32,7 @@
 - TEST COVERAGE : JACOCO
 - DEPLOYMENT : Docker, Amazon EC2
 
-# TRAITS
+## TRAITS
 - MVC STRUCTURE, SINGLETON PATTERN를 활용해 구조 체계화 및 인스턴스 최소화
 - JWT, Spring Security를 통한 인증/인가 및 내부 용량 효율화 및 JASYPT을 통한 내부보안
 - QueryDSL의 컴파일 처리로 오류 감소 및 인스턴스 최소화
@@ -43,33 +43,33 @@
 - JUNIT, Mokito를 통한 테스팅 99%
 - AWS, Docker, Amazon EC2로 클라우드 환경 구축
 
-# Test Coverage
+## Test Coverage
 - https://docs.google.com/spreadsheets/d/1OKFicrW9nmyS5sHzxdf49Tp4WqHmk1qrBU6Q3lpNXAg/edit?usp=sharing
 
-# PROTOTYPE
+## PROTOTYPE
 - https://www.figma.com/proto/p667iVrA2n38Qvr8l64xaQ/Graduation-Project?node-id=6-49&scaling=scale-down&page-id=0%3A1&starting-point-node-id=6%3A15
 
-# API SPECIFICATION
+## API SPECIFICATION
 - https://docs.google.com/document/d/13W18PYfz040IY35pNc1uI9T5nt0C9nzI4S5q_MH0USw/edit
 
-# DATABASE SPECIFICATION
+## DATABASE SPECIFICATION
 - https://docs.google.com/document/d/1AKWyWDcy_u3G-zKH0nWjQUifhvrn_jncopUeqKt-gEQ/edit
 
-# Trouble Shooting
+## Trouble Shooting
 - https://mokjaemin88.tistory.com/category/Trouble%20Shooting
 
-# Function
-- Member
+## Function
+### Member
 1. 계정 생성
 2. 로그인
 3. 회원 정보 찾기
 4. 회원 정보 수정
 5. 회원 정보 삭제
-- Store Basic
+### Store Basic
 1. 가게 등록
 2. 가게 지역별 리스트
 3. 가게 관리자 페이지 로그인
-- Store Info
+### Store Info
 1. 가게 쉬는날 등록
 2. 가게 쉬는날 수정
 3. 가게 쉬는날 삭제
@@ -84,7 +84,7 @@
 12. 가게 메뉴 등록
 13. 가게 메뉴 수정
 14. 가게 메뉴 삭제
-- Reservation & Order & Pay & Coupon
+### Reservation & Order & Pay & Coupon
 1. 가게 자리/시간 예약
 2. 가게 자리/시간 수정
 3. 가게 자리/시간 삭제
@@ -94,7 +94,7 @@
 7. 결제 등록
 8. 결제 취소
 9. 쿠폰 조회
-- Recipt & Board
+### Recipt & Board
 1. 영수증 출력
 2. 영수증 댓글 등록
 3. 영수증 댓글 수정
