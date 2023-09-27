@@ -19,6 +19,9 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class BoardDTO {
 
+  private static final BoardDTO sample =
+      BoardDTO.builder().storeId(0).title("title").content("content").rating(5.0).build();
+
   @NotNull
   private int storeId;
 
@@ -30,11 +33,11 @@ public class BoardDTO {
 
   @NotNull
   private double rating;
-  
+
   private MultipartFile foodImage;
-  
+
   public static BoardDTO sample() {
-    return BoardDTO.builder().storeId(0).title("title").content("content").rating(5.0).build();
+    return sample;
   }
 
 }

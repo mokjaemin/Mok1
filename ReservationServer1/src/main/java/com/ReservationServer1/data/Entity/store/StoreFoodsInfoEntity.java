@@ -29,6 +29,10 @@ import lombok.ToString;
 @Table(name = "StoreFoodsInfo")
 public class StoreFoodsInfoEntity extends BaseEntity {
 
+  private static final StoreFoodsInfoEntity sample =
+      StoreFoodsInfoEntity.builder().tableId(-1L).storeId(-1).foodName("foodName")
+          .foodDescription("foodDescription").foodPrice(0).imageURL("url").build();
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long tableId;
@@ -50,6 +54,10 @@ public class StoreFoodsInfoEntity extends BaseEntity {
   public StoreFoodsInfoResultDTO toStoreFoodsInfoResultDTO() {
     return StoreFoodsInfoResultDTO.builder().storeId(this.storeId).foodName(this.foodName)
         .foodDescription(this.foodDescription).foodPrice(this.foodPrice).build();
+  }
+  
+  public static StoreFoodsInfoEntity sample() {
+    return sample;
   }
 
 }

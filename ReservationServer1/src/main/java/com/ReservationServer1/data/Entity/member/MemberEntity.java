@@ -25,13 +25,16 @@ import lombok.ToString;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Member", indexes = {@Index(name = "idx_email", columnList = "userEmail")})
-//, indexes = {@Index(name = "idx_city", columnList = "city"),
-//    @Index(name = "idx_dong", columnList = "dong")}
 @EqualsAndHashCode(callSuper = false)
+@Table(name = "Member", indexes = {@Index(name = "idx_email", columnList = "userEmail")})
+// , indexes = {@Index(name = "idx_city", columnList = "city"),
+// @Index(name = "idx_dong", columnList = "dong")}
 // @EntityListeners(CustomListener.class)
 public class MemberEntity extends BaseEntity {
 
+  private static final MemberDTO sample =
+      MemberDTO.builder().userId("userId").userPwd("userPwd").userName("userName")
+          .userNumber("userNumber").userAddress("userAddress").userEmail("userEmail").build();
 
   @Id
   private String userId;
@@ -50,5 +53,9 @@ public class MemberEntity extends BaseEntity {
     return MemberDTO.builder().userId(memberEntity.userId).userPwd(memberEntity.userPwd)
         .userName(memberEntity.userName).userNumber(memberEntity.userNumber)
         .userAddress(memberEntity.userAddress).userEmail(memberEntity.userEmail).build();
+  }
+
+  public static MemberDTO sample() {
+    return sample;
   }
 }

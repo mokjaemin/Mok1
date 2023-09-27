@@ -17,6 +17,10 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class BoardResultDTO {
 
+  private static final BoardResultDTO sample =
+      BoardResultDTO.builder().boardId(0L).userId("userId").title("title").content("content")
+          .comment("comment").rating(5.0).foodImage("foodImage").build();
+
   private Long boardId;
 
   private int storeId;
@@ -35,7 +39,6 @@ public class BoardResultDTO {
 
 
   public static BoardResultDTO sample() {
-    return BoardResultDTO.builder().boardId(0L).userId("userId").title("title").content("content")
-        .comment("comment").rating(5.0).foodImage("foodImage").build();
+    return sample;
   }
 }

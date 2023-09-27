@@ -18,6 +18,8 @@ import lombok.ToString;
 @Builder
 @EqualsAndHashCode
 public class OrderDTO {
+  private static HashMap<String, Integer> testInfo = new HashMap<>();
+  private static OrderDTO sample = OrderDTO.builder().storeId(0).build();
 
   @NotNull
   private int storeId;
@@ -26,10 +28,14 @@ public class OrderDTO {
   private HashMap<String, Integer> orderInfo;
   
   public static OrderDTO sample() {
-    HashMap<String, Integer> testInfo = new HashMap<>();
-    testInfo.put("foodName1", 1);
-    testInfo.put("foodName2", 2);
-    return OrderDTO.builder().storeId(0).orderInfo(testInfo).build();
+    if(testInfo.size() == 0) {
+      testInfo.put("foodName1", 1);
+      testInfo.put("foodName2", 2);
+    }
+    if(sample.getOrderInfo() == null) {
+      sample.setOrderInfo(testInfo);
+    }
+    return sample;
   }
   
 }

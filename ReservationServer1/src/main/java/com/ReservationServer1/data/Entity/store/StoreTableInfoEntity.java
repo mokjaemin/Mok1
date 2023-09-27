@@ -22,9 +22,11 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(callSuper = false)
 @Table(name = "StoreTableInfo")
 public class StoreTableInfoEntity {
+
+  private static final StoreTableInfoEntity sample =
+      StoreTableInfoEntity.builder().tableId(-1L).storeId(-1).count(0).imageURL("url").build();
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,10 +37,14 @@ public class StoreTableInfoEntity {
   private int count;
 
   private String imageURL;
-  
+
 
   public StoreTableInfoEntity(StoreTableInfoDTO storeTableInfoDTO) {
     BeanUtils.copyProperties(storeTableInfoDTO, this);
+  }
+
+  public static StoreTableInfoEntity sample() {
+    return sample;
   }
 
 }

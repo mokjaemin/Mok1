@@ -19,6 +19,9 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class StoreFoodsInfoDTO {
 
+  private static final StoreFoodsInfoDTO sample = StoreFoodsInfoDTO.builder().storeId(0)
+      .foodName("foodName").foodDescription("foodDescription").foodPrice(0).build();
+
   @NotNull
   private int storeId;
 
@@ -35,7 +38,6 @@ public class StoreFoodsInfoDTO {
 
 
   public static StoreFoodsInfoDTO sample() {
-    return StoreFoodsInfoDTO.builder().storeId(0).foodName("foodName")
-        .foodDescription("foodDescription").foodPrice(0).build();
+    return sample;
   }
 }

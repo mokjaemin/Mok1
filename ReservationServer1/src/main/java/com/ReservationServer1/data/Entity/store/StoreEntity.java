@@ -32,6 +32,10 @@ import lombok.ToString;
     @Index(name = "idx_dong", columnList = "dong")})
 public class StoreEntity extends BaseEntity {
 
+  private static final StoreEntity sample =
+      StoreEntity.builder().storeId(-1).storeName("storeName").ownerId("ownerId").country("country")
+          .city("city").dong("dong").type("type").couponInfo("couponInfo").build();
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int storeId;
@@ -53,5 +57,9 @@ public class StoreEntity extends BaseEntity {
         StoreDTO.builder().storeName(this.storeName).ownerId(this.ownerId).country(this.country)
             .city(this.city).dong(this.dong).type(this.type).couponInfo(this.couponInfo).build();
     return storeDTO;
+  }
+  
+  public static StoreEntity sample() {
+    return sample;
   }
 }
