@@ -11,9 +11,9 @@ import com.ReservationServer1.utils.JWTutil;
 public class JWTutilsTest {
 
   @Test
-  @DisplayName("MemberEntity : toMemberDTO")
+  @DisplayName("Create JwtUtil")
   void JWTutilConstructorTest() throws Exception {
-    JWTutil jwt = new JWTutil();
+    String jwt = JWTutil.createJWT(null, null, null, 0);
 
     assertTrue(jwt != null);
   }

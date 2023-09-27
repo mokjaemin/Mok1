@@ -20,6 +20,11 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class StoreTimeInfoDTO {
+
+  private static List<String> breakTimeSample = new ArrayList<>();
+  private static StoreTimeInfoDTO sample = StoreTimeInfoDTO.builder().startTime("startTime")
+      .endTime("endTime").intervalTime("intervalTime").storeId(1).build();
+
   @NotNull
   private String startTime;
   @NotNull
@@ -32,10 +37,12 @@ public class StoreTimeInfoDTO {
   private int storeId;
 
   public static StoreTimeInfoDTO sample() {
-    List<String> breakTimeSample = new ArrayList<>();
-    breakTimeSample.add("breakTime");
-    StoreTimeInfoDTO sample = StoreTimeInfoDTO.builder().startTime("startTime").endTime("endTime")
-        .breakTime(breakTimeSample).intervalTime("intervalTime").storeId(1).build();
+    if (breakTimeSample.size() == 0) {
+      breakTimeSample.add("breakTime");
+    }
+    if (sample.getBreakTime() == null) {
+      sample.setBreakTime(breakTimeSample);
+    }
     return sample;
   }
 

@@ -28,14 +28,14 @@ import jakarta.validation.Valid;
 @RestController("MemberController")
 @RequestMapping("/member")
 public class MemberController {
-  
+
 
   private final MemberService memberService;
+
   public MemberController(MemberService memberService) {
     this.memberService = memberService;
   }
-  
-  
+
 
 
   @PostMapping
@@ -46,15 +46,16 @@ public class MemberController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> registerMember(@Valid @RequestBody MemberDTO member) {   
+  public ResponseEntity<String> registerMember(@Valid @RequestBody MemberDTO member) {
     return ResponseEntity.status(HttpStatus.OK).body(memberService.registerMember(member));
   }
 
 
   @PostMapping("/login")
   @Operation(summary = "로그인 요청", description = "로그인을 요청합니다.", tags = {"Member Controller"})
-  @ApiResponses({@ApiResponse(responseCode = "200", description = "OK",
-      content = @Content(schema = @Schema(implementation = LoginDTO.class))),
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "OK",
+          content = @Content(schema = @Schema(implementation = LoginDTO.class))),
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
@@ -65,56 +66,65 @@ public class MemberController {
 
   @PostMapping("/auth/pwd")
   @Operation(summary = "비밀번호 찾기 요청", description = "비밀번호 찾기를 요청합니다.", tags = {"Member Controller"})
-  @ApiResponses({@ApiResponse(responseCode = "200", description = "OK",
-      content = @Content(schema = @Schema(implementation = FindPwdDTO.class))),
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "OK",
+          content = @Content(schema = @Schema(implementation = FindPwdDTO.class))),
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
   public ResponseEntity<String> findPwdMember(@Valid @RequestBody FindPwdDTO findPwdDTO) {
-    return ResponseEntity.status(HttpStatus.OK).body(memberService.findPwdMember(findPwdDTO.getUserId(), findPwdDTO.getUserEmail()));
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(memberService.findPwdMember(findPwdDTO.getUserId(), findPwdDTO.getUserEmail()));
   }
-  
-  
-  
+
+
+
   @PutMapping("/pwd")
   @Operation(summary = "비밀번호 수정 요청", description = "비밀번호 수정을 요청합니다.", tags = {"Member Controller"})
   @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> modPwdMember(@Valid @RequestBody String userPwd, Authentication authentication) throws IOException{
+  public ResponseEntity<String> modPwdMember(@Valid @RequestBody String userPwd,
+      Authentication authentication) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
     JsonNode jsonNode = objectMapper.readTree(userPwd);
     String new_userPwd = jsonNode.get("userPwd").asText();
-    return ResponseEntity.status(HttpStatus.OK).body(memberService.modPwdMember(authentication.getName(), new_userPwd));
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(memberService.modPwdMember(authentication.getName(), new_userPwd));
   }
-  
-  
+
+
   @PutMapping("/info")
   @Operation(summary = "회원정보 수정 요청", description = "회원정보 수정을 요청합니다.", tags = {"Member Controller"})
-  @ApiResponses({@ApiResponse(responseCode = "200", description = "OK",
-      content = @Content(schema = @Schema(implementation = ModifyMemberDTO.class))),
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "OK",
+          content = @Content(schema = @Schema(implementation = ModifyMemberDTO.class))),
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> modInfoMember(@Valid @RequestBody ModifyMemberDTO modifyMemberDTO, Authentication authentication){
-    return ResponseEntity.status(HttpStatus.OK).body(memberService.modInfoMember(authentication.getName(), modifyMemberDTO));
+  public ResponseEntity<String> modInfoMember(@Valid @RequestBody ModifyMemberDTO modifyMemberDTO,
+      Authentication authentication) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(memberService.modInfoMember(authentication.getName(), modifyMemberDTO));
   }
-  
-  
+
+
   @DeleteMapping
   @Operation(summary = "회원정보 삭제 요청", description = "회원정보 삭제를 요청합니다.", tags = {"Member Controller"})
   @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> delMember(@Valid @RequestBody String userPwd, Authentication authentication) throws IOException{
+  public ResponseEntity<String> delMember(@Valid @RequestBody String userPwd,
+      Authentication authentication) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
     JsonNode jsonNode = objectMapper.readTree(userPwd);
     String new_userPwd = jsonNode.get("userPwd").asText();
-    return ResponseEntity.status(HttpStatus.OK).body(memberService.delMember(authentication.getName(), new_userPwd));
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(memberService.delMember(authentication.getName(), new_userPwd));
   }
-  
-  
+
+
 
 }

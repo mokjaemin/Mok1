@@ -7,6 +7,10 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 public class JWTutil {
   
+  private JWTutil() {
+    // Do Not Make Insatnce With Constructor
+  }
+  
   
   public static String getUserId(String token, String secretKey) {
     return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)

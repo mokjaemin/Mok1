@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,9 +19,9 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper=false)
 @Table(name = "StoreRestDaysMap")
 public class StoreRestDaysMapEntity {
+  
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long dayId;

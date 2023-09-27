@@ -18,22 +18,25 @@ import lombok.ToString;
 @Builder
 @EqualsAndHashCode
 public class ReservationDTO {
-  
+
+  private static final ReservationDTO sample =
+      ReservationDTO.builder().storeId(0).date("1월1일").time("1시").storeTable("1번").build();
+
   @NotNull
   private int storeId;
-  
+
   @NotNull
   private String date;
-  
+
   @NotNull
   private String time;
-  
+
   @NotNull
   private String storeTable;
-  
+
   public static ReservationDTO sample() {
-    return ReservationDTO.builder().storeId(0).date("1월1일").time("1시").storeTable("1번").build();
+    return sample;
   }
-  
+
 
 }

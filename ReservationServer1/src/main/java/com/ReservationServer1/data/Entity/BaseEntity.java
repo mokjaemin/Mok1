@@ -29,14 +29,17 @@ public class BaseEntity {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+    
+    
     /*
     @CreatedBy
     @Column(updatable = false)
     private String createdBy;
     */
-
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
+    
 
     /*
     @LastModifiedBy

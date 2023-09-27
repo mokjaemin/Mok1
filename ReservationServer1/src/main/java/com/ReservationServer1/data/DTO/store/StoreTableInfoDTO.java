@@ -19,6 +19,9 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class StoreTableInfoDTO {
 
+  private static final StoreTableInfoDTO sample =
+      StoreTableInfoDTO.builder().storeId(0).count(1).tableImage(null).build();
+
   @NotNull
   private int storeId;
 
@@ -28,7 +31,7 @@ public class StoreTableInfoDTO {
   private MultipartFile tableImage;
 
   public static StoreTableInfoDTO sample() {
-    return StoreTableInfoDTO.builder().storeId(0).count(1).tableImage(null).build();
+    return sample;
   }
 
 }

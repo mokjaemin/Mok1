@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,7 +21,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @Table(name = "StoreBoard")
+@EqualsAndHashCode
 public class StoreBoardEntity {
+
+  private static final StoreBoardEntity sample =
+      StoreBoardEntity.builder().boardId(0L).userId("userId").title("title").content("content")
+          .comment("comment").imageURL("url").rating(5.0).build();
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,8 +47,7 @@ public class StoreBoardEntity {
   private double rating;
 
   public static StoreBoardEntity sample() {
-    return StoreBoardEntity.builder().boardId(0L).userId("userId").title("title").content("content")
-        .comment("comment").imageURL("url").rating(5.0).build();
+    return sample;
   }
 
 }
