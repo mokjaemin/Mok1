@@ -44,19 +44,19 @@
 - AWS, Docker, Amazon EC2로 클라우드 환경 구축
 
 ## Test Coverage
-- https://docs.google.com/spreadsheets/d/1OKFicrW9nmyS5sHzxdf49Tp4WqHmk1qrBU6Q3lpNXAg/edit?usp=sharing
+[Test Coverage File](https://docs.google.com/spreadsheets/d/1OKFicrW9nmyS5sHzxdf49Tp4WqHmk1qrBU6Q3lpNXAg/edit?usp=sharing)
 
 ## PROTOTYPE
-- https://www.figma.com/proto/p667iVrA2n38Qvr8l64xaQ/Graduation-Project?node-id=6-49&scaling=scale-down&page-id=0%3A1&starting-point-node-id=6%3A15
+[ProtoType File](https://www.figma.com/proto/p667iVrA2n38Qvr8l64xaQ/Graduation-Project?node-id=6-49&scaling=scale-down&page-id=0%3A1&starting-point-node-id=6%3A15)
 
 ## API SPECIFICATION
-- https://docs.google.com/document/d/13W18PYfz040IY35pNc1uI9T5nt0C9nzI4S5q_MH0USw/edit
+[API Specification File](https://docs.google.com/document/d/13W18PYfz040IY35pNc1uI9T5nt0C9nzI4S5q_MH0USw/edit)
 
 ## DATABASE SPECIFICATION
-- https://docs.google.com/document/d/1AKWyWDcy_u3G-zKH0nWjQUifhvrn_jncopUeqKt-gEQ/edit
+[DataBase File](https://docs.google.com/document/d/1AKWyWDcy_u3G-zKH0nWjQUifhvrn_jncopUeqKt-gEQ/edit)
 
 ## Trouble Shooting
-- https://mokjaemin88.tistory.com/category/Trouble%20Shooting
+[Trouble Shooting With Blog](https://mokjaemin88.tistory.com/category/Trouble%20Shooting)
 
 ## Function
 ### Member
