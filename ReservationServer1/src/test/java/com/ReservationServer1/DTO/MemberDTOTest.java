@@ -19,6 +19,7 @@ public class MemberDTOTest {
     assertTrue(sample1 == sample2);
     assertTrue(sample1.getUserId() == sample2.getUserId());
     assertTrue(sample1.getUserEmail() == sample2.getUserEmail());
+    assertTrue(sample1.getUserAddress() == sample2.getUserAddress());
   }
   
   
