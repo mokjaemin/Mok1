@@ -8,7 +8,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class JWTutil {
   
   private JWTutil() {
-    // Do Not Make Insatnce With Constructor
+    throw new AssertionError();
   }
   
   
