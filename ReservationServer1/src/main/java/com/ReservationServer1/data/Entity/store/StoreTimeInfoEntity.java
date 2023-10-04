@@ -13,6 +13,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,6 +26,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = "breakTime")
 @Builder
 @Table(name = "StoreTimeInfo")
 public class StoreTimeInfoEntity {
@@ -37,12 +39,13 @@ public class StoreTimeInfoEntity {
   private String intervalTime;
   private int storeId;
   
+  @OneToMany(mappedBy = "storeTimeInfoEntity", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+  private Set<StoreTimeInfoMapEntity> breakTime;
+  
   public StoreTimeInfoEntity(StoreTimeInfoDTO storeTimeInfoDTO) {
     BeanUtils.copyProperties(storeTimeInfoDTO, this);
   }
-  
-  @OneToMany(mappedBy = "storeTimeInfoEntity", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-  private Set<StoreTimeInfoMapEntity> breakTime;
+ 
     
 
 }
