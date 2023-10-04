@@ -23,7 +23,7 @@ import lombok.ToString;
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "breakTime")
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(exclude = "breakTime")

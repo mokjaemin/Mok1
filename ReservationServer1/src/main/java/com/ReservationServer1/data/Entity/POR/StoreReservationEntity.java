@@ -52,6 +52,16 @@ public class StoreReservationEntity extends BaseEntity {
       cascade = CascadeType.REMOVE)
   @Expose
   private StoreOrdersEntity child;
+  
+  public StoreReservationEntity(StoreReservationEntity other) {
+    this.reservationId = other.reservationId;
+    this.userId = other.userId;
+    this.storeId = other.storeId;
+    this.date = other.date;
+    this.time = other.time;
+    this.storeTable = other.storeTable;
+    this.child = other.child;
+  }
 
 
   public StoreReservationEntity(ReservationDTO reservationDTO) {

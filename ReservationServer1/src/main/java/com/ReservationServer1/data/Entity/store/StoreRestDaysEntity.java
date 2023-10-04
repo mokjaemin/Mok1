@@ -20,7 +20,7 @@ import lombok.ToString;
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "childSet")
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false, exclude="childSet")
 @Table(name = "StoreRestDays")

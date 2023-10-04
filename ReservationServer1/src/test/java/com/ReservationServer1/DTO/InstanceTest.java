@@ -8,7 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.ReservationServer1.data.DTO.member.MemberDTO;
 
 @ExtendWith(MockitoExtension.class)
-public class MemberDTOTest {
+public class InstanceTest {
 
 
   @Test

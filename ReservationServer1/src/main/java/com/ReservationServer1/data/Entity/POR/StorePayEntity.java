@@ -42,4 +42,5 @@ public class StorePayEntity {
   private String comment;
   
   private String bigComment;
+  
 }
