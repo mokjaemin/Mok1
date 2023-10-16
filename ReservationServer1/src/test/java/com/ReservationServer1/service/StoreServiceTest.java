@@ -40,7 +40,7 @@ public class StoreServiceTest {
 
   @Mock
   private StoreListCache storeListCache;
-  
+
   @Mock
   private JWTutil jwtUtil;
 
@@ -148,22 +148,22 @@ public class StoreServiceTest {
     // given
     String userId = "testId";
     doReturn(userId).when(storeDAO).loginStore(anyInt());
-    
+
     // when
     String result = storeServiceImpl.loginStore(0, userId);
-    
+
     // then
     String resultId = JWTutil.getUserId(result, secretKey);
     String userRole = JWTutil.getUserRole(result, secretKey);
     assertThat(userId.equals(resultId));
     assertThat(userRole.equals("OWNER"));
-    
-    // verify 
+
+    // verify
     verify(storeDAO, times(1)).loginStore(anyInt());
     verify(storeDAO).loginStore(eq(0));
   }
-  
-  
+
+
   @Test
   @DisplayName("가게 로그인 실패")
   public void loginStoreTestFail() {
@@ -171,14 +171,14 @@ public class StoreServiceTest {
     String userId = "testId";
     String wrongId = "wrongId";
     doReturn(wrongId).when(storeDAO).loginStore(anyInt());
-    
+
     // when
     String result = storeServiceImpl.loginStore(0, userId);
-    
+
     // then
     assertEquals(result, "user");
-    
-    // verify 
+
+    // verify
     verify(storeDAO, times(1)).loginStore(anyInt());
     verify(storeDAO).loginStore(0);
   }

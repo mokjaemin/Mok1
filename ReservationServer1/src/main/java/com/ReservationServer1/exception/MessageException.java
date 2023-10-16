@@ -4,7 +4,7 @@ package com.ReservationServer1.exception;
 
 public class MessageException extends RuntimeException{
 
-	private String message;
+	private final String message;
 	private static final long serialVersionUID = 5867172506387382920L;
 	
 	
@@ -15,5 +15,6 @@ public class MessageException extends RuntimeException{
 	public String getMessage() {
         return this.message;
     }
+	
 	
 }

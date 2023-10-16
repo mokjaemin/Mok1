@@ -1,6 +1,7 @@
 package com.ReservationServer1.controller;
 
 import java.io.IOException;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -14,6 +15,7 @@ import com.ReservationServer1.data.DTO.member.FindPwdDTO;
 import com.ReservationServer1.data.DTO.member.LoginDTO;
 import com.ReservationServer1.data.DTO.member.MemberDTO;
 import com.ReservationServer1.data.DTO.member.ModifyMemberDTO;
+import com.ReservationServer1.data.DTO.member.SearchMemberDTO;
 import com.ReservationServer1.service.MemberService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,8 +37,7 @@ public class MemberController {
   public MemberController(MemberService memberService) {
     this.memberService = memberService;
   }
-
-
+  
 
   @PostMapping
   @Operation(summary = "회원 등록 요청", description = "회원 정보가 등록됩니다.", tags = {"Member Controller"})
@@ -125,6 +126,18 @@ public class MemberController {
         .body(memberService.delMember(authentication.getName(), new_userPwd));
   }
 
+  
+  @PostMapping("/search")
+  @Operation(summary = "회원 정보 검색 요청", description = "회원 정보가 검색됩니다.", tags = {"Member Controller"})
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "OK",
+          content = @Content(schema = @Schema(implementation = MemberDTO.class))),
+      @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
+      @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
+  public ResponseEntity<List<SearchMemberDTO>> searchMember(@Valid @RequestBody SearchMemberDTO member) {
+    return ResponseEntity.status(HttpStatus.OK).body(memberService.searchMember(member));
+  }
 
 
 }

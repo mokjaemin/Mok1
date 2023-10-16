@@ -21,12 +21,12 @@ public class RedisCacheConfig implements CacheConfig{
 
     
     @Bean
-    public RedisConnectionFactory redisConnectionFactory(){
+    RedisConnectionFactory redisConnectionFactory(){
         return new LettuceConnectionFactory(host, port);
     }
 
     @Bean
-    public RedisTemplate<?, ?> redisTemplate() {
+    RedisTemplate<?, ?> redisTemplate() {
         RedisTemplate<?, ?> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         return redisTemplate;

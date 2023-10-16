@@ -1,5 +1,6 @@
 package com.ReservationServer1.service.Impl;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
@@ -9,6 +10,7 @@ import com.ReservationServer1.DAO.MemberDAO;
 import com.ReservationServer1.data.DTO.member.LoginDTO;
 import com.ReservationServer1.data.DTO.member.MemberDTO;
 import com.ReservationServer1.data.DTO.member.ModifyMemberDTO;
+import com.ReservationServer1.data.DTO.member.SearchMemberDTO;
 import com.ReservationServer1.data.Entity.member.MemberEntity;
 import com.ReservationServer1.service.MemberService;
 import com.ReservationServer1.utils.JWTutil;
@@ -18,7 +20,6 @@ public class MemberServiceImpl implements MemberService {
 
   @Value("${jwt.secret}")
   private String secretKey;
-
   private final JavaMailSender emailSender;
   private final MemberDAO memberDAO;
   private final Environment env;
@@ -31,11 +32,14 @@ public class MemberServiceImpl implements MemberService {
     this.emailSender = emailSender;
     this.env = env;
   }
-  
+
   public void setTestSecretKey(String secretKey) {
+    if (secretKey != null) {
+      return;
+    }
     this.secretKey = secretKey;
   }
-  
+
 
   @Override
   public String registerMember(MemberDTO member) {
@@ -53,7 +57,7 @@ public class MemberServiceImpl implements MemberService {
   @Override
   public String findPwdMember(String userId, String userEmail) {
     memberDAO.findPwdMember(userId, userEmail);
-    String token = JWTutil.createJWT(userId, "PWD", secretKey, expiredPwdMs); 
+    String token = JWTutil.createJWT(userId, "PWD", secretKey, expiredPwdMs);
     SimpleMailMessage message = new SimpleMailMessage();
     message.setFrom(env.getProperty("spring.mail.username"));
     message.setTo(userEmail);
@@ -76,6 +80,11 @@ public class MemberServiceImpl implements MemberService {
   @Override
   public String delMember(String userId, String userPwd) {
     return memberDAO.delMember(userId, userPwd);
+  }
+
+  @Override
+  public List<SearchMemberDTO> searchMember(SearchMemberDTO member) {
+    return memberDAO.searchMember(member);
   }
 
 

@@ -22,13 +22,13 @@ public class JwtFilter extends OncePerRequestFilter {
   
   private final String secretKey;
   
-  
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
     final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
     
+    // 토큰이 Null인 경우
     if (authorization == null) {
       filterChain.doFilter(request, response);
       return;
@@ -38,7 +38,7 @@ public class JwtFilter extends OncePerRequestFilter {
     String token = authorization.split(" ")[1];
 
     
-    // Expired Check
+    // 토큰이 만료된 경우
     if (JWTutil.isExpired(token, secretKey)) {
       filterChain.doFilter(request, response);
       return;
@@ -46,7 +46,7 @@ public class JwtFilter extends OncePerRequestFilter {
     
     
     
-    // Token에서 꺼냄
+    // 정보 추출
     String userId = JWTutil.getUserId(token, secretKey);
     String userRole = JWTutil.getUserRole(token, secretKey);
     

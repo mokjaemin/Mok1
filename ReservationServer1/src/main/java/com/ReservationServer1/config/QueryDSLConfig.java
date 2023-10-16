@@ -17,12 +17,12 @@ public class QueryDSLConfig {
   private EntityManager entityManager;
 
   @Bean
-  public JPAQueryFactory jpaQueryFactory() {
+  JPAQueryFactory jpaQueryFactory() {
       return new JPAQueryFactory(entityManager);
   }
   
   @Bean
-  public EntityManager entityManager() {
+  EntityManager entityManager() {
       return entityManager;
   }
 

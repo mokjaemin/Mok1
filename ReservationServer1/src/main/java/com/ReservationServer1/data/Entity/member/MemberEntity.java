@@ -7,7 +7,6 @@ import com.ReservationServer1.data.DTO.member.MemberDTO;
 import com.ReservationServer1.data.Entity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,14 +25,15 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "Member", indexes = {@Index(name = "idx_email", columnList = "userEmail")})
+@Table(name = "Member")
+// , indexes = {@Index(name = "idx_email", columnList = "userEmail")}
 // , indexes = {@Index(name = "idx_city", columnList = "city"),
 // @Index(name = "idx_dong", columnList = "dong")}
 // @EntityListeners(CustomListener.class)
 public class MemberEntity extends BaseEntity {
 
-  private static final MemberDTO sample =
-      MemberDTO.builder().userId("userId").userPwd("userPwd").userName("userName")
+  private static final MemberEntity sample =
+      MemberEntity.builder().userId("userId").userPwd("userPwd").userName("userName")
           .userNumber("userNumber").userAddress("userAddress").userEmail("userEmail").build();
 
   @Id
@@ -55,7 +55,7 @@ public class MemberEntity extends BaseEntity {
         .userAddress(memberEntity.userAddress).userEmail(memberEntity.userEmail).build();
   }
 
-  public static MemberDTO sample() {
+  public static MemberEntity sample() {
     return sample;
   }
 }

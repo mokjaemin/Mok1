@@ -12,47 +12,47 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 
 
-
 @RestControllerAdvice
 public class ErrorHandler {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(ErrorHandler.class);
-	
-	
-	// Basic Exception Handler
-	@ExceptionHandler(value = Exception.class)
-	public ResponseEntity<Map<String, String>> BasicExceptionHandler(Exception e) {
-		HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
-        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+  private final Logger LOGGER = LoggerFactory.getLogger(ErrorHandler.class);
 
-        LOGGER.error("GeneralException, 원인 : {}, {}", e.getCause(), e.getMessage());
 
-        Map<String, String> map = new HashMap<>();
-        map.put("error type", httpStatus.getReasonPhrase());
-        map.put("code", "400");
-        map.put("message", "오류발생");
+  // Basic Exception Handler
+  @ExceptionHandler(value = Exception.class)
+  public ResponseEntity<Map<String, String>> BasicExceptionHandler(Exception e) {
+    
+    LOGGER.error("Exception 발생, 원인 : {}", e.getCause());
+    LOGGER.error("Exception 발생, 메시지 : {}", e.getMessage());
 
-        return new ResponseEntity<>(map, responseHeaders, httpStatus);
+    
+    HttpHeaders responseHeaders = new HttpHeaders();
+    responseHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
+
+
+    Map<String, String> map = new HashMap<>();
+    HttpStatus httpStatus;
+
+    // 일반 RuntimeException
+    if (!(e instanceof ReservationException)) {
+      httpStatus = HttpStatus.BAD_REQUEST;
+      map.put("error type", httpStatus.getReasonPhrase());
+      map.put("message", "오류발생");
+      map.put("code", "400");
     }
-	
-	
-	
-	// Personal Exception Handler
-	@ExceptionHandler(value = MessageException.class)
-	public ResponseEntity<Map<String, String>> PersonalExceptionHandler(Exception e) {
-		HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
-        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
 
-        LOGGER.error("Check Exception, 원인 : {}", e.getMessage());
-
-        Map<String, String> map = new HashMap<>();
-        map.put("error type", httpStatus.getReasonPhrase());
-        map.put("code", "400");
-        map.put("message", e.getMessage());
-        return new ResponseEntity<>(map, responseHeaders, httpStatus);
+    // ReservationException일 경우
+    else {
+      ReservationException new_e = (ReservationException) e;
+      httpStatus = new_e.getHttpStatus();
+      map.put("error type", httpStatus.getReasonPhrase());
+      map.put("message", new_e.getMessage());
+      map.put("code", new_e.getCode());
     }
-	
-	
+
+    return new ResponseEntity<>(map, responseHeaders, httpStatus);
+  }
+
+
+
 }

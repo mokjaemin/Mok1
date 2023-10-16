@@ -24,7 +24,7 @@ public class WebSecurityConfig {
 
 
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.httpBasic().disable().csrf().disable().cors().and().authorizeHttpRequests()
         // No Security
         .requestMatchers("/member/login", "/member", "/member/auth/pwd", "/swagger-ui/**",
@@ -36,6 +36,7 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.PUT, "/member/info").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.DELETE, "/member").hasAnyAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.PUT, "/member/pwd").hasAuthority("ROLE_PWD")
+        .requestMatchers(HttpMethod.POST, "/member/search").hasAuthority("ROLE_OWNER")
         // Store
         .requestMatchers(HttpMethod.POST, "/store").hasAuthority("ROLE_USER")
         .requestMatchers(HttpMethod.GET, "/store").hasAuthority("ROLE_USER")
