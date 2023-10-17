@@ -62,7 +62,7 @@ public class StoreBoardController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> updateBoard(@Valid @RequestParam Long boardId,
+  public ResponseEntity<String> updateBoard(@Valid @RequestParam int boardId,
       @ModelAttribute BoardDTO board, Authentication authentication) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(storeBoardService.updateBoard(boardId, board, authentication.getName()));
@@ -75,7 +75,7 @@ public class StoreBoardController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> deleteBoard(@Valid @RequestParam Long boardId,
+  public ResponseEntity<String> deleteBoard(@Valid @RequestParam int boardId,
       Authentication authentication) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(storeBoardService.deleteBoard(boardId, authentication.getName()));
@@ -88,7 +88,7 @@ public class StoreBoardController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<List<BoardResultDTO>> getBoard(@Valid @RequestParam int storeId) {
+  public ResponseEntity<List<BoardResultDTO>> getBoard(@Valid @RequestParam short storeId) {
     return ResponseEntity.status(HttpStatus.OK).body(storeBoardService.getBoard(storeId));
   }
 
@@ -114,7 +114,7 @@ public class StoreBoardController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> registerBoardComment(@Valid @RequestParam Long boardId,
+  public ResponseEntity<String> registerBoardComment(@Valid @RequestParam int boardId,
       @RequestBody String comment, Authentication authentication) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
     JsonNode jsonNode = objectMapper.readTree(comment);
@@ -131,7 +131,7 @@ public class StoreBoardController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> updateBoardComment(@Valid @RequestParam Long boardId,
+  public ResponseEntity<String> updateBoardComment(@Valid @RequestParam int boardId,
       @RequestBody String comment, Authentication authentication) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
     JsonNode jsonNode = objectMapper.readTree(comment);
@@ -148,7 +148,7 @@ public class StoreBoardController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> deleteBoardComment(@Valid @RequestParam Long boardId,
+  public ResponseEntity<String> deleteBoardComment(@Valid @RequestParam int boardId,
       Authentication authentication) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(storeBoardService.deleteBoardComment(boardId, authentication.getName()));

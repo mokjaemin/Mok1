@@ -19,13 +19,13 @@ import lombok.ToString;
 public class PayDTO {
 
   private static final PayDTO sample =
-      PayDTO.builder().reservationId(0L).storeId(0).amount(0).build();
+      PayDTO.builder().reservationId(0).storeId((short) 0).amount(0).build();
 
   @NotNull
-  private Long reservationId;
+  private int reservationId;
 
   @NotNull
-  private int storeId;
+  private short storeId;
 
   @NotNull
   private int amount;

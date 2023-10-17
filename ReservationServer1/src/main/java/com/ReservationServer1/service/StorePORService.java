@@ -12,9 +12,9 @@ public interface StorePORService {
 
   String updateReservation(ReservationDTO reservationDTO, String userId);
 
-  StoreReservationEntity getReservation(int storeId, String userId);
+  StoreReservationEntity getReservation(short storeId, String userId);
 
-  String deleteReservation(int storeId, String userId);
+  String deleteReservation(short storeId, String userId);
   
   
 
@@ -22,32 +22,32 @@ public interface StorePORService {
 
   String updateOrder(OrderDTO orderDTO, String userId);
 
-  String deleteOrder(int storeId, String foodName, String userId);
+  String deleteOrder(short storeId, String foodName, String userId);
   
   
   
 
   String registerPay(PayDTO payDTO);
 
-  String deletePay(Long reservationId);
+  String deletePay(int reservationId);
   
   
   
 
-  String registerComment(long reservationId, String comment, String userId);
+  String registerComment(int reservationId, String comment, String userId);
 
-  String deleteComment(Long reservationId, String userId);
+  String deleteComment(int reservationId, String userId);
   
   
 
-  String registerBigComment(long reservationId, String bigcomment, int storeId);
+  String registerBigComment(int reservationId, String bigcomment, short storeId);
 
-  String deleteBigComment(Long reservationId, int storeId);
+  String deleteBigComment(int reservationId, short storeId);
   
   
   
-  int getCouponClient(int storeId, String userId);
+  int getCouponClient(short storeId, String userId);
   
-  HashMap<String, Integer> getCouponOwner(int storeId);
+  HashMap<String, Integer> getCouponOwner(short storeId);
   
 }

@@ -1,6 +1,8 @@
 package com.ReservationServer1.data.DTO.member;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -23,18 +25,22 @@ public class ModifyMemberDTO {
       .userName("testName").userNumber("testNumber").userAddress("testAddress").userEmail("testEmail").build();
 
   @NotNull
+  @Size(min=3, max=20)
   private String userPwd;
 
   @NotNull
+  @Size(min=2, max=7)
   private String userName;
 
   @NotNull
+  @Size(min=11, max=11)
   private String userNumber;
 
   @NotNull
   private String userAddress;
 
   @NotNull
+  @Email
   private String userEmail;
 
 

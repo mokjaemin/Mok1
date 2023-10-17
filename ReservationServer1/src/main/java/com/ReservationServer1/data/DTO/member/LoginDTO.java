@@ -1,6 +1,7 @@
 package com.ReservationServer1.data.DTO.member;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -22,9 +23,11 @@ public class LoginDTO {
       LoginDTO.builder().userId("testId").userPwd("testPwd").build();
 
   @NotNull
+  @Size(min=3, max=20)
   private String userId;
 
   @NotNull
+  @Size(min=3, max=20)
   private String userPwd;
 
 

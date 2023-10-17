@@ -1,10 +1,13 @@
 package com.ReservationServer1.data.Entity.board;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -25,25 +28,34 @@ import lombok.ToString;
 public class StoreBoardEntity {
 
   private static final StoreBoardEntity sample =
-      StoreBoardEntity.builder().boardId(0L).userId("userId").title("title").content("content")
-          .comment("comment").imageURL("url").rating(5.0).build();
+      StoreBoardEntity.builder().boardId((short) 0).userId("userId").title("title").content("content")
+          .comment("comment").boardImage(new byte[10]).rating(5.0).build();
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long boardId;
+  private int boardId;
 
-  private int storeId;
+  @NotNull
+  private short storeId;
 
+  @NotNull
   private String userId;
 
+  @Column(length = 20)
+  @NotNull
   private String title;
 
+  @Column(length = 50)
+  @NotNull
   private String content;
 
+  @Column(length = 50)
   private String comment;
 
-  private String imageURL;
+  @Lob
+  private byte[] boardImage;
 
+  @NotNull
   private double rating;
 
   public static StoreBoardEntity sample() {

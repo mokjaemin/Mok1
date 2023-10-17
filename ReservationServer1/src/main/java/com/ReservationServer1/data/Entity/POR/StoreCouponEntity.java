@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -24,19 +25,25 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class StoreCouponEntity {
 
+  // Sample
   private static final StoreCouponEntity sample =
-      StoreCouponEntity.builder().couponId(-1L).storeId(-1).userId("userId").amount(0).build();
+      StoreCouponEntity.builder().couponId(-1).storeId((short) -1).userId("userId").amount(0).build();
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long couponId;
+  private int couponId;
 
-  private int storeId;
+  @NotNull
+  private short storeId;
 
+  @NotNull
   private String userId;
 
+  @NotNull
   private int amount;
 
+  
+  // Get Sample
   public static StoreCouponEntity sample() {
     return sample;
   }

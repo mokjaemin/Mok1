@@ -76,7 +76,7 @@ public class StorePORController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<StoreReservationEntity> getReservation(@Valid @RequestParam int storeId,
+  public ResponseEntity<StoreReservationEntity> getReservation(@Valid @RequestParam short storeId,
       Authentication authentication) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(storePORService.getReservation(storeId, authentication.getName()));
@@ -90,7 +90,7 @@ public class StorePORController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> delelteReservation(@Valid @RequestParam int storeId,
+  public ResponseEntity<String> delelteReservation(@Valid @RequestParam short storeId,
       Authentication authentication) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(storePORService.deleteReservation(storeId, authentication.getName()));
@@ -135,7 +135,7 @@ public class StorePORController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> delelteReservation(@Valid @RequestParam int storeId,
+  public ResponseEntity<String> delelteReservation(@Valid @RequestParam short storeId,
       String foodName, Authentication authentication) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(storePORService.deleteOrder(storeId, foodName, authentication.getName()));
@@ -166,7 +166,7 @@ public class StorePORController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> deleltePay(@Valid @RequestParam int storeId, Long reservationId,
+  public ResponseEntity<String> deleltePay(@Valid @RequestParam short storeId, int reservationId,
       Authentication authentication) {
     if (!authentication.getName().equals(String.valueOf(storeId))) {
       return ResponseEntity.status(HttpStatus.OK).body("권한이 없습니다.");
@@ -183,7 +183,7 @@ public class StorePORController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> registerComment(@Valid @RequestParam long reservationId,
+  public ResponseEntity<String> registerComment(@Valid @RequestParam int reservationId,
       @RequestBody String comment, Authentication authentication) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
     JsonNode jsonNode = objectMapper.readTree(comment);
@@ -200,7 +200,7 @@ public class StorePORController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> delelteComment(@Valid Long reservationId,
+  public ResponseEntity<String> delelteComment(@Valid int reservationId,
       Authentication authentication) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(storePORService.deleteComment(reservationId, authentication.getName()));
@@ -216,13 +216,13 @@ public class StorePORController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> registerBigComment(@Valid @RequestParam long reservationId,
+  public ResponseEntity<String> registerBigComment(@Valid @RequestParam int reservationId,
       @RequestBody String bigcomment, Authentication authentication) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
     JsonNode jsonNode = objectMapper.readTree(bigcomment);
     String new_bigcomment = jsonNode.get("bigcomment").asText();
     return ResponseEntity.status(HttpStatus.OK).body(storePORService.registerBigComment(
-        reservationId, new_bigcomment, Integer.valueOf(authentication.getName())));
+        reservationId, new_bigcomment, Short.valueOf(authentication.getName())));
   }
 
 
@@ -233,10 +233,10 @@ public class StorePORController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> delelteBigComment(@Valid Long reservationId,
+  public ResponseEntity<String> delelteBigComment(@Valid int reservationId,
       Authentication authentication) {
     return ResponseEntity.status(HttpStatus.OK).body(
-        storePORService.deleteBigComment(reservationId, Integer.valueOf(authentication.getName())));
+        storePORService.deleteBigComment(reservationId, Short.valueOf(authentication.getName())));
   }
 
   @GetMapping("/coupon/client")
@@ -246,7 +246,7 @@ public class StorePORController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<Integer> getCouponClient(@Valid @RequestParam int storeId,
+  public ResponseEntity<Integer> getCouponClient(@Valid @RequestParam short storeId,
       Authentication authentication) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(storePORService.getCouponClient(storeId, authentication.getName()));
@@ -261,6 +261,6 @@ public class StorePORController {
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
   public ResponseEntity<HashMap<String, Integer>> getCouponOwner(Authentication authentication) {
     return ResponseEntity.status(HttpStatus.OK)
-        .body(storePORService.getCouponOwner(Integer.valueOf(authentication.getName())));
+        .body(storePORService.getCouponOwner(Short.valueOf(authentication.getName())));
   }
 }

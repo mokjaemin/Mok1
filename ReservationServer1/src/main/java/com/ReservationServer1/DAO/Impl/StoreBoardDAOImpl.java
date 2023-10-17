@@ -3,13 +3,15 @@ package com.ReservationServer1.DAO.Impl;
 
 import static com.ReservationServer1.data.Entity.POR.QStoreReservationEntity.storeReservationEntity;
 import static com.ReservationServer1.data.Entity.board.QStoreBoardEntity.storeBoardEntity;
+import java.io.IOException;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import com.ReservationServer1.DAO.StoreBoardDAO;
 import com.ReservationServer1.data.DTO.board.BoardDTO;
 import com.ReservationServer1.data.Entity.board.StoreBoardEntity;
-import com.ReservationServer1.exception.MessageException;
+import com.ReservationServer1.exception.store.NoAuthorityException;
+import com.ReservationServer1.exception.store.NoInformationException;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
@@ -27,47 +29,62 @@ public class StoreBoardDAOImpl implements StoreBoardDAO {
   }
 
   @Override
-  public String registerBoard(BoardDTO boardDTO, String userId, String imageURL) {
-    Long reservationId = queryFactory.select(storeReservationEntity.reservationId)
-        .from(storeReservationEntity).where(storeReservationEntity.userId.eq(userId)).fetchFirst();
+  public String registerBoard(StoreBoardEntity entity) {
+
+    Integer reservationId =
+        queryFactory.select(storeReservationEntity.reservationId).from(storeReservationEntity)
+            .where(storeReservationEntity.userId.eq(entity.getUserId())).fetchFirst();
+
+    // 예약 내역 없어 권한 없음
     if (reservationId == null) {
-      throw new MessageException("방문 기록이 존재하지 않습니다.: " + userId);
+      throw new NoAuthorityException();
     }
-    StoreBoardEntity entity =
-        StoreBoardEntity.builder().storeId(boardDTO.getStoreId()).title(boardDTO.getTitle())
-            .content(boardDTO.getContent()).userId(userId).rating(boardDTO.getRating()).build();
+
+    // 저장
     entityManager.persist(entity);
-    String string_boardId = String.valueOf(entity.getBoardId());
-    entity.setImageURL(imageURL + string_boardId + ".png");
-    return string_boardId;
+    return String.valueOf(entity.getBoardId());
   }
 
   @Override
-  public String updateBoard(Long boardId, BoardDTO boardDTO, String userId) {
-    StoreBoardEntity entity = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
-        .where(storeBoardEntity.boardId.eq(boardId)).fetchFirst();
-    if (!userId.equals(entity.getUserId())) {
-      throw new MessageException("권한이 없습니다.: " + userId);
+  public String updateBoard(int boardId, BoardDTO boardDTO, String userId) {
+    try {
+      StoreBoardEntity entity = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
+          .where(storeBoardEntity.boardId.eq(boardId)).fetchFirst();
+
+      if (entity == null) {
+        throw new NoInformationException();
+      }
+
+      if (!userId.equals(entity.getUserId())) {
+        throw new NoAuthorityException();
+      }
+
+      entity.setTitle(boardDTO.getTitle());
+      entity.setContent(boardDTO.getContent());
+      entity.setRating(boardDTO.getRating());
+      entity.setBoardImage(boardDTO.getFoodImage().getBytes());
+    } catch (IOException e) {
+      return null;
     }
-    entity.setTitle(boardDTO.getTitle());
-    entity.setContent(boardDTO.getContent());
-    entity.setRating(boardDTO.getRating());
     return "success";
   }
 
   @Override
-  public Long deleteBoard(Long boardId, String userId) {
+  public String deleteBoard(int boardId, String userId) {
+    
     StoreBoardEntity entity = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
         .where(storeBoardEntity.boardId.eq(boardId)).fetchFirst();
+    
     if (!entity.getUserId().equals(userId)) {
-      throw new MessageException("권한이 없습니다.: " + userId);
+      throw new NoAuthorityException();
     }
+    
     queryFactory.delete(storeBoardEntity).where(storeBoardEntity.boardId.eq(boardId)).execute();
-    return boardId;
+    return "success";
   }
 
   @Override
-  public List<StoreBoardEntity> getBoard(int storeId) {
+  public List<StoreBoardEntity> getBoard(short storeId) {
     List<StoreBoardEntity> result = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
         .where(storeBoardEntity.storeId.eq(storeId)).fetch();
     return result;
@@ -81,33 +98,33 @@ public class StoreBoardDAOImpl implements StoreBoardDAO {
   }
 
   @Override
-  public String registerBoardComment(Long boardId, String comment, String storeId) {
+  public String registerBoardComment(int boardId, String comment, String storeId) {
     StoreBoardEntity entity = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
         .where(storeBoardEntity.boardId.eq(boardId)).fetchFirst();
-    if(!String.valueOf(entity.getStoreId()).equals(storeId)) {
-      throw new MessageException("권한이 없습니다.: " + storeId);
+    if (!String.valueOf(entity.getStoreId()).equals(storeId)) {
+      throw new NoAuthorityException();
     }
     entity.setComment(comment);
     return "success";
   }
 
   @Override
-  public String updateBoardComment(Long boardId, String comment, String storeId) {
+  public String updateBoardComment(int boardId, String comment, String storeId) {
     StoreBoardEntity entity = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
         .where(storeBoardEntity.boardId.eq(boardId)).fetchFirst();
-    if(!String.valueOf(entity.getStoreId()).equals(storeId)) {
-      throw new MessageException("권한이 없습니다.: " + storeId);
+    if (!String.valueOf(entity.getStoreId()).equals(storeId)) {
+      throw new NoAuthorityException();
     }
     entity.setComment(comment);
     return "success";
   }
 
   @Override
-  public String deleteBoardComment(Long boardId, String storeId) {
+  public String deleteBoardComment(int boardId, String storeId) {
     StoreBoardEntity entity = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
         .where(storeBoardEntity.boardId.eq(boardId)).fetchFirst();
-    if(!String.valueOf(entity.getStoreId()).equals(storeId)) {
-      throw new MessageException("권한이 없습니다.: " + storeId);
+    if (!String.valueOf(entity.getStoreId()).equals(storeId)) {
+      throw new NoAuthorityException();
     }
     entity.setComment(null);
     return "success";

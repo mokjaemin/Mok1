@@ -1,7 +1,9 @@
 package com.ReservationServer1.data.DTO.member;
 
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -25,9 +27,11 @@ public class FindPwdDTO {
       FindPwdDTO.builder().userId("testId").userEmail("testEmail").build();
 
   @NotNull
+  @Size(min=3, max=20)
   private String userId;
 
   @NotNull
+  @Email
   private String userEmail;
 
 

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.ReservationServer1.DAO.StoreDAO;
 import com.ReservationServer1.DAO.Cache.StoreListCache;
+import com.ReservationServer1.data.StoreType;
 import com.ReservationServer1.data.DTO.store.StoreDTO;
 import com.ReservationServer1.data.DTO.store.cache.StoreListDTO;
 import com.ReservationServer1.data.Entity.store.StoreEntity;
@@ -39,12 +40,18 @@ public class StoreServiceImpl implements StoreService {
   }
 
   @Override
-  public HashMap<String, Integer> getStoreList(String country, String city, String dong,
-      String type, int page, int size) {
+  public HashMap<String, Short> getStoreList(String country, String city, String dong,
+      StoreType type, int page, int size) {
+    
+    // Key
     String address = country + city + dong + type + page + size;
+    
+    // Cache 체크
     Optional<StoreListDTO> storeList = storeListCache.findById(address);
+    
+    // Cache가 비어있다면
     if (storeList.isEmpty() == true) {
-      HashMap<String, Integer> new_storeList =
+      HashMap<String, Short> new_storeList =
           storeDAO.getStoreList(country, city, dong, type, page, size);
       StoreListDTO storeListDTO = new StoreListDTO(address, new_storeList);
       storeListCache.save(storeListDTO);
@@ -54,7 +61,7 @@ public class StoreServiceImpl implements StoreService {
   }
 
   @Override
-  public String loginStore(int storeId, String userId) {
+  public String loginStore(short storeId, String userId) {
     String result = storeDAO.loginStore(storeId);
     if (result != null && result.equals(userId)) {
       return JWTutil.createJWT(String.valueOf(storeId), "OWNER", secretKey, expiredLoginMs);

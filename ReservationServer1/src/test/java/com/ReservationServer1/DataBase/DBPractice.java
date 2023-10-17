@@ -74,6 +74,7 @@ public class DBPractice {
     // 예약 조회
     StoreReservationEntity reservation2 =
         queryFactory.select(storeReservationEntity).from(storeReservationEntity)
+        .leftJoin(storeReservationEntity.child, storeOrdersEntity).fetchJoin()
             .where(storeReservationEntity.userId.eq("userId")).fetchFirst();
 
     // 동기화
@@ -95,7 +96,6 @@ public class DBPractice {
         queryFactory.select(Projections.fields(ReservationDTO.class, storeReservationEntity.storeId,
             Expressions.asString("date").as("date"), storeReservationEntity.time,
             storeReservationEntity.storeTable)).from(storeReservationEntity).fetchFirst();
-    System.out.println(dto);
 
   }
 

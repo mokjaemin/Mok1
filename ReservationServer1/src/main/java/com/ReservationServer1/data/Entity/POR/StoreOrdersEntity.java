@@ -32,7 +32,7 @@ public class StoreOrdersEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long ordersId;
+  private int ordersId;
 
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "reservation_id")

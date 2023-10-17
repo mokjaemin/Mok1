@@ -10,7 +10,7 @@ public class ExistIDException extends RuntimeException implements ReservationExc
   private final String code = "400";
   private final String message1 = "해당 ID가 이미 존재합니다.";
   private final String message2 = "해당 ID가 존재하지 않습니다.";
-  HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+  private final HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
   private final Boolean Exist;
 
   
@@ -19,15 +19,18 @@ public class ExistIDException extends RuntimeException implements ReservationExc
   }
 
   
+  @Override
   public String getCode() {
     return this.code;
   }
 
   
+  @Override
   public String getMessage() {
     return (Exist) ? message1 : message2;
   }
   
+  @Override
   public HttpStatus getHttpStatus() {
     return this.httpStatus;
   }

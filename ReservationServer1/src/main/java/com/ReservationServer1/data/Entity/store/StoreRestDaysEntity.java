@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,15 +29,16 @@ public class StoreRestDaysEntity extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long daysId;
+  private int daysId;
   
-  private int storeId;
+  @NotNull
+  private short storeId;
   
   @OneToMany(mappedBy = "storeRestDaysEntity", fetch = FetchType.LAZY,  cascade = CascadeType.REMOVE)
   private Set<StoreRestDaysMapEntity> childSet;
 
   
-  public StoreRestDaysEntity(int storeId) {
+  public StoreRestDaysEntity(short storeId) {
     this.storeId = storeId;
   }
 }

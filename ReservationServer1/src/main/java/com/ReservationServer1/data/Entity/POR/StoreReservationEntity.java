@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -14,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -36,22 +38,37 @@ public class StoreReservationEntity extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Expose
-  private Long reservationId;
+  private int reservationId;
+  
   @Expose
+  @Column(length = 20)
+  @NotNull
   private String userId;
+  
   @Expose
-  private int storeId;
+  @NotNull
+  private short storeId;
+  
   @Expose
+  @Column(length = 8)
+  @NotNull
   private String date;
+  
   @Expose
+  @Column(length = 4)
+  @NotNull
   private String time;
+  
   @Expose
+  @Column(length = 4)
   private String storeTable;
 
   @OneToOne(mappedBy = "storeReservationEntity", fetch = FetchType.LAZY,
       cascade = CascadeType.REMOVE)
   @Expose
   private StoreOrdersEntity child;
+  
+  
   
   public StoreReservationEntity(StoreReservationEntity other) {
     this.reservationId = other.reservationId;

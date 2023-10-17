@@ -18,6 +18,7 @@ import com.ReservationServer1.data.DTO.store.StoreFoodsInfoResultDTO;
 import com.ReservationServer1.data.DTO.store.StoreRestDayDTO;
 import com.ReservationServer1.data.DTO.store.StoreTableInfoDTO;
 import com.ReservationServer1.data.DTO.store.StoreTimeInfoDTO;
+import com.ReservationServer1.data.Entity.store.StoreTimeInfoEntity;
 import com.ReservationServer1.service.StoreInfoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -62,7 +63,7 @@ public class StoreInfoController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<List<String>> getDayOff(@RequestParam int storeId) {
+  public ResponseEntity<List<String>> getDayOff(@RequestParam short storeId) {
     return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.getDayOff(storeId));
   }
 
@@ -74,7 +75,7 @@ public class StoreInfoController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> deleteDayOff(@RequestParam int storeId,
+  public ResponseEntity<String> deleteDayOff(@RequestParam short storeId,
       Authentication authentication) {
     if (!String.valueOf(storeId).equals(authentication.getName())) {
       return ResponseEntity.status(HttpStatus.OK).body("권한이 없습니다.");
@@ -108,7 +109,7 @@ public class StoreInfoController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<StoreTimeInfoDTO> getTimeInfo(@RequestParam int storeId) {
+  public ResponseEntity<StoreTimeInfoEntity> getTimeInfo(@RequestParam short storeId) {
     return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.getTimeInfo(storeId));
   }
 
@@ -136,7 +137,7 @@ public class StoreInfoController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> deleteTimeInfo(@RequestParam int storeId,
+  public ResponseEntity<String> deleteTimeInfo(@RequestParam short storeId,
       Authentication authentication) {
     if (!String.valueOf(storeId).equals(authentication.getName())) {
       return ResponseEntity.status(HttpStatus.OK).body("권한이 없습니다.");
@@ -188,7 +189,7 @@ public class StoreInfoController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> deleteTableInfo(@RequestParam int storeId,
+  public ResponseEntity<String> deleteTableInfo(@RequestParam short storeId,
       Authentication authentication) {
     if (!String.valueOf(storeId).equals(authentication.getName())) {
       return ResponseEntity.status(HttpStatus.OK).body("권한이 없습니다.");
@@ -222,7 +223,7 @@ public class StoreInfoController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<List<StoreFoodsInfoResultDTO>> getFoodsInfo(@RequestParam int storeId) {
+  public ResponseEntity<List<StoreFoodsInfoResultDTO>> getFoodsInfo(@RequestParam short storeId) {
     return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.getFoodsInfo(storeId));
   }
 
@@ -251,7 +252,7 @@ public class StoreInfoController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> deleteFoodsInfo(@RequestParam int storeId, String foodName,
+  public ResponseEntity<String> deleteFoodsInfo(@RequestParam short storeId, String foodName,
       Authentication authentication) {
     if (!authentication.getName().equals(String.valueOf(storeId))) {
       return ResponseEntity.status(HttpStatus.OK).body("권한이 없습니다.");

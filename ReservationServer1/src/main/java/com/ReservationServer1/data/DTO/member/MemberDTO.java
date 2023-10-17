@@ -1,7 +1,9 @@
 package com.ReservationServer1.data.DTO.member;
 
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -18,22 +20,32 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode
-public class MemberDTO implements Comparable<MemberDTO> {
+public class MemberDTO{
 
   private static final MemberDTO sample = MemberDTO.builder().userId("id").userPwd("pwd")
       .userName("name").userNumber("number").userAddress("address").userEmail("email").build();
 
   @NotNull
+  @Size(min=3, max=20)
   private String userId;
+  
   @NotNull
+  @Size(min=3, max=20)
   private String userPwd;
+  
   @NotNull
+  @Size(min=2, max=7)
   private String userName;
+  
   @NotNull
+  @Size(min=11, max=11)
   private String userNumber;
+  
   @NotNull
   private String userAddress;
+  
   @NotNull
+  @Email
   private String userEmail;
 
   public MemberDTO(MemberDTO other) {
@@ -47,26 +59,6 @@ public class MemberDTO implements Comparable<MemberDTO> {
 
   public static MemberDTO sample() {
     return sample;
-  }
-
-  @Override
-  public int compareTo(MemberDTO other) {
-    int check1 = this.userId.compareTo(other.userId);
-    if (check1 < 0) {
-      return -1;
-    } 
-    else if (check1 > 0) {
-      return 1;
-    } 
-    else {
-      int check2 = this.userPwd.compareTo(other.userPwd);
-      if(check2 < 0) {
-        return -1;
-      }
-      else {
-        return 1;
-      }
-    }
   }
 
 

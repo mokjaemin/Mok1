@@ -6,25 +6,26 @@ import com.ReservationServer1.data.DTO.store.StoreFoodsInfoResultDTO;
 import com.ReservationServer1.data.DTO.store.StoreRestDayDTO;
 import com.ReservationServer1.data.DTO.store.StoreTableInfoDTO;
 import com.ReservationServer1.data.DTO.store.StoreTimeInfoDTO;
+import com.ReservationServer1.data.Entity.store.StoreTimeInfoEntity;
 
 public interface StoreInfoService {
 
   // DAY OFF
   String registerDayOff(StoreRestDayDTO restDayDTO);
 
-  List<String> getDayOff(int storeId);
+  List<String> getDayOff(short storeId);
 
-  String deleteDayOff(int storeId);
+  String deleteDayOff(short storeId);
 
 
   // TIME INFO
   String registerTimeInfo(StoreTimeInfoDTO timeInfoDTO);
 
-  StoreTimeInfoDTO getTimeInfo(int storeId);
+  StoreTimeInfoEntity getTimeInfo(short storeId);
 
   String modTimeInfo(StoreTimeInfoDTO timeInfoDTO);
 
-  String deleteTimeInfo(int storeId);
+  String deleteTimeInfo(short storeId);
 
 
   // TABLE INFO
@@ -32,15 +33,15 @@ public interface StoreInfoService {
 
   String modTableInfo(StoreTableInfoDTO storeTableInfoDTO);
 
-  String deleteTableInfo(int storeId);
+  String deleteTableInfo(short storeId);
   
   
   // FOODS INFO
    String registerFoodsInfo(StoreFoodsInfoDTO storeFoodsInfoDTO);
 
-   List<StoreFoodsInfoResultDTO> getFoodsInfo(int storeId);
+   List<StoreFoodsInfoResultDTO> getFoodsInfo(short storeId);
 
    String modFoodsInfo(StoreFoodsInfoDTO storeFoodsInfoDTO);
 
-   String deleteFoodsInfo(int storeId, String foodName);
+   String deleteFoodsInfo(short storeId, String foodName);
 }

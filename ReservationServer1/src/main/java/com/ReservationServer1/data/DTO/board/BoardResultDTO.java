@@ -18,12 +18,12 @@ import lombok.ToString;
 public class BoardResultDTO {
 
   private static final BoardResultDTO sample =
-      BoardResultDTO.builder().boardId(0L).userId("userId").title("title").content("content")
-          .comment("comment").rating(5.0).foodImage("foodImage").build();
+      BoardResultDTO.builder().boardId(0).userId("userId").title("title").content("content")
+          .comment("comment").rating(5.0).boardImage(new byte[10]).build();
 
-  private Long boardId;
+  private int boardId;
 
-  private int storeId;
+  private short storeId;
 
   private String userId;
 
@@ -35,7 +35,7 @@ public class BoardResultDTO {
 
   private double rating;
 
-  private String foodImage;
+  private byte[] boardImage;
 
 
   public static BoardResultDTO sample() {

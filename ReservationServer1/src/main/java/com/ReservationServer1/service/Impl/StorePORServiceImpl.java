@@ -29,12 +29,12 @@ public class StorePORServiceImpl implements StorePORService {
   }
 
   @Override
-  public StoreReservationEntity getReservation(int storeId, String userId) {
+  public StoreReservationEntity getReservation(short storeId, String userId) {
     return storePORDAO.getReservation(storeId, userId);
   }
 
   @Override
-  public String deleteReservation(int storeId, String userId) {
+  public String deleteReservation(short storeId, String userId) {
     return storePORDAO.deleteReservation(storeId, userId);
   }
 
@@ -49,7 +49,7 @@ public class StorePORServiceImpl implements StorePORService {
   }
 
   @Override
-  public String deleteOrder(int storeId, String foodName, String userId) {
+  public String deleteOrder(short storeId, String foodName, String userId) {
     return storePORDAO.deleteOrder(storeId, foodName, userId);
   }
 
@@ -59,37 +59,37 @@ public class StorePORServiceImpl implements StorePORService {
   }
 
   @Override
-  public String deletePay(Long reservationId) {
+  public String deletePay(int reservationId) {
     return storePORDAO.deletePay(reservationId);
   }
 
   @Override
-  public String registerComment(long reservationId, String comment, String userId) {
+  public String registerComment(int reservationId, String comment, String userId) {
     return storePORDAO.registerComment(reservationId, comment, userId);
   }
 
   @Override
-  public String deleteComment(Long reservationId, String userId) {
+  public String deleteComment(int reservationId, String userId) {
     return storePORDAO.deleteComment(reservationId, userId);
   }
 
   @Override
-  public String registerBigComment(long reservationId, String bigcomment, int storeId) {
+  public String registerBigComment(int reservationId, String bigcomment, short storeId) {
     return storePORDAO.registerBigComment(reservationId, bigcomment, storeId);
   }
 
   @Override
-  public String deleteBigComment(Long reservationId, int storeId) {
+  public String deleteBigComment(int reservationId, short storeId) {
     return storePORDAO.deleteBigComment(reservationId, storeId);
   }
 
   @Override
-  public int getCouponClient(int storeId, String userId) {
+  public int getCouponClient(short storeId, String userId) {
     return storePORDAO.getCouponClient(storeId, userId);
   }
 
   @Override
-  public HashMap<String, Integer> getCouponOwner(int storeId) {
+  public HashMap<String, Integer> getCouponOwner(short storeId) {
     return storePORDAO.getCouponOwner(storeId);
   }
 }

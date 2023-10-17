@@ -1,12 +1,15 @@
 package com.ReservationServer1.data.Entity.store;
 
+import java.sql.Blob;
 import org.springframework.beans.BeanUtils;
 import com.ReservationServer1.data.DTO.store.StoreTableInfoDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -27,23 +30,29 @@ import lombok.ToString;
 public class StoreTableInfoEntity {
 
   private static final StoreTableInfoEntity sample =
-      StoreTableInfoEntity.builder().tableId(-1L).storeId(-1).count(0).imageURL("url").build();
+      StoreTableInfoEntity.builder().tableId((short) -1).storeId((short) -1).count((byte) 0).tableImage(null).build();
 
+  
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long tableId;
+  private short tableId;
 
-  private int storeId;
-
+  @NotNull
+  private short storeId;
+  
+  @NotNull
   private int count;
 
-  private String imageURL;
+  @Lob
+  private byte[] tableImage;
 
 
+  // StoreTableInfoDTO -> StoreTableInfoEntity
   public StoreTableInfoEntity(StoreTableInfoDTO storeTableInfoDTO) {
     BeanUtils.copyProperties(storeTableInfoDTO, this);
   }
 
+  // Get Sample
   public static StoreTableInfoEntity sample() {
     return sample;
   }

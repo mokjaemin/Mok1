@@ -12,7 +12,6 @@ import com.ReservationServer1.data.DTO.member.LoginDTO;
 import com.ReservationServer1.data.DTO.member.ModifyMemberDTO;
 import com.ReservationServer1.data.DTO.member.SearchMemberDTO;
 import com.ReservationServer1.data.Entity.member.MemberEntity;
-import com.ReservationServer1.exception.MessageException;
 import com.ReservationServer1.exception.member.BadEmailException;
 import com.ReservationServer1.exception.member.BadPwdException;
 import com.ReservationServer1.exception.member.ExistIDException;
@@ -174,6 +173,7 @@ public class MemberDAOImpl implements MemberDAO {
         .where(eqUserId(member.getUserId()), eqUserName(member.getUserName()),
             eqUserNumber(member.getUserNumber()), eqUserAddress(member.getUserAddress()),
             eqUserEmail(member.getUserEmail()))
+        .orderBy(memberEntity.userId.asc(), memberEntity.userName.asc())
         .fetch();
 
 

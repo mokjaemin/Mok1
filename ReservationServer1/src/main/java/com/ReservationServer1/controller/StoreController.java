@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.ReservationServer1.data.StoreType;
 import com.ReservationServer1.data.DTO.store.StoreDTO;
 import com.ReservationServer1.service.StoreService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,6 +41,7 @@ public class StoreController {
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
   public ResponseEntity<String> registerStore(@Valid @RequestBody StoreDTO storeDTO,
       Authentication authentication) {
+    // JWT에서 Id추출해 ownerId 설정
     storeDTO.setOwnerId(authentication.getName());
     return ResponseEntity.status(HttpStatus.OK).body(storeService.registerStore(storeDTO));
   }
@@ -51,8 +53,8 @@ public class StoreController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<HashMap<String, Integer>> getStoreList(@RequestParam String country, String city,
-      String dong, String type, int page, int size) {
+  public ResponseEntity<HashMap<String, Short>> getStoreList(@RequestParam String country, String city,
+      String dong, StoreType type, int page, int size) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(storeService.getStoreList(country, city, dong, type, page, size));
   }
@@ -64,7 +66,7 @@ public class StoreController {
       @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
       @ApiResponse(responseCode = "404", description = "NOT FOUND"),
       @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> loginStore(@RequestParam int storeId,
+  public ResponseEntity<String> loginStore(@RequestParam short storeId,
       Authentication authentication) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(storeService.loginStore(storeId, authentication.getName()));

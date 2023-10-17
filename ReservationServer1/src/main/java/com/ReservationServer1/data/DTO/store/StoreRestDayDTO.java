@@ -24,7 +24,7 @@ public class StoreRestDayDTO {
   private static StoreRestDayDTO sample = new StoreRestDayDTO();
 
   @NotNull
-  private int storeId;
+  private short storeId;
 
   @NotNull
   private Set<String> date;

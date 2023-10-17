@@ -4,13 +4,10 @@ import java.time.LocalDateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import com.ReservationServer1.data.DTO.member.FindPwdDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,18 +30,6 @@ public class BaseEntity {
     @LastModifiedDate
     private LocalDateTime updatedAt;
     
-    
-    /*
-    @CreatedBy
-    @Column(updatable = false)
-    private String createdBy;
-    */
-    
-
-    /*
-    @LastModifiedBy
-    private String updatedBy;
-    */
 
 }
 
