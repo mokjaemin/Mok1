@@ -20,20 +20,19 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class StoreTableInfoDTO {
 
-  private static final StoreTableInfoDTO sample =
-      StoreTableInfoDTO.builder().storeId((short) 0).count((byte) 1).tableImage(null).build();
+	private static final StoreTableInfoDTO sample = StoreTableInfoDTO.builder().storeId((short) 0).count((byte) 1)
+			.tableImage(null).build();
 
-  
-  @NotNull
-  private short storeId;
+	@NotNull
+	private short storeId;
 
-  @NotNull
-  private byte count;
+	@NotNull
+	private byte count;
 
-  private MultipartFile tableImage;
+	private MultipartFile tableImage;
 
-  public static StoreTableInfoDTO sample() {
-    return sample;
-  }
+	public static StoreTableInfoDTO sample() {
+		return sample;
+	}
 
 }

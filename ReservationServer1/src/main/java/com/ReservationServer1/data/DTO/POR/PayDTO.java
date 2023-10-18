@@ -18,20 +18,19 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class PayDTO {
 
-  private static final PayDTO sample =
-      PayDTO.builder().reservationId(0).storeId((short) 0).amount(0).build();
+	private static final PayDTO sample = PayDTO.builder().reservationId(0).storeId((short) 0).amount(0).build();
 
-  @NotNull
-  private int reservationId;
+	@NotNull
+	private int reservationId;
 
-  @NotNull
-  private short storeId;
+	@NotNull
+	private short storeId;
 
-  @NotNull
-  private int amount;
+	@NotNull
+	private int amount;
 
-  public static PayDTO sample() {
-    return sample;
-  }
+	public static PayDTO sample() {
+		return sample;
+	}
 
 }

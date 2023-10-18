@@ -25,27 +25,26 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class StoreCouponEntity {
 
-  // Sample
-  private static final StoreCouponEntity sample =
-      StoreCouponEntity.builder().couponId(-1).storeId((short) -1).userId("userId").amount(0).build();
+	// Sample
+	private static final StoreCouponEntity sample = StoreCouponEntity.builder().couponId(-1).storeId((short) -1)
+			.userId("userId").amount(0).build();
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int couponId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int couponId;
 
-  @NotNull
-  private short storeId;
+	@NotNull
+	private short storeId;
 
-  @NotNull
-  private String userId;
+	@NotNull
+	private String userId;
 
-  @NotNull
-  private int amount;
+	@NotNull
+	private int amount;
 
-  
-  // Get Sample
-  public static StoreCouponEntity sample() {
-    return sample;
-  }
+	// Get Sample
+	public static StoreCouponEntity sample() {
+		return sample;
+	}
 
 }

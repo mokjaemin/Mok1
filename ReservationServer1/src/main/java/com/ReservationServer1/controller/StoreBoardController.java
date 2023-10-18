@@ -30,127 +30,106 @@ import jakarta.validation.Valid;
 @RequestMapping("/board")
 public class StoreBoardController {
 
+	private final StoreBoardService storeBoardService;
 
-  private final StoreBoardService storeBoardService;
+	public StoreBoardController(StoreBoardService storeBoardService) {
+		this.storeBoardService = storeBoardService;
+	}
 
-  public StoreBoardController(StoreBoardService storeBoardService) {
-    this.storeBoardService = storeBoardService;
-  }
+	@PostMapping
+	@Operation(summary = "가게 후기 등록 요청", description = "가게 후기가 등록됩니다.", tags = { "Store Board Controller" })
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = BoardDTO.class))),
+			@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+			@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
+	public ResponseEntity<String> registerBoard(@Valid @ModelAttribute BoardDTO board, Authentication authentication) {
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(storeBoardService.registerBoard(board, authentication.getName()));
+	}
 
-  @PostMapping
-  @Operation(summary = "가게 후기 등록 요청", description = "가게 후기가 등록됩니다.",
-      tags = {"Store Board Controller"})
-  @ApiResponses({
-      @ApiResponse(responseCode = "200", description = "OK",
-          content = @Content(schema = @Schema(implementation = BoardDTO.class))),
-      @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
-      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
-      @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> registerBoard(@Valid @ModelAttribute BoardDTO board,
-      Authentication authentication) {
-    return ResponseEntity.status(HttpStatus.OK)
-        .body(storeBoardService.registerBoard(board, authentication.getName()));
-  }
+	@PutMapping
+	@Operation(summary = "가게 후기 등록 수정 요청", description = "가게 후기가 수정됩니다.", tags = { "Store Board Controller" })
+	@ApiResponses({
+			@ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = BoardDTO.class))),
+			@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+			@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
+	public ResponseEntity<String> updateBoard(@Valid @RequestParam int boardId, @ModelAttribute BoardDTO board,
+			Authentication authentication) {
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(storeBoardService.updateBoard(boardId, board, authentication.getName()));
+	}
 
+	@DeleteMapping
+	@Operation(summary = "가게 후기 삭제 요청", description = "가게 후기가 삭제됩니다.", tags = { "Store Board Controller" })
+	@ApiResponses({ @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+			@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
+	public ResponseEntity<String> deleteBoard(@Valid @RequestParam int boardId, Authentication authentication) {
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(storeBoardService.deleteBoard(boardId, authentication.getName()));
+	}
 
-  @PutMapping
-  @Operation(summary = "가게 후기 등록 수정 요청", description = "가게 후기가 수정됩니다.",
-      tags = {"Store Board Controller"})
-  @ApiResponses({
-      @ApiResponse(responseCode = "200", description = "OK",
-          content = @Content(schema = @Schema(implementation = BoardDTO.class))),
-      @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
-      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
-      @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> updateBoard(@Valid @RequestParam int boardId,
-      @ModelAttribute BoardDTO board, Authentication authentication) {
-    return ResponseEntity.status(HttpStatus.OK)
-        .body(storeBoardService.updateBoard(boardId, board, authentication.getName()));
-  }
+	@GetMapping
+	@Operation(summary = "가게별 후기 출력 요청", description = "가게 후기가 출력됩니다.", tags = { "Store Board Controller" })
+	@ApiResponses({ @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+			@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
+	public ResponseEntity<List<BoardResultDTO>> getBoard(@Valid @RequestParam short storeId) {
+		return ResponseEntity.status(HttpStatus.OK).body(storeBoardService.getBoard(storeId));
+	}
 
-  @DeleteMapping
-  @Operation(summary = "가게 후기 삭제 요청", description = "가게 후기가 삭제됩니다.",
-      tags = {"Store Board Controller"})
-  @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
-      @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
-      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
-      @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> deleteBoard(@Valid @RequestParam int boardId,
-      Authentication authentication) {
-    return ResponseEntity.status(HttpStatus.OK)
-        .body(storeBoardService.deleteBoard(boardId, authentication.getName()));
-  }
+	@GetMapping("/user")
+	@Operation(summary = "개인별 후기 출력 요청", description = "개인별 가게 후기가 출력됩니다.", tags = { "Store Board Controller" })
+	@ApiResponses({ @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+			@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
+	public ResponseEntity<List<BoardResultDTO>> getBoardByUser(Authentication authentication) {
+		return ResponseEntity.status(HttpStatus.OK).body(storeBoardService.getBoardByUser(authentication.getName()));
+	}
 
-  @GetMapping
-  @Operation(summary = "가게별 후기 출력 요청", description = "가게 후기가 출력됩니다.",
-      tags = {"Store Board Controller"})
-  @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
-      @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
-      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
-      @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<List<BoardResultDTO>> getBoard(@Valid @RequestParam short storeId) {
-    return ResponseEntity.status(HttpStatus.OK).body(storeBoardService.getBoard(storeId));
-  }
+	@PostMapping("/comment")
+	@Operation(summary = "가게 후기 댓글 등록 요청", description = "가게 후기 댓글이 등록됩니다.", tags = { "Store Board Controller" })
+	@ApiResponses({ @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+			@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
+	public ResponseEntity<String> registerBoardComment(@Valid @RequestParam int boardId, @RequestBody String comment,
+			Authentication authentication) throws IOException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonNode jsonNode = objectMapper.readTree(comment);
+		String new_comment = jsonNode.get("comment").asText();
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(storeBoardService.registerBoardComment(boardId, new_comment, authentication.getName()));
+	}
 
+	@PutMapping("/comment")
+	@Operation(summary = "가게 후기 댓글 수정 요청", description = "가게 후기 댓글이 수정됩니다.", tags = { "Store Board Controller" })
+	@ApiResponses({ @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+			@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
+	public ResponseEntity<String> updateBoardComment(@Valid @RequestParam int boardId, @RequestBody String comment,
+			Authentication authentication) throws IOException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonNode jsonNode = objectMapper.readTree(comment);
+		String new_comment = jsonNode.get("comment").asText();
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(storeBoardService.updateBoardComment(boardId, new_comment, authentication.getName()));
+	}
 
-  @GetMapping("/user")
-  @Operation(summary = "개인별 후기 출력 요청", description = "개인별 가게 후기가 출력됩니다.",
-      tags = {"Store Board Controller"})
-  @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
-      @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
-      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
-      @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<List<BoardResultDTO>> getBoardByUser(Authentication authentication) {
-    return ResponseEntity.status(HttpStatus.OK)
-        .body(storeBoardService.getBoardByUser(authentication.getName()));
-  }
-
-
-
-  @PostMapping("/comment")
-  @Operation(summary = "가게 후기 댓글 등록 요청", description = "가게 후기 댓글이 등록됩니다.",
-      tags = {"Store Board Controller"})
-  @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
-      @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
-      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
-      @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> registerBoardComment(@Valid @RequestParam int boardId,
-      @RequestBody String comment, Authentication authentication) throws IOException {
-    ObjectMapper objectMapper = new ObjectMapper();
-    JsonNode jsonNode = objectMapper.readTree(comment);
-    String new_comment = jsonNode.get("comment").asText();
-    return ResponseEntity.status(HttpStatus.OK).body(
-        storeBoardService.registerBoardComment(boardId, new_comment, authentication.getName()));
-  }
-
-
-  @PutMapping("/comment")
-  @Operation(summary = "가게 후기 댓글 수정 요청", description = "가게 후기 댓글이 수정됩니다.",
-      tags = {"Store Board Controller"})
-  @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
-      @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
-      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
-      @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> updateBoardComment(@Valid @RequestParam int boardId,
-      @RequestBody String comment, Authentication authentication) throws IOException {
-    ObjectMapper objectMapper = new ObjectMapper();
-    JsonNode jsonNode = objectMapper.readTree(comment);
-    String new_comment = jsonNode.get("comment").asText();
-    return ResponseEntity.status(HttpStatus.OK)
-        .body(storeBoardService.updateBoardComment(boardId, new_comment, authentication.getName()));
-  }
-
-
-  @DeleteMapping("/comment")
-  @Operation(summary = "가게 후기 댓글 삭제 요청", description = "가게 후기 댓글이 삭제됩니다.",
-      tags = {"Store Board Controller"})
-  @ApiResponses({@ApiResponse(responseCode = "200", description = "OK"),
-      @ApiResponse(responseCode = "400", description = "BAD REQUEST"),
-      @ApiResponse(responseCode = "404", description = "NOT FOUND"),
-      @ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")})
-  public ResponseEntity<String> deleteBoardComment(@Valid @RequestParam int boardId,
-      Authentication authentication) {
-    return ResponseEntity.status(HttpStatus.OK)
-        .body(storeBoardService.deleteBoardComment(boardId, authentication.getName()));
-  }
+	@DeleteMapping("/comment")
+	@Operation(summary = "가게 후기 댓글 삭제 요청", description = "가게 후기 댓글이 삭제됩니다.", tags = { "Store Board Controller" })
+	@ApiResponses({ @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+			@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
+	public ResponseEntity<String> deleteBoardComment(@Valid @RequestParam int boardId, Authentication authentication) {
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(storeBoardService.deleteBoardComment(boardId, authentication.getName()));
+	}
 }

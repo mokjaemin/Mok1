@@ -10,38 +10,35 @@ import com.ReservationServer1.data.Entity.store.StoreTimeInfoEntity;
 
 public interface StoreInfoService {
 
-  // DAY OFF
-  String registerDayOff(StoreRestDayDTO restDayDTO);
+	// DAY OFF
+	String registerDayOff(StoreRestDayDTO restDayDTO);
 
-  List<String> getDayOff(short storeId);
+	List<String> getDayOff(short storeId);
 
-  String deleteDayOff(short storeId);
+	String deleteDayOff(short storeId);
 
+	// TIME INFO
+	String registerTimeInfo(StoreTimeInfoDTO timeInfoDTO);
 
-  // TIME INFO
-  String registerTimeInfo(StoreTimeInfoDTO timeInfoDTO);
+	StoreTimeInfoEntity getTimeInfo(short storeId);
 
-  StoreTimeInfoEntity getTimeInfo(short storeId);
+	String modTimeInfo(StoreTimeInfoDTO timeInfoDTO);
 
-  String modTimeInfo(StoreTimeInfoDTO timeInfoDTO);
+	String deleteTimeInfo(short storeId);
 
-  String deleteTimeInfo(short storeId);
+	// TABLE INFO
+	String registerTableInfo(StoreTableInfoDTO storeTableInfoDTO);
 
+	String modTableInfo(StoreTableInfoDTO storeTableInfoDTO);
 
-  // TABLE INFO
-  String registerTableInfo(StoreTableInfoDTO storeTableInfoDTO);
+	String deleteTableInfo(short storeId);
 
-  String modTableInfo(StoreTableInfoDTO storeTableInfoDTO);
+	// FOODS INFO
+	String registerFoodsInfo(StoreFoodsInfoDTO storeFoodsInfoDTO);
 
-  String deleteTableInfo(short storeId);
-  
-  
-  // FOODS INFO
-   String registerFoodsInfo(StoreFoodsInfoDTO storeFoodsInfoDTO);
+	List<StoreFoodsInfoResultDTO> getFoodsInfo(short storeId);
 
-   List<StoreFoodsInfoResultDTO> getFoodsInfo(short storeId);
+	String modFoodsInfo(StoreFoodsInfoDTO storeFoodsInfoDTO);
 
-   String modFoodsInfo(StoreFoodsInfoDTO storeFoodsInfoDTO);
-
-   String deleteFoodsInfo(short storeId, String foodName);
+	String deleteFoodsInfo(short storeId, String foodName);
 }

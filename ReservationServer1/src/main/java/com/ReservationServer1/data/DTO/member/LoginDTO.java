@@ -19,19 +19,17 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class LoginDTO {
 
-  private static final LoginDTO sample =
-      LoginDTO.builder().userId("testId").userPwd("testPwd").build();
+	private static final LoginDTO sample = LoginDTO.builder().userId("testId").userPwd("testPwd").build();
 
-  @NotNull
-  @Size(min=3, max=20)
-  private String userId;
+	@NotNull
+	@Size(min = 3, max = 20)
+	private String userId;
 
-  @NotNull
-  @Size(min=3, max=20)
-  private String userPwd;
+	@NotNull
+	@Size(min = 3, max = 20)
+	private String userPwd;
 
-
-  public static LoginDTO sample() {
-    return sample;
-  }
+	public static LoginDTO sample() {
+		return sample;
+	}
 }

@@ -30,22 +30,22 @@ import lombok.ToString;
 @Table(name = "StorePay")
 public class StorePayEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long paymentId;
-  
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "ordersId")
-  @JsonBackReference
-  private StoreOrdersEntity storeOrdersEntity;
-  
-  @NotNull
-  private int amount;
-  
-  @Column(length = 40)
-  private String comment;
-  
-  @Column(length = 40)
-  private String bigComment;
-  
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int paymentId;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ordersId")
+	@JsonBackReference
+	private StoreOrdersEntity storeOrdersEntity;
+
+	@NotNull
+	private int amount;
+
+	@Column(length = 40)
+	private String comment;
+
+	@Column(length = 40)
+	private String bigComment;
+
 }

@@ -9,21 +9,31 @@ import com.ReservationServer1.data.Entity.store.StoreTimeInfoEntity;
 
 public interface StoreInfoDAO {
 
-  String registerDayOff(StoreRestDayDTO restDayDTO);
-  List<String> getDayOff(short storeId);
-  String deleteDayOff(short storeId);
-  
-  String registerTimeInfo(StoreTimeInfoDTO storeTimeInfoDTO);
-  StoreTimeInfoEntity getTimeInfo(short storeId);
-  String modTimeInfo(StoreTimeInfoDTO storeTimeInfoDTO);
-  String deleteTimeInfo(short storeId);
+	String registerDayOff(StoreRestDayDTO restDayDTO);
 
-  String registerTableInfo(StoreTableInfoEntity storeTableInfoEntity);
-  String modTableInfo(StoreTableInfoEntity storeTableInfoEntity);
-  String deleteTableInfo(short storeId);
-  
-  String registerFoodsInfo(StoreFoodsInfoEntity storeFoodsInfoEntity);
-  List<StoreFoodsInfoEntity> getFoodsInfo(short storeId);
-  String modFoodsInfo(StoreFoodsInfoEntity storeFoodsInfoEntity);
-  String deleteFoodsInfo(short storeId, String foodName);
+	List<String> getDayOff(short storeId);
+
+	String deleteDayOff(short storeId);
+
+	String registerTimeInfo(StoreTimeInfoDTO storeTimeInfoDTO);
+
+	StoreTimeInfoEntity getTimeInfo(short storeId);
+
+	String modTimeInfo(StoreTimeInfoDTO storeTimeInfoDTO);
+
+	String deleteTimeInfo(short storeId);
+
+	String registerTableInfo(StoreTableInfoEntity storeTableInfoEntity);
+
+	String modTableInfo(StoreTableInfoEntity storeTableInfoEntity);
+
+	String deleteTableInfo(short storeId);
+
+	String registerFoodsInfo(StoreFoodsInfoEntity storeFoodsInfoEntity);
+
+	List<StoreFoodsInfoEntity> getFoodsInfo(short storeId);
+
+	String modFoodsInfo(StoreFoodsInfoEntity storeFoodsInfoEntity);
+
+	String deleteFoodsInfo(short storeId, String foodName);
 }

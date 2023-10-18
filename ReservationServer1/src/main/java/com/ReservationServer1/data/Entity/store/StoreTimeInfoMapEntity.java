@@ -30,17 +30,16 @@ import lombok.ToString;
 @Table(name = "StoreTimeInfoMap")
 public class StoreTimeInfoMapEntity {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int timeId;
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int timeId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "timesId", referencedColumnName = "timesId")
+	@JsonBackReference
+	private StoreTimeInfoEntity storeTimeInfoEntity;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "timesId", referencedColumnName = "timesId")
-  @JsonBackReference
-  private StoreTimeInfoEntity storeTimeInfoEntity;
-  
-  @Column(length = 5)
-  @NotNull
-  private String time;
+	@Column(length = 5)
+	@NotNull
+	private String time;
 }

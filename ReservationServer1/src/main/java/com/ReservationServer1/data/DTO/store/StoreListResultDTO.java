@@ -9,9 +9,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class StoreListResultDTO {
 
-  private String storeName;
-  
-  private short storeId;
-  
-  
+	private String storeName;
+
+	private short storeId;
+
 }

@@ -20,27 +20,26 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class StoreFoodsInfoDTO {
 
-  private static final StoreFoodsInfoDTO sample = StoreFoodsInfoDTO.builder().storeId((short)-1)
-      .foodName("foodName").foodDescription("foodDescription").foodPrice(0).build();
+	private static final StoreFoodsInfoDTO sample = StoreFoodsInfoDTO.builder().storeId((short) -1).foodName("foodName")
+			.foodDescription("foodDescription").foodPrice(0).build();
 
-  @NotNull
-  private short storeId;
+	@NotNull
+	private short storeId;
 
-  @NotNull
-  @Size(min = 1, max = 20)
-  private String foodName;
+	@NotNull
+	@Size(min = 1, max = 20)
+	private String foodName;
 
-  @NotNull
-  @Size(min = 1, max = 30)
-  private String foodDescription;
+	@NotNull
+	@Size(min = 1, max = 30)
+	private String foodDescription;
 
-  @NotNull
-  private int foodPrice;
+	@NotNull
+	private int foodPrice;
 
-  private MultipartFile foodImage;
+	private MultipartFile foodImage;
 
-
-  public static StoreFoodsInfoDTO sample() {
-    return sample;
-  }
+	public static StoreFoodsInfoDTO sample() {
+		return sample;
+	}
 }

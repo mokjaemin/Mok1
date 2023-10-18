@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @Getter
 @Setter
 @ToString
@@ -20,27 +19,26 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class ReservationDTO {
 
-  private static final ReservationDTO sample =
-      ReservationDTO.builder().storeId((short) 0).date("1월1일").time("1시").storeTable("1번").build();
+	private static final ReservationDTO sample = ReservationDTO.builder().storeId((short) 0).date("1월1일").time("1시")
+			.storeTable("1번").build();
 
-  @NotNull
-  private short storeId;
+	@NotNull
+	private short storeId;
 
-  @NotNull
-  @Size(min=1, max=8)
-  private String date;
+	@NotNull
+	@Size(min = 1, max = 8)
+	private String date;
 
-  @NotNull
-  @Size(min=1, max=4)
-  private String time;
+	@NotNull
+	@Size(min = 1, max = 4)
+	private String time;
 
-  @NotNull
-  @Size(min=1, max=4)
-  private String storeTable;
+	@NotNull
+	@Size(min = 1, max = 4)
+	private String storeTable;
 
-  public static ReservationDTO sample() {
-    return sample;
-  }
-
+	public static ReservationDTO sample() {
+		return sample;
+	}
 
 }

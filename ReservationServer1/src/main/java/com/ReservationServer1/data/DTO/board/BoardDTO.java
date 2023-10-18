@@ -20,27 +20,27 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class BoardDTO {
 
-  private static final BoardDTO sample =
-      BoardDTO.builder().storeId((short) 0).title("title").content("content").rating(5.0).build();
+	private static final BoardDTO sample = BoardDTO.builder().storeId((short) 0).title("title").content("content")
+			.rating(5.0).build();
 
-  @NotNull
-  private short storeId;
+	@NotNull
+	private short storeId;
 
-  @NotNull
-  @Size(min=1, max=20)
-  private String title;
+	@NotNull
+	@Size(min = 1, max = 20)
+	private String title;
 
-  @NotNull
-  @Size(min=3, max=50)
-  private String content;
+	@NotNull
+	@Size(min = 3, max = 50)
+	private String content;
 
-  @NotNull
-  private double rating;
+	@NotNull
+	private double rating;
 
-  private MultipartFile foodImage;
+	private MultipartFile foodImage;
 
-  public static BoardDTO sample() {
-    return sample;
-  }
+	public static BoardDTO sample() {
+		return sample;
+	}
 
 }

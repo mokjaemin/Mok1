@@ -23,22 +23,23 @@ import lombok.ToString;
 @NoArgsConstructor
 @Table(name = "StoreRestDaysMap")
 public class StoreRestDaysMapEntity {
-  
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int dayId;
-  
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "days_id")
-  @JsonBackReference
-  private StoreRestDaysEntity storeRestDaysEntity;
-  
-  @Column(length = 7)
-  @NotNull
-  private String date;
-  
-  public StoreRestDaysMapEntity(String date, StoreRestDaysEntity storeRestDaysEntity) {
-    this.date = date;
-    this.storeRestDaysEntity = storeRestDaysEntity;;
-  }
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int dayId;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "days_id")
+	@JsonBackReference
+	private StoreRestDaysEntity storeRestDaysEntity;
+
+	@Column(length = 7)
+	@NotNull
+	private String date;
+
+	public StoreRestDaysMapEntity(String date, StoreRestDaysEntity storeRestDaysEntity) {
+		this.date = date;
+		this.storeRestDaysEntity = storeRestDaysEntity;
+		;
+	}
 }

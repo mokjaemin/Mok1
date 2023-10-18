@@ -21,7 +21,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @Entity
 @Getter
 @Setter
@@ -32,33 +31,31 @@ import lombok.ToString;
 @Builder
 @Table(name = "StoreTimeInfo")
 public class StoreTimeInfoEntity {
-  
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int timesId;
-  
-  @Column(length = 5)
-  @NotNull
-  private String startTime;
-  
-  @Column(length = 5)
-  @NotNull
-  private String endTime;
-  
-  @Column(length = 5)
-  @NotNull
-  private String intervalTime;
-  
-  @NotNull
-  private short storeId;
-  
-  @OneToMany(mappedBy = "storeTimeInfoEntity", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-  private Set<StoreTimeInfoMapEntity> breakTime;
-  
-  public StoreTimeInfoEntity(StoreTimeInfoDTO storeTimeInfoDTO) {
-    BeanUtils.copyProperties(storeTimeInfoDTO, this);
-  }
- 
-    
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int timesId;
+
+	@Column(length = 5)
+	@NotNull
+	private String startTime;
+
+	@Column(length = 5)
+	@NotNull
+	private String endTime;
+
+	@Column(length = 5)
+	@NotNull
+	private String intervalTime;
+
+	@NotNull
+	private short storeId;
+
+	@OneToMany(mappedBy = "storeTimeInfoEntity", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	private Set<StoreTimeInfoMapEntity> breakTime;
+
+	public StoreTimeInfoEntity(StoreTimeInfoDTO storeTimeInfoDTO) {
+		BeanUtils.copyProperties(storeTimeInfoDTO, this);
+	}
 
 }

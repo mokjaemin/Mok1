@@ -17,28 +17,26 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @Entity
 @Getter
 @Setter
 @ToString(exclude = "childSet")
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false, exclude="childSet")
+@EqualsAndHashCode(callSuper = false, exclude = "childSet")
 @Table(name = "StoreRestDays")
 public class StoreRestDaysEntity extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int daysId;
-  
-  @NotNull
-  private short storeId;
-  
-  @OneToMany(mappedBy = "storeRestDaysEntity", fetch = FetchType.LAZY,  cascade = CascadeType.REMOVE)
-  private Set<StoreRestDaysMapEntity> childSet;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int daysId;
 
-  
-  public StoreRestDaysEntity(short storeId) {
-    this.storeId = storeId;
-  }
+	@NotNull
+	private short storeId;
+
+	@OneToMany(mappedBy = "storeRestDaysEntity", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	private Set<StoreRestDaysMapEntity> childSet;
+
+	public StoreRestDaysEntity(short storeId) {
+		this.storeId = storeId;
+	}
 }

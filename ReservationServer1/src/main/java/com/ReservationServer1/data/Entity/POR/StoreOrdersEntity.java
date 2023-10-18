@@ -24,29 +24,28 @@ import lombok.ToString;
 @Setter
 @AllArgsConstructor
 @Builder
-@ToString(exclude = {"childSet", "payment"})
+@ToString(exclude = { "childSet", "payment" })
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"childSet", "payment"})
+@EqualsAndHashCode(exclude = { "childSet", "payment" })
 @Table(name = "StoreOrders")
 public class StoreOrdersEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int ordersId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int ordersId;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "reservation_id")
-  @JsonBackReference
-  private StoreReservationEntity storeReservationEntity;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "reservation_id")
+	@JsonBackReference
+	private StoreReservationEntity storeReservationEntity;
 
-  @OneToMany(mappedBy = "storeOrdersEntity", fetch = FetchType.LAZY)
-  private List<StoreOrdersMapEntity> childSet;
+	@OneToMany(mappedBy = "storeOrdersEntity", fetch = FetchType.LAZY)
+	private List<StoreOrdersMapEntity> childSet;
 
+	@OneToOne(mappedBy = "storeOrdersEntity", fetch = FetchType.LAZY)
+	private StorePayEntity payment;
 
-  @OneToOne(mappedBy = "storeOrdersEntity", fetch = FetchType.LAZY)
-  private StorePayEntity payment;
-
-  public StoreOrdersEntity(StoreReservationEntity storeReservationEntity) {
-    this.storeReservationEntity = storeReservationEntity;
-  }
+	public StoreOrdersEntity(StoreReservationEntity storeReservationEntity) {
+		this.storeReservationEntity = storeReservationEntity;
+	}
 }

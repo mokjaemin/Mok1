@@ -20,24 +20,22 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class StoreRestDayDTO {
 
-  private static Set<String> sampleDate = new HashSet<>();
-  private static StoreRestDayDTO sample = new StoreRestDayDTO();
+	private static Set<String> sampleDate = new HashSet<>();
+	private static StoreRestDayDTO sample = new StoreRestDayDTO();
 
-  @NotNull
-  private short storeId;
+	@NotNull
+	private short storeId;
 
-  @NotNull
-  private Set<String> date;
+	@NotNull
+	private Set<String> date;
 
-
-  public static StoreRestDayDTO sample() {
-    if (sampleDate.size() == 0) {
-      sampleDate.add("date1");
-    }
-    if (sample.getDate() == null) {
-      sample.setDate(sampleDate);
-    }
-    return sample;
-  }
+	public static StoreRestDayDTO sample() {
+		if (sampleDate.size() == 0) {
+			sampleDate.add("date1");
+		}
+		if (sample.getDate() == null) {
+			sample.setDate(sampleDate);
+		}
+		return sample;
+	}
 }
-

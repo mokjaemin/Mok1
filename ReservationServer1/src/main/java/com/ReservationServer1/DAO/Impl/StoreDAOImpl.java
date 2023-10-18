@@ -15,81 +15,76 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
-
 @Repository("StoreDAO")
 @Transactional
 public class StoreDAOImpl implements StoreDAO {
 
-  private final JPAQueryFactory queryFactory;
-  private final EntityManager entityManager;
+	private final JPAQueryFactory queryFactory;
+	private final EntityManager entityManager;
 
-  public StoreDAOImpl(JPAQueryFactory queryFactory, EntityManager entityManager) {
-    this.entityManager = entityManager;
-    this.queryFactory = queryFactory;
-  }
+	public StoreDAOImpl(JPAQueryFactory queryFactory, EntityManager entityManager) {
+		this.entityManager = entityManager;
+		this.queryFactory = queryFactory;
+	}
 
-  @Override
-  public String registerStore(StoreEntity storeEntity) {
-    entityManager.persist(storeEntity);
-    return "success";
-  }
+	@Override
+	public String registerStore(StoreEntity storeEntity) {
+		entityManager.persist(storeEntity);
+		return "success";
+	}
 
-  @Override
-  public HashMap<String, Short> getStoreList(String country, String city, String dong,
-      StoreType type, int page, int size) {
+	@Override
+	public HashMap<String, Short> getStoreList(String country, String city, String dong, StoreType type, int page,
+			int size) {
 
-    // DTO로 받기 & 동적 쿼리 생성
-    List<StoreListResultDTO> stores = queryFactory
-        .select(Projections.fields(StoreListResultDTO.class, storeEntity.storeId,
-            storeEntity.storeName))
-        .from(storeEntity).where(eqCountry(country), eqCity(city), eqDong(dong), eqType(type))
-        .limit(size).offset(page * size).orderBy(storeEntity.storeName.asc()).fetch();
+		// DTO로 받기 & 동적 쿼리 생성
+		List<StoreListResultDTO> stores = queryFactory
+				.select(Projections.fields(StoreListResultDTO.class, storeEntity.storeId, storeEntity.storeName))
+				.from(storeEntity).where(eqCountry(country), eqCity(city), eqDong(dong), eqType(type)).limit(size)
+				.offset(page * size).orderBy(storeEntity.storeName.asc()).fetch();
 
-    
-    // 결과 HashMap
-    HashMap<String, Short> result = new HashMap<>();
-    for (StoreListResultDTO store : stores) {
-      result.put(store.getStoreName(), store.getStoreId());
-    }
-    return result;
-  }
+		// 결과 HashMap
+		HashMap<String, Short> result = new HashMap<>();
+		for (StoreListResultDTO store : stores) {
+			result.put(store.getStoreName(), store.getStoreId());
+		}
+		return result;
+	}
 
-  @Override
-  public String loginStore(short storeId) {
-    String ownerId = queryFactory.select(storeEntity.ownerId).from(storeEntity)
-        .where(storeEntity.storeId.eq(storeId)).fetchFirst();
-    return ownerId;
-  }
-  
+	@Override
+	public String loginStore(short storeId) {
+		String ownerId = queryFactory.select(storeEntity.ownerId).from(storeEntity)
+				.where(storeEntity.storeId.eq(storeId)).fetchFirst();
+		return ownerId;
+	}
 
-  
-  // 동적 쿼리 메서드
-  private BooleanExpression eqCountry(String country) {
-    if (StringUtils.isEmpty(country)) {
-      return null;
-    }
-    return storeEntity.country.eq(country);
-  }
+	// 동적 쿼리 메서드
+	private BooleanExpression eqCountry(String country) {
+		if (StringUtils.isEmpty(country)) {
+			return null;
+		}
+		return storeEntity.country.eq(country);
+	}
 
-  private BooleanExpression eqCity(String city) {
-    if (StringUtils.isEmpty(city)) {
-      return null;
-    }
-    return storeEntity.city.eq(city);
-  }
+	private BooleanExpression eqCity(String city) {
+		if (StringUtils.isEmpty(city)) {
+			return null;
+		}
+		return storeEntity.city.eq(city);
+	}
 
-  private BooleanExpression eqDong(String dong) {
-    if (StringUtils.isEmpty(dong)) {
-      return null;
-    }
-    return storeEntity.dong.eq(dong);
-  }
+	private BooleanExpression eqDong(String dong) {
+		if (StringUtils.isEmpty(dong)) {
+			return null;
+		}
+		return storeEntity.dong.eq(dong);
+	}
 
-  private BooleanExpression eqType(StoreType type) {
-    if (type == null) {
-      return null;
-    }
-    return storeEntity.type.eq(type);
-  }
+	private BooleanExpression eqType(StoreType type) {
+		if (type == null) {
+			return null;
+		}
+		return storeEntity.type.eq(type);
+	}
 
 }

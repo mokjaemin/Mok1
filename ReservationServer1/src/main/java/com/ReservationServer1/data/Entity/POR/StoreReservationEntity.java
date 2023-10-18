@@ -35,58 +35,54 @@ import lombok.ToString;
 @Table(name = "Reservation")
 public class StoreReservationEntity extends BaseEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Expose
-  private int reservationId;
-  
-  @Expose
-  @Column(length = 20)
-  @NotNull
-  private String userId;
-  
-  @Expose
-  @NotNull
-  private short storeId;
-  
-  @Expose
-  @Column(length = 8)
-  @NotNull
-  private String date;
-  
-  @Expose
-  @Column(length = 4)
-  @NotNull
-  private String time;
-  
-  @Expose
-  @Column(length = 4)
-  private String storeTable;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Expose
+	private int reservationId;
 
-  @OneToOne(mappedBy = "storeReservationEntity", fetch = FetchType.LAZY,
-      cascade = CascadeType.REMOVE)
-  @Expose
-  private StoreOrdersEntity child;
-  
-  
-  
-  public StoreReservationEntity(StoreReservationEntity other) {
-    this.reservationId = other.reservationId;
-    this.userId = other.userId;
-    this.storeId = other.storeId;
-    this.date = other.date;
-    this.time = other.time;
-    this.storeTable = other.storeTable;
-    this.child = other.child;
-  }
+	@Expose
+	@Column(length = 20)
+	@NotNull
+	private String userId;
 
+	@Expose
+	@NotNull
+	private short storeId;
 
-  public StoreReservationEntity(ReservationDTO reservationDTO) {
-    BeanUtils.copyProperties(reservationDTO, this);
-  }
+	@Expose
+	@Column(length = 8)
+	@NotNull
+	private String date;
 
-  public static Gson createGsonInstance() {
-    return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-  }
+	@Expose
+	@Column(length = 4)
+	@NotNull
+	private String time;
+
+	@Expose
+	@Column(length = 4)
+	private String storeTable;
+
+	@OneToOne(mappedBy = "storeReservationEntity", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	@Expose
+	private StoreOrdersEntity child;
+
+	public StoreReservationEntity(StoreReservationEntity other) {
+		this.reservationId = other.reservationId;
+		this.userId = other.userId;
+		this.storeId = other.storeId;
+		this.date = other.date;
+		this.time = other.time;
+		this.storeTable = other.storeTable;
+		this.child = other.child;
+	}
+
+	public StoreReservationEntity(ReservationDTO reservationDTO) {
+		BeanUtils.copyProperties(reservationDTO, this);
+	}
+
+	public static Gson createGsonInstance() {
+		return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+	}
 
 }

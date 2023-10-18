@@ -21,29 +21,25 @@ import lombok.ToString;
 @RedisHash(value = "storeList", timeToLive = 60 * 10) // 10분
 public class StoreListDTO {
 
-  // Sample Data
-  private static HashMap<String, Short> testStoreList = new HashMap<>();
-  private static StoreListDTO sample = StoreListDTO.builder().Address("testAddress").build();
+	// Sample Data
+	private static HashMap<String, Short> testStoreList = new HashMap<>();
+	private static StoreListDTO sample = StoreListDTO.builder().Address("testAddress").build();
 
-  
-  @Id
-  private String Address;
-  
+	@Id
+	private String Address;
 
-  // 가게 이름, 가게 아이디
-  private HashMap<String, Short> storeList;
+	// 가게 이름, 가게 아이디
+	private HashMap<String, Short> storeList;
 
-  
-  // getSample
-  public static StoreListDTO sample() {
-    if(testStoreList.size() == 0) {
-      testStoreList.put("Name1", (short) 1);
-    }
-    if(sample.getStoreList() == null) {
-      sample.setStoreList(testStoreList);
-    }
-    return sample;
-  }
+	// getSample
+	public static StoreListDTO sample() {
+		if (testStoreList.size() == 0) {
+			testStoreList.put("Name1", (short) 1);
+		}
+		if (sample.getStoreList() == null) {
+			sample.setStoreList(testStoreList);
+		}
+		return sample;
+	}
 
 }
-

@@ -17,28 +17,26 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class BoardResultDTO {
 
-  private static final BoardResultDTO sample =
-      BoardResultDTO.builder().boardId(0).userId("userId").title("title").content("content")
-          .comment("comment").rating(5.0).boardImage(new byte[10]).build();
+	private static final BoardResultDTO sample = BoardResultDTO.builder().boardId(0).userId("userId").title("title")
+			.content("content").comment("comment").rating(5.0).encoded_boardImage("image").build();
 
-  private int boardId;
+	private int boardId;
 
-  private short storeId;
+	private short storeId;
 
-  private String userId;
+	private String userId;
 
-  private String title;
+	private String title;
 
-  private String content;
+	private String content;
 
-  private String comment;
+	private String comment;
 
-  private double rating;
+	private double rating;
 
-  private byte[] boardImage;
+	private String encoded_boardImage;
 
-
-  public static BoardResultDTO sample() {
-    return sample;
-  }
+	public static BoardResultDTO sample() {
+		return sample;
+	}
 }

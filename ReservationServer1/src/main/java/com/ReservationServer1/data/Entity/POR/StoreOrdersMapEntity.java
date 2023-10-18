@@ -30,26 +30,26 @@ import lombok.ToString;
 @Builder
 public class StoreOrdersMapEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int orderId;
-  
-  @Column(length = 20)
-  @NotNull
-  private String foodName;
-  
-  @NotNull
-  private short foodCount;
-  
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "orders_id")
-  @JsonBackReference
-  private StoreOrdersEntity storeOrdersEntity;
-  
-  public StoreOrdersMapEntity(String foodName, short foodCount, StoreOrdersEntity storeOrdersEntity) {
-    this.foodName = foodName;
-    this.foodCount = foodCount;
-    this.storeOrdersEntity = storeOrdersEntity;
-  }
-  
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int orderId;
+
+	@Column(length = 20)
+	@NotNull
+	private String foodName;
+
+	@NotNull
+	private short foodCount;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "orders_id")
+	@JsonBackReference
+	private StoreOrdersEntity storeOrdersEntity;
+
+	public StoreOrdersMapEntity(String foodName, short foodCount, StoreOrdersEntity storeOrdersEntity) {
+		this.foodName = foodName;
+		this.foodCount = foodCount;
+		this.storeOrdersEntity = storeOrdersEntity;
+	}
+
 }

@@ -27,39 +27,38 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class StoreBoardEntity {
 
-  private static final StoreBoardEntity sample =
-      StoreBoardEntity.builder().boardId((short) 0).userId("userId").title("title").content("content")
-          .comment("comment").boardImage(new byte[10]).rating(5.0).build();
+	private static final StoreBoardEntity sample = StoreBoardEntity.builder().boardId((short) 0).userId("userId")
+			.title("title").content("content").comment("comment").boardImage(new byte[10]).rating(5.0).build();
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int boardId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int boardId;
 
-  @NotNull
-  private short storeId;
+	@NotNull
+	private short storeId;
 
-  @NotNull
-  private String userId;
+	@NotNull
+	private String userId;
 
-  @Column(length = 20)
-  @NotNull
-  private String title;
+	@Column(length = 20)
+	@NotNull
+	private String title;
 
-  @Column(length = 50)
-  @NotNull
-  private String content;
+	@Column(length = 50)
+	@NotNull
+	private String content;
 
-  @Column(length = 50)
-  private String comment;
+	@Column(length = 50)
+	private String comment;
 
-  @Lob
-  private byte[] boardImage;
+	@Lob
+	private byte[] boardImage;
 
-  @NotNull
-  private double rating;
+	@NotNull
+	private double rating;
 
-  public static StoreBoardEntity sample() {
-    return sample;
-  }
+	public static StoreBoardEntity sample() {
+		return sample;
+	}
 
 }

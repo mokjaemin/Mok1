@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @Getter
 @Setter
 @ToString
@@ -21,30 +20,29 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class ModifyMemberDTO {
 
-  private static final ModifyMemberDTO sample = ModifyMemberDTO.builder().userPwd("testPwd")
-      .userName("testName").userNumber("testNumber").userAddress("testAddress").userEmail("testEmail").build();
+	private static final ModifyMemberDTO sample = ModifyMemberDTO.builder().userPwd("testPwd").userName("testName")
+			.userNumber("testNumber").userAddress("testAddress").userEmail("testEmail").build();
 
-  @NotNull
-  @Size(min=3, max=20)
-  private String userPwd;
+	@NotNull
+	@Size(min = 3, max = 20)
+	private String userPwd;
 
-  @NotNull
-  @Size(min=2, max=7)
-  private String userName;
+	@NotNull
+	@Size(min = 2, max = 7)
+	private String userName;
 
-  @NotNull
-  @Size(min=11, max=11)
-  private String userNumber;
+	@NotNull
+	@Size(min = 11, max = 11)
+	private String userNumber;
 
-  @NotNull
-  private String userAddress;
+	@NotNull
+	private String userAddress;
 
-  @NotNull
-  @Email
-  private String userEmail;
+	@NotNull
+	@Email
+	private String userEmail;
 
-
-  public static ModifyMemberDTO sample() {
-    return sample;
-  }
+	public static ModifyMemberDTO sample() {
+		return sample;
+	}
 }
