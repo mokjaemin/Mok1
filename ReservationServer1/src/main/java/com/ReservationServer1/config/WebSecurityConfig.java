@@ -85,6 +85,7 @@ public class WebSecurityConfig {
 				.requestMatchers(HttpMethod.DELETE, "/board").hasAuthority("ROLE_USER")
 				.requestMatchers(HttpMethod.GET, "/board").hasAuthority("ROLE_USER")
 				.requestMatchers(HttpMethod.GET, "/board/user").hasAuthority("ROLE_USER")
+				.requestMatchers(HttpMethod.GET, "/board/article").hasAuthority("ROLE_USER")
 				.requestMatchers(HttpMethod.POST, "/board/comment").hasAuthority("ROLE_OWNER")
 				.requestMatchers(HttpMethod.PUT, "/board/comment").hasAuthority("ROLE_OWNER")
 				.requestMatchers(HttpMethod.DELETE, "/board/comment").hasAuthority("ROLE_OWNER")

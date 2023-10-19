@@ -1,6 +1,7 @@
 package com.ReservationServer1.service;
 
-import java.util.List;
+import java.util.Map;
+
 import com.ReservationServer1.data.DTO.board.BoardDTO;
 import com.ReservationServer1.data.DTO.board.BoardResultDTO;
 
@@ -12,9 +13,11 @@ public interface StoreBoardService {
 
 	String deleteBoard(int boardId, String userId);
 
-	List<BoardResultDTO> getBoard(short storeId);
+	Map<String, Integer> getBoardListByStore(short storeId);
 
-	List<BoardResultDTO> getBoardByUser(String userId);
+	Map<String, Integer> getBoardListByUser(String userId);
+	
+	BoardResultDTO getFullBoard(int boardId);
 
 	String registerBoardComment(int boardId, String comment, String storeId);
 

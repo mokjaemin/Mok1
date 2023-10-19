@@ -84,12 +84,12 @@ public class StorePORServiceImpl implements StorePORService {
 	}
 
 	@Override
-	public int getCouponClient(short storeId, String userId) {
-		return storePORDAO.getCouponClient(storeId, userId);
+	public int getCouponOfClient(short storeId, String userId) {
+		return storePORDAO.getCouponOfClient(storeId, userId);
 	}
 
 	@Override
-	public HashMap<String, Integer> getCouponOwner(short storeId) {
-		return storePORDAO.getCouponOwner(storeId);
+	public HashMap<String, Integer> getCouponOfStore(short storeId) {
+		return storePORDAO.getCouponOfStore(storeId);
 	}
 }

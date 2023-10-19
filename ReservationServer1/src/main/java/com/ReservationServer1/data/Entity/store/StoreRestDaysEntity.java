@@ -20,9 +20,9 @@ import lombok.ToString;
 @Entity
 @Getter
 @Setter
-@ToString(exclude = "childSet")
+@ToString(exclude = "restDaysMap")
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false, exclude = "childSet")
+@EqualsAndHashCode(callSuper = false, exclude = "restDaysMap")
 @Table(name = "StoreRestDays")
 public class StoreRestDaysEntity extends BaseEntity {
 
@@ -34,7 +34,7 @@ public class StoreRestDaysEntity extends BaseEntity {
 	private short storeId;
 
 	@OneToMany(mappedBy = "storeRestDaysEntity", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-	private Set<StoreRestDaysMapEntity> childSet;
+	private Set<StoreRestDaysMapEntity> restDaysMap;
 
 	public StoreRestDaysEntity(short storeId) {
 		this.storeId = storeId;

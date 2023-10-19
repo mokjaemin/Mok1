@@ -1,4 +1,4 @@
-package com.ReservationServer1.exception;
+package com.ReservationServer1.exception.handler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.ReservationServer1.exception.ReservationException;
 
 @RestControllerAdvice
 public class ErrorHandler {

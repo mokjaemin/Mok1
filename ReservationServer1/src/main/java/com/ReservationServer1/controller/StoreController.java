@@ -38,7 +38,6 @@ public class StoreController {
 			@ApiResponse(responseCode = "404", description = "NOT FOUND"),
 			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
 	public ResponseEntity<String> registerStore(@Valid @RequestBody StoreDTO storeDTO, Authentication authentication) {
-		// JWT에서 Id추출해 ownerId 설정
 		storeDTO.setOwnerId(authentication.getName());
 		return ResponseEntity.status(HttpStatus.OK).body(storeService.registerStore(storeDTO));
 	}
@@ -56,7 +55,7 @@ public class StoreController {
 	}
 
 	@GetMapping
-	@Operation(summary = "가게 권한 인증 요청", description = "가게 사장/손님 등 권한이 반환됩니다.", tags = { "Store Controller" })
+	@Operation(summary = "가게 권한 인증 요청", description = "가게 사장 권한이 반환됩니다.", tags = { "Store Controller" })
 	@ApiResponses({ @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
 			@ApiResponse(responseCode = "404", description = "NOT FOUND"),

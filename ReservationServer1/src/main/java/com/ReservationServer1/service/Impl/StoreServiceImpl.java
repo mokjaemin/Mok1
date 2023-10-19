@@ -2,8 +2,10 @@ package com.ReservationServer1.service.Impl;
 
 import java.util.HashMap;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import com.ReservationServer1.DAO.StoreDAO;
 import com.ReservationServer1.DAO.Cache.StoreListCache;
 import com.ReservationServer1.data.StoreType;
@@ -28,6 +30,9 @@ public class StoreServiceImpl implements StoreService {
 	}
 
 	public void setTestSecretKey(String secretKey) {
+		if(secretKey != null) {
+			return;
+		}
 		this.secretKey = secretKey;
 	}
 
@@ -40,28 +45,23 @@ public class StoreServiceImpl implements StoreService {
 	public HashMap<String, Short> getStoreList(String country, String city, String dong, StoreType type, int page,
 			int size) {
 
-		// Key
-		String address = country + city + dong + type + page + size;
+		String cacheKey = country + city + dong + type + page + size;
 
-		// Cache 체크
-		Optional<StoreListDTO> storeList = storeListCache.findById(address);
+		Optional<StoreListDTO> storeList = storeListCache.findById(cacheKey);
 
-		// Cache가 비어있다면 DB 검색
 		if (storeList.isEmpty() == true) {
 			HashMap<String, Short> new_storeList = storeDAO.getStoreList(country, city, dong, type, page, size);
-			StoreListDTO storeListDTO = new StoreListDTO(address, new_storeList);
+			StoreListDTO storeListDTO = new StoreListDTO(cacheKey, new_storeList);
 			storeListCache.save(storeListDTO);
 			return new_storeList;
 		}
-
-		// Cache 존재한다면 바로 반환
+		
 		return storeList.get().getStoreList();
 	}
 
 	@Override
 	public String loginStore(short storeId, String userId) {
 		String result = storeDAO.loginStore(storeId);
-		// NullPointException 방지
 		if (result != null && result.equals(userId)) {
 			return JWTutil.createJWT(String.valueOf(storeId), "OWNER", secretKey, expiredLoginMs);
 		}

@@ -25,31 +25,23 @@ public class JwtFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 
 		final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
-
-		// 토큰이 Null인 경우
 		if (authorization == null) {
 			filterChain.doFilter(request, response);
 			return;
 		}
 
 		String token = authorization.split(" ")[1];
-
-		// 토큰이 만료된 경우
 		if (JWTutil.isExpired(token, secretKey)) {
 			filterChain.doFilter(request, response);
 			return;
 		}
-		;
 
-		// 정보 추출
 		String userId = JWTutil.getUserId(token, secretKey);
 		String userRole = JWTutil.getUserRole(token, secretKey);
 
-		// userId, credentials, roll
 		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userId, "",
 				Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + userRole)));
 
-		// Detail Build
 		authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		filterChain.doFilter(request, response);

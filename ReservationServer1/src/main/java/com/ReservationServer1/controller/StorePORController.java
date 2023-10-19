@@ -17,7 +17,7 @@ import com.ReservationServer1.data.DTO.POR.OrderDTO;
 import com.ReservationServer1.data.DTO.POR.PayDTO;
 import com.ReservationServer1.data.DTO.POR.ReservationDTO;
 import com.ReservationServer1.data.Entity.POR.StoreReservationEntity;
-import com.ReservationServer1.exception.store.NoAuthorityException;
+import com.ReservationServer1.exception.NoAuthorityException;
 import com.ReservationServer1.service.StorePORService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -226,9 +226,9 @@ public class StorePORController {
 			@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
 			@ApiResponse(responseCode = "404", description = "NOT FOUND"),
 			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
-	public ResponseEntity<Integer> getCouponClient(@Valid @RequestParam short storeId, Authentication authentication) {
+	public ResponseEntity<Integer> getCouponOfClient(@Valid @RequestParam short storeId, Authentication authentication) {
 		return ResponseEntity.status(HttpStatus.OK)
-				.body(storePORService.getCouponClient(storeId, authentication.getName()));
+				.body(storePORService.getCouponOfClient(storeId, authentication.getName()));
 	}
 
 	@GetMapping("/coupon/owner")
@@ -238,8 +238,8 @@ public class StorePORController {
 			@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
 			@ApiResponse(responseCode = "404", description = "NOT FOUND"),
 			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
-	public ResponseEntity<HashMap<String, Integer>> getCouponOwner(Authentication authentication) {
+	public ResponseEntity<HashMap<String, Integer>> getCouponOfStore(Authentication authentication) {
 		return ResponseEntity.status(HttpStatus.OK)
-				.body(storePORService.getCouponOwner(Short.valueOf(authentication.getName())));
+				.body(storePORService.getCouponOfStore(Short.valueOf(authentication.getName())));
 	}
 }

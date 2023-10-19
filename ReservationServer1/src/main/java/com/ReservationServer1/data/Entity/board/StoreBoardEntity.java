@@ -1,5 +1,7 @@
 package com.ReservationServer1.data.Entity.board;
 
+import com.ReservationServer1.data.Entity.BaseEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,11 +26,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @Table(name = "StoreBoard")
-@EqualsAndHashCode
-public class StoreBoardEntity {
+@EqualsAndHashCode(callSuper = false)
+public class StoreBoardEntity extends BaseEntity{
 
 	private static final StoreBoardEntity sample = StoreBoardEntity.builder().boardId((short) 0).userId("userId")
-			.title("title").content("content").comment("comment").boardImage(new byte[10]).rating(5.0).build();
+			.title("title").content("content").comment("comment").boardImage(new byte[10]).rating(5.0).views(10)
+			.build();
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,6 +59,8 @@ public class StoreBoardEntity {
 
 	@NotNull
 	private double rating;
+
+	private int views;
 
 	public static StoreBoardEntity sample() {
 		return sample;

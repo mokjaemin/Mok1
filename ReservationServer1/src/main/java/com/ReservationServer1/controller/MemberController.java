@@ -76,13 +76,13 @@ public class MemberController {
 			@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
 			@ApiResponse(responseCode = "404", description = "NOT FOUND"),
 			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
-	public ResponseEntity<String> modPwdMember(@Valid @RequestBody String userPwd, Authentication authentication)
+	public ResponseEntity<String> updatePwdMember(@Valid @RequestBody String userPwd, Authentication authentication)
 			throws IOException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		JsonNode jsonNode = objectMapper.readTree(userPwd);
 		String new_userPwd = jsonNode.get("userPwd").asText();
 		return ResponseEntity.status(HttpStatus.OK)
-				.body(memberService.modPwdMember(authentication.getName(), new_userPwd));
+				.body(memberService.modifyPwdMember(authentication.getName(), new_userPwd));
 	}
 
 	@PutMapping("/info")
@@ -92,10 +92,10 @@ public class MemberController {
 			@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
 			@ApiResponse(responseCode = "404", description = "NOT FOUND"),
 			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
-	public ResponseEntity<String> modInfoMember(@Valid @RequestBody ModifyMemberDTO modifyMemberDTO,
+	public ResponseEntity<String> updateInfoMember(@Valid @RequestBody ModifyMemberDTO modifyMemberDTO,
 			Authentication authentication) {
 		return ResponseEntity.status(HttpStatus.OK)
-				.body(memberService.modInfoMember(authentication.getName(), modifyMemberDTO));
+				.body(memberService.modifyInfoMember(authentication.getName(), modifyMemberDTO));
 	}
 
 	@DeleteMapping
@@ -104,13 +104,13 @@ public class MemberController {
 			@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
 			@ApiResponse(responseCode = "404", description = "NOT FOUND"),
 			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
-	public ResponseEntity<String> delMember(@Valid @RequestBody String userPwd, Authentication authentication)
+	public ResponseEntity<String> deleteMember(@Valid @RequestBody String userPwd, Authentication authentication)
 			throws IOException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		JsonNode jsonNode = objectMapper.readTree(userPwd);
 		String new_userPwd = jsonNode.get("userPwd").asText();
 		return ResponseEntity.status(HttpStatus.OK)
-				.body(memberService.delMember(authentication.getName(), new_userPwd));
+				.body(memberService.deleteMember(authentication.getName(), new_userPwd));
 	}
 
 	@PostMapping("/search")

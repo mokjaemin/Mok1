@@ -19,21 +19,21 @@ public interface StoreInfoDAO {
 
 	StoreTimeInfoEntity getTimeInfo(short storeId);
 
-	String modTimeInfo(StoreTimeInfoDTO storeTimeInfoDTO);
+	String updateTimeInfo(StoreTimeInfoDTO storeTimeInfoDTO);
 
 	String deleteTimeInfo(short storeId);
 
-	String registerTableInfo(StoreTableInfoEntity storeTableInfoEntity);
+	String registerTableInfo(StoreTableInfoEntity tableInfo);
 
-	String modTableInfo(StoreTableInfoEntity storeTableInfoEntity);
+	String updateTableInfo(StoreTableInfoEntity tableInfo);
 
 	String deleteTableInfo(short storeId);
 
-	String registerFoodsInfo(StoreFoodsInfoEntity storeFoodsInfoEntity);
+	String registerFoodsInfo(StoreFoodsInfoEntity foodsInfo);
 
 	List<StoreFoodsInfoEntity> getFoodsInfo(short storeId);
 
-	String modFoodsInfo(StoreFoodsInfoEntity storeFoodsInfoEntity);
+	String updateFoodsInfo(StoreFoodsInfoEntity foodsInfo);
 
 	String deleteFoodsInfo(short storeId, String foodName);
 }

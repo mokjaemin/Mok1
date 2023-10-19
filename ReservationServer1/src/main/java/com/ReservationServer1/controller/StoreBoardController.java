@@ -2,6 +2,8 @@ package com.ReservationServer1.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -14,11 +16,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.ReservationServer1.data.DTO.board.BoardDTO;
 import com.ReservationServer1.data.DTO.board.BoardResultDTO;
+import com.ReservationServer1.data.Entity.board.StoreBoardEntity;
 import com.ReservationServer1.service.StoreBoardService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -73,23 +78,33 @@ public class StoreBoardController {
 	}
 
 	@GetMapping
-	@Operation(summary = "가게별 후기 출력 요청", description = "가게 후기가 출력됩니다.", tags = { "Store Board Controller" })
+	@Operation(summary = "가게별 후기 리스트 출력 요청", description = "가게 후기 리스트가 출력됩니다.", tags = { "Store Board Controller" })
 	@ApiResponses({ @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
 			@ApiResponse(responseCode = "404", description = "NOT FOUND"),
 			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
-	public ResponseEntity<List<BoardResultDTO>> getBoard(@Valid @RequestParam short storeId) {
-		return ResponseEntity.status(HttpStatus.OK).body(storeBoardService.getBoard(storeId));
+	public ResponseEntity<Map<String, Integer>> getBoardListByStore(@Valid @RequestParam short storeId) {
+		return ResponseEntity.status(HttpStatus.OK).body(storeBoardService.getBoardListByStore(storeId));
 	}
 
 	@GetMapping("/user")
-	@Operation(summary = "개인별 후기 출력 요청", description = "개인별 가게 후기가 출력됩니다.", tags = { "Store Board Controller" })
+	@Operation(summary = "개인별 후기 리스트 출력 요청", description = "개인별 가게 후기 리스트가 출력됩니다.", tags = { "Store Board Controller" })
 	@ApiResponses({ @ApiResponse(responseCode = "200", description = "OK"),
 			@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
 			@ApiResponse(responseCode = "404", description = "NOT FOUND"),
 			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
-	public ResponseEntity<List<BoardResultDTO>> getBoardByUser(Authentication authentication) {
-		return ResponseEntity.status(HttpStatus.OK).body(storeBoardService.getBoardByUser(authentication.getName()));
+	public ResponseEntity<Map<String, Integer>> getBoardListByUser(Authentication authentication) {
+		return ResponseEntity.status(HttpStatus.OK).body(storeBoardService.getBoardListByUser(authentication.getName()));
+	}
+	
+	@GetMapping("/article")
+	@Operation(summary = "게시글 상세 출력 요청", description = "게시글 상세 출력됩니다.", tags = { "Store Board Controller" })
+	@ApiResponses({ @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+			@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
+	public ResponseEntity<BoardResultDTO> getFullBoard(int boardId) {
+		return ResponseEntity.status(HttpStatus.OK).body(storeBoardService.getFullBoard(boardId));
 	}
 
 	@PostMapping("/comment")
@@ -102,9 +117,9 @@ public class StoreBoardController {
 			Authentication authentication) throws IOException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		JsonNode jsonNode = objectMapper.readTree(comment);
-		String new_comment = jsonNode.get("comment").asText();
+		String Comment = jsonNode.get("comment").asText();
 		return ResponseEntity.status(HttpStatus.OK)
-				.body(storeBoardService.registerBoardComment(boardId, new_comment, authentication.getName()));
+				.body(storeBoardService.registerBoardComment(boardId, Comment, authentication.getName()));
 	}
 
 	@PutMapping("/comment")
@@ -117,9 +132,9 @@ public class StoreBoardController {
 			Authentication authentication) throws IOException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		JsonNode jsonNode = objectMapper.readTree(comment);
-		String new_comment = jsonNode.get("comment").asText();
+		String Comment = jsonNode.get("comment").asText();
 		return ResponseEntity.status(HttpStatus.OK)
-				.body(storeBoardService.updateBoardComment(boardId, new_comment, authentication.getName()));
+				.body(storeBoardService.updateBoardComment(boardId, Comment, authentication.getName()));
 	}
 
 	@DeleteMapping("/comment")

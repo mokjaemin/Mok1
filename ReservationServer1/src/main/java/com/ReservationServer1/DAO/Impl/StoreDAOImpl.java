@@ -1,11 +1,16 @@
 package com.ReservationServer1.DAO.Impl;
 
 import static com.ReservationServer1.data.Entity.store.QStoreEntity.storeEntity;
+
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.ReservationServer1.DAO.StoreDAO;
 import com.ReservationServer1.data.StoreType;
 import com.ReservationServer1.data.DTO.store.StoreListResultDTO;
@@ -13,6 +18,7 @@ import com.ReservationServer1.data.Entity.store.StoreEntity;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import jakarta.persistence.EntityManager;
 
 @Repository("StoreDAO")
@@ -37,18 +43,15 @@ public class StoreDAOImpl implements StoreDAO {
 	public HashMap<String, Short> getStoreList(String country, String city, String dong, StoreType type, int page,
 			int size) {
 
-		// DTO로 받기 & 동적 쿼리 생성
-		List<StoreListResultDTO> stores = queryFactory
+		List<StoreListResultDTO> storeList = queryFactory
 				.select(Projections.fields(StoreListResultDTO.class, storeEntity.storeId, storeEntity.storeName))
 				.from(storeEntity).where(eqCountry(country), eqCity(city), eqDong(dong), eqType(type)).limit(size)
-				.offset(page * size).orderBy(storeEntity.storeName.asc()).fetch();
+				.offset(page * size).fetch();
 
-		// 결과 HashMap
-		HashMap<String, Short> result = new HashMap<>();
-		for (StoreListResultDTO store : stores) {
-			result.put(store.getStoreName(), store.getStoreId());
-		}
-		return result;
+		return storeList.stream().sorted(Comparator.comparing((StoreListResultDTO dto) -> dto.getStoreName()))
+				.collect(Collectors.toMap(StoreListResultDTO::getStoreName, StoreListResultDTO::getStoreId,
+						(existing, replacement) -> existing, HashMap::new));
+
 	}
 
 	@Override
@@ -58,7 +61,6 @@ public class StoreDAOImpl implements StoreDAO {
 		return ownerId;
 	}
 
-	// 동적 쿼리 메서드
 	private BooleanExpression eqCountry(String country) {
 		if (StringUtils.isEmpty(country)) {
 			return null;

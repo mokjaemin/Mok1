@@ -19,84 +19,32 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
-
 @DataJpaTest
 @ActiveProfiles("test")
 @Transactional
 public class DBPractice {
 
+	@Autowired
+	private TestEntityManager testEntityManager;
 
-  @Autowired
-  private TestEntityManager testEntityManager;
+	private JPAQueryFactory queryFactory;
 
-  private JPAQueryFactory queryFactory;
+	private EntityManager em;
 
-  private EntityManager em;
+	@BeforeEach
+	void init() {
+		em = testEntityManager.getEntityManager();
+		queryFactory = new JPAQueryFactory(em);
+	}
 
+	@Test
+	@DisplayName("Practice")
+	public void Test1() {
 
+		
 
-  @BeforeEach
-  void init() {
-    em = testEntityManager.getEntityManager();
-    queryFactory = new JPAQueryFactory(em);
-  }
+	}
 
-
-  @Test
-  @DisplayName("Entity 자제 Test")
-  public void Test1() {
-
-    // 예약 저장
-    StoreReservationEntity reservation = StoreReservationEntity.builder().userId("userId").build();
-    em.persist(reservation);
-
-    // 동기화
-    em.flush();
-    em.clear();
-
-    // 예약 조회
-    StoreReservationEntity reservation1 =
-        queryFactory.select(storeReservationEntity).from(storeReservationEntity)
-            .where(storeReservationEntity.userId.eq("userId")).fetchFirst();
-
-
-    // 주문 저장 - 예약의 Id만 활용
-    StoreOrdersEntity orders = StoreOrdersEntity.builder().build();
-    orders.setStoreReservationEntity(
-        StoreReservationEntity.builder().reservationId(reservation1.getReservationId()).build());
-    em.persist(orders);
-
-    // 동기화
-    em.flush();
-    em.clear();
-
-
-    // 예약 조회
-    StoreReservationEntity reservation2 =
-        queryFactory.select(storeReservationEntity).from(storeReservationEntity)
-        .leftJoin(storeReservationEntity.child, storeOrdersEntity).fetchJoin()
-            .where(storeReservationEntity.userId.eq("userId")).fetchFirst();
-
-    // 동기화
-    em.flush();
-    em.clear();
-
-    // 주문 조회
-    StoreOrdersEntity orders1 =
-        queryFactory.select(storeOrdersEntity).from(storeOrdersEntity).fetchFirst();
-
-    // 검증
-    assertTrue(reservation2.getChild().getOrdersId() == orders1.getOrdersId());
-
-
-    em.flush();
-    em.clear();
-
-    ReservationDTO dto =
-        queryFactory.select(Projections.fields(ReservationDTO.class, storeReservationEntity.storeId,
-            Expressions.asString("date").as("date"), storeReservationEntity.time,
-            storeReservationEntity.storeTable)).from(storeReservationEntity).fetchFirst();
-
-  }
+	
 
 }

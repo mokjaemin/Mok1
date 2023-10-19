@@ -1,10 +1,12 @@
 package com.ReservationServer1.service.Impl;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
+
 import com.ReservationServer1.DAO.StoreInfoDAO;
 import com.ReservationServer1.data.DTO.store.StoreFoodsInfoDTO;
 import com.ReservationServer1.data.DTO.store.StoreFoodsInfoResultDTO;
@@ -52,8 +54,8 @@ public class StoreInfoServiceImpl implements StoreInfoService {
 	}
 
 	@Override
-	public String modTimeInfo(StoreTimeInfoDTO timeInfoDTO) {
-		return storeInfoDAO.modTimeInfo(timeInfoDTO);
+	public String updateTimeInfo(StoreTimeInfoDTO timeInfoDTO) {
+		return storeInfoDAO.updateTimeInfo(timeInfoDTO);
 	}
 
 	@Override
@@ -64,22 +66,22 @@ public class StoreInfoServiceImpl implements StoreInfoService {
 	@Override
 	public String registerTableInfo(StoreTableInfoDTO storeTableInfoDTO) {
 		try {
-			StoreTableInfoEntity storeTableInfoEntity = StoreTableInfoEntity.builder()
+			StoreTableInfoEntity tableInfo = StoreTableInfoEntity.builder()
 					.storeId(storeTableInfoDTO.getStoreId()).count(storeTableInfoDTO.getCount())
 					.tableImage(storeTableInfoDTO.getTableImage().getBytes()).build();
-			return storeInfoDAO.registerTableInfo(storeTableInfoEntity);
+			return storeInfoDAO.registerTableInfo(tableInfo);
 		} catch (IOException e) {
 			return "FILE UPLOAD FAIL";
 		}
 	}
 
 	@Override
-	public String modTableInfo(StoreTableInfoDTO storeTableInfoDTO) {
+	public String updateTableInfo(StoreTableInfoDTO storeTableInfoDTO) {
 		try {
-			StoreTableInfoEntity storeTableInfoEntity = StoreTableInfoEntity.builder()
+			StoreTableInfoEntity tableInfo = StoreTableInfoEntity.builder()
 					.storeId(storeTableInfoDTO.getStoreId()).count(storeTableInfoDTO.getCount())
 					.tableImage(storeTableInfoDTO.getTableImage().getBytes()).build();
-			return storeInfoDAO.modTableInfo(storeTableInfoEntity);
+			return storeInfoDAO.updateTableInfo(tableInfo);
 		} catch (IOException e) {
 			return "FILE UPLOAD FAIL";
 		}
@@ -93,12 +95,12 @@ public class StoreInfoServiceImpl implements StoreInfoService {
 	@Override
 	public String registerFoodsInfo(StoreFoodsInfoDTO storeFoodsInfoDTO) {
 		try {
-			StoreFoodsInfoEntity storeFoodsInfoEntity = StoreFoodsInfoEntity.builder()
+			StoreFoodsInfoEntity foodsInfo = StoreFoodsInfoEntity.builder()
 					.storeId(storeFoodsInfoDTO.getStoreId()).foodName(storeFoodsInfoDTO.getFoodName())
 					.foodDescription(storeFoodsInfoDTO.getFoodDescription())
 					.foodImage(storeFoodsInfoDTO.getFoodImage().getBytes()).foodPrice(storeFoodsInfoDTO.getFoodPrice())
 					.build();
-			return storeInfoDAO.registerFoodsInfo(storeFoodsInfoEntity);
+			return storeInfoDAO.registerFoodsInfo(foodsInfo);
 		} catch (IOException e) {
 			return "FILE UPLOAD FAIL";
 		}
@@ -106,27 +108,25 @@ public class StoreInfoServiceImpl implements StoreInfoService {
 
 	@Override
 	public List<StoreFoodsInfoResultDTO> getFoodsInfo(short storeId) {
-		List<StoreFoodsInfoResultDTO> result = new ArrayList<>();
-		List<StoreFoodsInfoEntity> storeFoodsInfoEntity = storeInfoDAO.getFoodsInfo(storeId);
-		for (StoreFoodsInfoEntity entity : storeFoodsInfoEntity) {
-			byte[] foodImage = entity.getFoodImage();
-			String encoded_image = Base64.getEncoder().encodeToString(foodImage);
-			StoreFoodsInfoResultDTO dto = entity.toStoreFoodsInfoResultDTO();
-			dto.setEncoded_image(encoded_image);
-			result.add(dto);
-		}
-		return result;
+
+		return storeInfoDAO.getFoodsInfo(storeId).stream().map(foodsInfo -> {
+			String encoded_image = Base64.getEncoder().encodeToString(foodsInfo.getFoodImage());
+			StoreFoodsInfoResultDTO foodsInfoDTO = foodsInfo.toStoreFoodsInfoResultDTO();
+			foodsInfoDTO.setEncoded_image(encoded_image);
+			return foodsInfoDTO;
+		}).collect(Collectors.toList());
+
 	}
 
 	@Override
-	public String modFoodsInfo(StoreFoodsInfoDTO storeFoodsInfoDTO) {
+	public String updateFoodsInfo(StoreFoodsInfoDTO storeFoodsInfoDTO) {
 		try {
-			StoreFoodsInfoEntity storeFoodsInfoEntity = StoreFoodsInfoEntity.builder()
+			StoreFoodsInfoEntity foodsInfo = StoreFoodsInfoEntity.builder()
 					.storeId(storeFoodsInfoDTO.getStoreId()).foodName(storeFoodsInfoDTO.getFoodName())
 					.foodDescription(storeFoodsInfoDTO.getFoodDescription())
 					.foodImage(storeFoodsInfoDTO.getFoodImage().getBytes()).foodPrice(storeFoodsInfoDTO.getFoodPrice())
 					.build();
-			return storeInfoDAO.modFoodsInfo(storeFoodsInfoEntity);
+			return storeInfoDAO.updateFoodsInfo(foodsInfo);
 		} catch (IOException e) {
 			return "FILE UPLOAD FAIL";
 		}

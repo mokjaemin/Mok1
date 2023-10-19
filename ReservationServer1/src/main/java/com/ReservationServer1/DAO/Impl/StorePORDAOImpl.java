@@ -5,10 +5,13 @@ import static com.ReservationServer1.data.Entity.POR.QStoreOrdersEntity.storeOrd
 import static com.ReservationServer1.data.Entity.POR.QStoreOrdersMapEntity.storeOrdersMapEntity;
 import static com.ReservationServer1.data.Entity.POR.QStorePayEntity.storePayEntity;
 import static com.ReservationServer1.data.Entity.POR.QStoreReservationEntity.storeReservationEntity;
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Repository;
+
 import com.ReservationServer1.DAO.StorePORDAO;
 import com.ReservationServer1.data.DTO.POR.OrderDTO;
 import com.ReservationServer1.data.DTO.POR.PayDTO;
@@ -18,9 +21,10 @@ import com.ReservationServer1.data.Entity.POR.StoreOrdersEntity;
 import com.ReservationServer1.data.Entity.POR.StoreOrdersMapEntity;
 import com.ReservationServer1.data.Entity.POR.StorePayEntity;
 import com.ReservationServer1.data.Entity.POR.StoreReservationEntity;
-import com.ReservationServer1.exception.store.NoAuthorityException;
-import com.ReservationServer1.exception.store.NoInformationException;
+import com.ReservationServer1.exception.NoAuthorityException;
+import com.ReservationServer1.exception.NoInformationException;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
@@ -37,41 +41,45 @@ public class StorePORDAOImpl implements StorePORDAO {
 
 	@Override
 	public String registerReservation(ReservationDTO reservationDTO, String userId) {
-		StoreReservationEntity storeReservationEntity = new StoreReservationEntity(reservationDTO);
-		storeReservationEntity.setUserId(userId);
-		entityManager.persist(storeReservationEntity);
+
+		StoreReservationEntity reservation = new StoreReservationEntity(reservationDTO);
+		reservation.setUserId(userId);
+		entityManager.persist(reservation);
 		return "success";
 	}
 
 	@Override
 	public String updateReservation(ReservationDTO reservationDTO, String userId) {
-		StoreReservationEntity entity = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
+
+		StoreReservationEntity reservation = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
 				.where(storeReservationEntity.storeId.eq(reservationDTO.getStoreId())
 						.and(storeReservationEntity.userId.eq(userId)))
 				.fetchFirst();
-		entity.setDate(reservationDTO.getDate());
-		entity.setTime(reservationDTO.getTime());
-		entity.setStoreTable(reservationDTO.getStoreTable());
+		reservation.setDate(reservationDTO.getDate());
+		reservation.setTime(reservationDTO.getTime());
+		reservation.setStoreTable(reservationDTO.getStoreTable());
 		return "success";
 	}
 
 	@Override
 	public StoreReservationEntity getReservation(short storeId, String userId) {
-		StoreReservationEntity result = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
+
+		StoreReservationEntity reservation = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
 				.leftJoin(storeReservationEntity.child, storeOrdersEntity).fetchJoin()
 				.leftJoin(storeOrdersEntity.payment, storePayEntity).fetchJoin()
-				.leftJoin(storeOrdersEntity.childSet, storeOrdersMapEntity).fetchJoin()
+				.leftJoin(storeOrdersEntity.ordersMap, storeOrdersMapEntity).fetchJoin()
 				.where(storeReservationEntity.storeId.eq(storeId).and(storeReservationEntity.userId.eq(userId)))
 				.fetchFirst();
 
-		if (result == null) {
+		if (reservation == null) {
 			throw new NoInformationException();
 		}
-		return result;
+		return reservation;
 	}
 
 	@Override
 	public String deleteReservation(short storeId, String userId) {
+
 		queryFactory.delete(storeReservationEntity)
 				.where(storeReservationEntity.storeId.eq(storeId).and(storeReservationEntity.userId.eq(userId)))
 				.execute();
@@ -81,30 +89,27 @@ public class StorePORDAOImpl implements StorePORDAO {
 	@Override
 	public String registerOrder(OrderDTO orderDTO, String userId) {
 
-		// Reservation ID 조회
 		Integer reservationId = queryFactory.select(storeReservationEntity.reservationId).from(storeReservationEntity)
 				.where(storeReservationEntity.userId.eq(userId)
 						.and(storeReservationEntity.storeId.eq(orderDTO.getStoreId())))
 				.fetchFirst();
 
-		// 정보가 없는 경우
 		if (reservationId == null) {
 			throw new NoInformationException();
 		}
 
-		// ID로 객체 생성 -> 조인 -> 저장
-		StoreReservationEntity grandfa = StoreReservationEntity.builder().reservationId(reservationId).build();
-		StoreOrdersEntity father = new StoreOrdersEntity(grandfa);
-		entityManager.persist(father);
+		StoreReservationEntity reservation = StoreReservationEntity.builder().reservationId(reservationId).build();
+		StoreOrdersEntity orders = new StoreOrdersEntity(reservation);
+		entityManager.persist(orders);
 
-		// 객체 생성 -> 조인 -> 저장
-		List<StoreOrdersMapEntity> childs = new ArrayList<>();
-		for (String foodName : orderDTO.getOrderInfo().keySet()) {
-			StoreOrdersMapEntity child = new StoreOrdersMapEntity(foodName, orderDTO.getOrderInfo().get(foodName),
-					father);
-			entityManager.persist(child);
-			childs.add(child);
-		}
+		List<StoreOrdersMapEntity> ordersMapList = orderDTO.getOrderInfo().keySet().stream().map(foodName -> {
+			StoreOrdersMapEntity ordersMap = new StoreOrdersMapEntity(foodName, orderDTO.getOrderInfo().get(foodName),
+					orders);
+			entityManager.persist(ordersMap);
+			return ordersMap;
+		}).toList();
+
+		orders.setOrdersMap(ordersMapList);
 
 		return "success";
 	}
@@ -112,52 +117,48 @@ public class StorePORDAOImpl implements StorePORDAO {
 	@Override
 	public String updateOrder(OrderDTO orderDTO, String userId) {
 
-		// 주문 정보 불러옴
-		StoreReservationEntity entity = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
+		StoreReservationEntity reservation = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
 				.leftJoin(storeReservationEntity.child, storeOrdersEntity).fetchJoin()
-				.leftJoin(storeOrdersEntity.childSet, storeOrdersMapEntity).fetchJoin()
+				.leftJoin(storeOrdersEntity.ordersMap, storeOrdersMapEntity).fetchJoin()
 				.where(storeReservationEntity.storeId.eq(orderDTO.getStoreId())
 						.and(storeReservationEntity.userId.eq(userId)))
 				.fetchFirst();
 
-		// 정보가 없는 경우
-		if (entity == null) {
+		if (reservation == null) {
 			throw new NoInformationException();
 		}
 
-		// 정보 변경
-		for (StoreOrdersMapEntity child : entity.getChild().getChildSet()) {
-			for (String foodName : orderDTO.getOrderInfo().keySet()) {
-				if (child.getFoodName().equals(foodName)) {
-					child.setFoodCount(orderDTO.getOrderInfo().get(foodName));
-				}
-			}
-		}
+		reservation.getChild().getOrdersMap().forEach(ordersMap -> {
+			orderDTO.getOrderInfo().keySet().stream().filter(foodName -> ordersMap.getFoodName().equals(foodName))
+					.forEach(foodName -> {
+						ordersMap.setFoodCount(orderDTO.getOrderInfo().get(foodName));
+					});
+		});
+
 		return "success";
 	}
 
 	@Override
 	public String deleteOrder(short storeId, String foodName, String userId) {
 
-		// 주문 정보 불러옴
-		StoreReservationEntity entity = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
+		StoreReservationEntity reservation = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
 				.leftJoin(storeReservationEntity.child, storeOrdersEntity).fetchJoin()
-				.leftJoin(storeOrdersEntity.childSet, storeOrdersMapEntity).fetchJoin()
+				.leftJoin(storeOrdersEntity.ordersMap, storeOrdersMapEntity).fetchJoin()
 				.where(storeReservationEntity.storeId.eq(storeId).and(storeReservationEntity.userId.eq(userId)))
 				.fetchFirst();
 
-		// 정보가 없는 경우
-		if (entity == null) {
+		if (reservation == null) {
 			throw new NoInformationException();
 		}
 
-		// 삭제
-		queryFactory.delete(storeOrdersMapEntity).where(storeOrdersMapEntity.storeOrdersEntity.ordersId
-				.eq(entity.getChild().getOrdersId()).and(storeOrdersMapEntity.foodName.eq(foodName))).execute();
+		queryFactory
+				.delete(storeOrdersMapEntity).where(storeOrdersMapEntity.storeOrdersEntity.ordersId
+						.eq(reservation.getChild().getOrdersId()).and(storeOrdersMapEntity.foodName.eq(foodName)))
+				.execute();
 		return "success";
 	}
 
-	// 수정 필요 - DTO로 받기
+	// -- DTO로 받기 --
 	@Override
 	public String registerPay(PayDTO payDTO) {
 
@@ -171,25 +172,19 @@ public class StorePORDAOImpl implements StorePORDAO {
 			throw new NoInformationException();
 		}
 
-		// Pay Entity 저장
-		StorePayEntity entity = StorePayEntity.builder().amount(payDTO.getAmount()).build();
-		entity.setStoreOrdersEntity(StoreOrdersEntity.builder().ordersId(reservation.getChild().getOrdersId()).build());
-		entityManager.persist(entity);
+		StorePayEntity pay = StorePayEntity.builder().amount(payDTO.getAmount()).build();
+		pay.setStoreOrdersEntity(StoreOrdersEntity.builder().ordersId(reservation.getChild().getOrdersId()).build());
+		entityManager.persist(pay);
 
-		// 쿠폰 증가
 		StoreCouponEntity coupon = queryFactory.select(storeCouponEntity).from(storeCouponEntity)
 				.where(storeCouponEntity.userId.eq(reservation.getUserId()).and(storeCouponEntity.storeId.eq(storeId)))
 				.fetchFirst();
 
-		// 쿠폰 정보 없는 경우
 		if (coupon == null) {
 			StoreCouponEntity newCoupon = StoreCouponEntity.builder().storeId(storeId).userId(reservation.getUserId())
 					.amount(1).build();
 			entityManager.persist(newCoupon);
-		}
-
-		// 있는 경우
-		else {
+		} else {
 			coupon.setAmount(coupon.getAmount() + 1);
 		}
 
@@ -198,16 +193,18 @@ public class StorePORDAOImpl implements StorePORDAO {
 
 	@Override
 	public String deletePay(int reservationId) {
-		StoreReservationEntity result = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
+
+		StoreReservationEntity reservation = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
 				.leftJoin(storeReservationEntity.child, storeOrdersEntity).fetchJoin()
 				.leftJoin(storeOrdersEntity.payment, storePayEntity).fetchJoin()
 				.where(storeReservationEntity.reservationId.eq(reservationId)).fetchFirst();
-		queryFactory.delete(storePayEntity)
-				.where(storePayEntity.paymentId.eq(result.getChild().getPayment().getPaymentId())).execute();
 
-		// 쿠폰 감소
-		StoreCouponEntity coupon = queryFactory.select(storeCouponEntity).from(storeCouponEntity).where(
-				storeCouponEntity.userId.eq(result.getUserId()).and(storeCouponEntity.storeId.eq(result.getStoreId())))
+		queryFactory.delete(storePayEntity)
+				.where(storePayEntity.paymentId.eq(reservation.getChild().getPayment().getPaymentId())).execute();
+
+		StoreCouponEntity coupon = queryFactory
+				.select(storeCouponEntity).from(storeCouponEntity).where(storeCouponEntity.userId
+						.eq(reservation.getUserId()).and(storeCouponEntity.storeId.eq(reservation.getStoreId())))
 				.fetchFirst();
 		coupon.setAmount(coupon.getAmount() - 1);
 		return "success";
@@ -216,17 +213,17 @@ public class StorePORDAOImpl implements StorePORDAO {
 	@Override
 	public String registerComment(int reservationId, String comment, String userId) {
 
-		StoreReservationEntity entity = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
+		StoreReservationEntity reservation = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
 				.leftJoin(storeReservationEntity.child, storeOrdersEntity).fetchJoin()
 				.leftJoin(storeOrdersEntity.payment, storePayEntity).fetchJoin()
 				.where(storeReservationEntity.reservationId.eq(reservationId)).fetchFirst();
 
-		if (!userId.equals(entity.getUserId())) {
+		if (!userId.equals(reservation.getUserId())) {
 			throw new NoAuthorityException();
 		}
 
-		StorePayEntity child = entity.getChild().getPayment();
-		child.setComment(comment);
+		StorePayEntity pay = reservation.getChild().getPayment();
+		pay.setComment(comment);
 
 		return "success";
 	}
@@ -234,17 +231,17 @@ public class StorePORDAOImpl implements StorePORDAO {
 	@Override
 	public String deleteComment(int reservationId, String userId) {
 
-		StoreReservationEntity entity = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
+		StoreReservationEntity reservation = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
 				.leftJoin(storeReservationEntity.child, storeOrdersEntity).fetchJoin()
 				.leftJoin(storeOrdersEntity.payment, storePayEntity).fetchJoin()
 				.where(storeReservationEntity.reservationId.eq(reservationId)).fetchFirst();
 
-		if (!userId.equals(entity.getUserId())) {
+		if (!userId.equals(reservation.getUserId())) {
 			throw new NoAuthorityException();
 		}
 
-		StorePayEntity child = entity.getChild().getPayment();
-		child.setComment(null);
+		StorePayEntity pay = reservation.getChild().getPayment();
+		pay.setComment(null);
 
 		return "success";
 	}
@@ -252,17 +249,17 @@ public class StorePORDAOImpl implements StorePORDAO {
 	@Override
 	public String registerBigComment(int reservationId, String bigcomment, short storeId) {
 
-		StoreReservationEntity entity = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
+		StoreReservationEntity reservation = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
 				.leftJoin(storeReservationEntity.child, storeOrdersEntity).fetchJoin()
 				.leftJoin(storeOrdersEntity.payment, storePayEntity).fetchJoin()
 				.where(storeReservationEntity.reservationId.eq(reservationId)).fetchFirst();
 
-		if (storeId != entity.getStoreId()) {
+		if (storeId != reservation.getStoreId()) {
 			throw new NoAuthorityException();
 		}
 
-		StorePayEntity child = entity.getChild().getPayment();
-		child.setBigComment(bigcomment);
+		StorePayEntity pay = reservation.getChild().getPayment();
+		pay.setBigComment(bigcomment);
 
 		return "success";
 	}
@@ -270,44 +267,42 @@ public class StorePORDAOImpl implements StorePORDAO {
 	@Override
 	public String deleteBigComment(int reservationId, short storeId) {
 
-		StoreReservationEntity entity = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
+		StoreReservationEntity reservation = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
 				.leftJoin(storeReservationEntity.child, storeOrdersEntity).fetchJoin()
 				.leftJoin(storeOrdersEntity.payment, storePayEntity).fetchJoin()
 				.where(storeReservationEntity.reservationId.eq(reservationId)).fetchFirst();
 
-		if (storeId != entity.getStoreId()) {
+		if (storeId != reservation.getStoreId()) {
 			throw new NoAuthorityException();
 		}
 
-		StorePayEntity child = entity.getChild().getPayment();
-		child.setBigComment(null);
+		StorePayEntity pay = reservation.getChild().getPayment();
+		pay.setBigComment(null);
 
 		return "success";
 	}
 
 	@Override
-	public int getCouponClient(short storeId, String userId) {
+	public int getCouponOfClient(short storeId, String userId) {
 
-		StoreCouponEntity entity = queryFactory.select(storeCouponEntity).from(storeCouponEntity)
+		int couponAmount = queryFactory.select(storeCouponEntity.amount).from(storeCouponEntity)
 				.where(storeCouponEntity.storeId.eq(storeId).and(storeCouponEntity.userId.eq(userId))).fetchFirst();
 
-		return entity.getAmount();
+		return couponAmount;
 	}
 
 	@Override
-	public HashMap<String, Integer> getCouponOwner(short storeId) {
+	public HashMap<String, Integer> getCouponOfStore(short storeId) {
 
-		List<StoreCouponEntity> entity = queryFactory.select(storeCouponEntity).from(storeCouponEntity)
+		List<StoreCouponEntity> couponList = queryFactory.select(storeCouponEntity).from(storeCouponEntity)
 				.where(storeCouponEntity.storeId.eq(storeId)).fetch();
 
-		if (entity.size() == 0 | entity == null) {
+		if (couponList.size() == 0 | couponList == null) {
 			throw new NoInformationException();
 		}
 
-		HashMap<String, Integer> result = new HashMap<>();
-		for (StoreCouponEntity now : entity) {
-			result.put(now.getUserId(), now.getAmount());
-		}
+		HashMap<String, Integer> result = couponList.stream().collect(Collectors.toMap(StoreCouponEntity::getUserId,
+				StoreCouponEntity::getAmount, (existing, replacement) -> existing, HashMap::new));
 		return result;
 	}
 }

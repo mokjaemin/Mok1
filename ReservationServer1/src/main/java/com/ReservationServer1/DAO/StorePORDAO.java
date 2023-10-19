@@ -34,7 +34,7 @@ public interface StorePORDAO {
 
 	String deleteBigComment(int reservationId, short storeId);
 
-	int getCouponClient(short storeId, String userId);
+	int getCouponOfClient(short storeId, String userId);
 
-	HashMap<String, Integer> getCouponOwner(short storeId);
+	HashMap<String, Integer> getCouponOfStore(short storeId);
 }

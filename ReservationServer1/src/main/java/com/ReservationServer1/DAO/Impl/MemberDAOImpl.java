@@ -1,24 +1,31 @@
 package com.ReservationServer1.DAO.Impl;
 
 import static com.ReservationServer1.data.Entity.member.QMemberEntity.memberEntity;
+
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.ReservationServer1.DAO.MemberDAO;
 import com.ReservationServer1.data.DTO.member.LoginDTO;
 import com.ReservationServer1.data.DTO.member.ModifyMemberDTO;
 import com.ReservationServer1.data.DTO.member.SearchMemberDTO;
 import com.ReservationServer1.data.Entity.member.MemberEntity;
-import com.ReservationServer1.exception.member.BadEmailException;
-import com.ReservationServer1.exception.member.BadPwdException;
-import com.ReservationServer1.exception.member.ExistIDException;
+import com.ReservationServer1.exception.ExistIDException;
+import com.ReservationServer1.exception.NoInformationException;
+import com.ReservationServer1.exception.NotCoincideEmailException;
+import com.ReservationServer1.exception.NotCoincidePwdException;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import jakarta.persistence.EntityManager;
 
 @Repository("MemberDAO")
@@ -29,6 +36,7 @@ public class MemberDAOImpl implements MemberDAO {
 	private final JPAQueryFactory queryFactory;
 	private final EntityManager entityManager;
 
+	
 	public MemberDAOImpl(BCryptPasswordEncoder passwordEncoder, JPAQueryFactory queryFactory,
 			EntityManager entityManager) {
 		this.passwordEncoder = passwordEncoder;
@@ -36,77 +44,67 @@ public class MemberDAOImpl implements MemberDAO {
 		this.entityManager = entityManager;
 	}
 
-	// 회원등록
 	@Override
-	public String registerMember(MemberEntity entity) {
-		String user_id = entity.getUserId();
-		// ID 존재 여부 확인
-		Integer exist_id = queryFactory.selectOne().from(memberEntity).where(memberEntity.userId.eq(user_id))
+	public String registerMember(MemberEntity member) {
+		
+		String userId = member.getUserId();
+		Integer existId = queryFactory.selectOne().from(memberEntity).where(memberEntity.userId.eq(userId))
 				.fetchFirst();
-		// 이미 존재하는 아이디 처리
-		if (exist_id != null) {
-			throw new ExistIDException(true);
+		if (existId != null) {
+			throw new ExistIDException();
 		}
-		// 회원정보 저장
-		entity.setUserPwd(passwordEncoder.encode(entity.getUserPwd()));
-		entityManager.persist(entity);
+		member.setUserPwd(passwordEncoder.encode(member.getUserPwd()));
+		entityManager.persist(member);
 		return "success";
 	}
 
-	// 로그인
 	public void loginMember(LoginDTO loginDTO) {
-		// 비밀번호 조회
-		String get_pwd = queryFactory.select(memberEntity.userPwd).from(memberEntity)
+		
+		String getPwd = queryFactory.select(memberEntity.userPwd).from(memberEntity)
 				.where(memberEntity.userId.eq(loginDTO.getUserId())).fetchFirst();
-		// ID 존재하지 않음
-		if (get_pwd == null) {
-			throw new ExistIDException(false);
+		if (getPwd == null) {
+			throw new NoInformationException();
 		}
-		// 비밀번호 불일치
-		if (!passwordEncoder.matches(loginDTO.getUserPwd(), get_pwd)) {
-			throw new BadPwdException();
+		if (!passwordEncoder.matches(loginDTO.getUserPwd(), getPwd)) {
+			throw new NotCoincidePwdException();
 		}
 	}
 
-	// 비밀번호 찾기
 	public void findPwdMember(String userId, String userEmail) {
-		// Email 조회
-		String get_email = queryFactory.select(memberEntity.userEmail).from(memberEntity)
+		
+		String getEmail = queryFactory.select(memberEntity.userEmail).from(memberEntity)
 				.where(memberEntity.userId.eq(userId)).fetchFirst();
-		// 존재하지 않는 아이디
-		if (get_email == null) {
-			throw new ExistIDException(false);
+		if (getEmail == null) {
+			throw new NoInformationException();
 		}
 		// 이메일 정보 불일치
-		if (!get_email.equals(userEmail)) {
-			throw new BadEmailException();
+		if (!getEmail.equals(getEmail)) {
+			throw new NotCoincideEmailException();
 		}
 	}
 
 	// 비밀번호 수정
 	@Override
-	public String modPwdMember(String userId, String userPwd) {
-		// 아이디 존재 여부 확인
-		Integer exist_id = queryFactory.selectOne().from(memberEntity).where(memberEntity.userId.eq(userId))
+	public String modifyPwdMember(String userId, String userPwd) {
+
+		Integer existId = queryFactory.selectOne().from(memberEntity).where(memberEntity.userId.eq(userId))
 				.fetchFirst();
-		if (exist_id == null) {
-			throw new ExistIDException(false);
+		if (existId == null) {
+			throw new NoInformationException();
 		}
-		// 비밀번호 수정
-		String encoded_pwd = passwordEncoder.encode(userPwd);
-		queryFactory.update(memberEntity).set(memberEntity.userPwd, encoded_pwd).where(memberEntity.userId.eq(userId))
+		String encodedPwd = passwordEncoder.encode(userPwd);
+		queryFactory.update(memberEntity).set(memberEntity.userPwd, encodedPwd).where(memberEntity.userId.eq(userId))
 				.execute();
 		return "success";
 	}
 
-	// 회원정보 수정
 	@Override
-	public String modInfoMember(String userId, ModifyMemberDTO modifyMemberDTO) {
-		// 아이디 존재 여부 확인
-		Integer exist_id = queryFactory.selectOne().from(memberEntity).where(memberEntity.userId.eq(userId))
+	public String modifyInfoMember(String userId, ModifyMemberDTO modifyMemberDTO) {
+		
+		Integer existId = queryFactory.selectOne().from(memberEntity).where(memberEntity.userId.eq(userId))
 				.fetchFirst();
-		if (exist_id == null) {
-			throw new ExistIDException(false);
+		if (existId == null) {
+			throw new NoInformationException();
 		}
 		// 정보 수정
 		String encoded_pwd = passwordEncoder.encode(modifyMemberDTO.getUserPwd());
@@ -119,21 +117,21 @@ public class MemberDAOImpl implements MemberDAO {
 		return "success";
 	}
 
-	// 회원정보 삭제
+	
 	@Override
-	public String delMember(String userId, String userPwd) {
-		// 비밀번호 조회
+	public String deleteMember(String userId, String userPwd) {
+
 		String getPwd = queryFactory.select(memberEntity.userPwd).from(memberEntity)
 				.where(memberEntity.userId.eq(userId)).fetchFirst();
-		// 존재하지 않는 아이디
+		
 		if (getPwd == null) {
-			throw new ExistIDException(false);
+			throw new NoInformationException();
 		}
-		// 비밀번호 불일치
+		
 		if (!passwordEncoder.matches(userPwd, getPwd)) {
-			throw new BadPwdException();
+			throw new NotCoincidePwdException();
 		}
-		// 회원정보 삭제
+
 		queryFactory.delete(memberEntity).where(memberEntity.userId.eq(userId)).execute();
 		return "success";
 	}
@@ -141,7 +139,6 @@ public class MemberDAOImpl implements MemberDAO {
 	@Override
 	public List<SearchMemberDTO> searchMember(SearchMemberDTO member) {
 
-		// 아이디가 존재한다면 아이디로 조회
 		if (member.getUserId() != null) {
 			SearchMemberDTO dto = queryFactory
 					.select(Projections.fields(SearchMemberDTO.class,
@@ -153,20 +150,21 @@ public class MemberDAOImpl implements MemberDAO {
 			return result;
 		}
 
-		// 동적 쿼리 생성 및 결과 반환
-		List<SearchMemberDTO> result = queryFactory
+		List<SearchMemberDTO> memberList = queryFactory
 				.select(Projections.fields(SearchMemberDTO.class, memberEntity.userId, memberEntity.userName,
 						memberEntity.userNumber, memberEntity.userAddress, memberEntity.userEmail))
 				.from(memberEntity)
 				.where(eqUserId(member.getUserId()), eqUserName(member.getUserName()),
 						eqUserNumber(member.getUserNumber()), eqUserAddress(member.getUserAddress()),
 						eqUserEmail(member.getUserEmail()))
-				.orderBy(memberEntity.userId.asc(), memberEntity.userName.asc()).fetch();
+				.fetch();
 
-		return result;
+		
+		return memberList.stream().sorted(
+				Comparator.comparing((SearchMemberDTO dto) -> dto.getUserId()).thenComparing(dto -> dto.getUserName()))
+				.collect(Collectors.toList());
 	}
 
-	// 동적 쿼리 메서드
 	private BooleanExpression eqUserId(String userId) {
 		if (StringUtils.isEmpty(userId)) {
 			return null;

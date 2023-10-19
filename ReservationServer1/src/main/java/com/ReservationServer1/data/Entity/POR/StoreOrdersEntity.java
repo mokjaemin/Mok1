@@ -24,9 +24,9 @@ import lombok.ToString;
 @Setter
 @AllArgsConstructor
 @Builder
-@ToString(exclude = { "childSet", "payment" })
+@ToString(exclude = { "ordersMap", "payment" })
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = { "childSet", "payment" })
+@EqualsAndHashCode(exclude = { "ordersMap", "payment" })
 @Table(name = "StoreOrders")
 public class StoreOrdersEntity {
 
@@ -40,7 +40,7 @@ public class StoreOrdersEntity {
 	private StoreReservationEntity storeReservationEntity;
 
 	@OneToMany(mappedBy = "storeOrdersEntity", fetch = FetchType.LAZY)
-	private List<StoreOrdersMapEntity> childSet;
+	private List<StoreOrdersMapEntity> ordersMap;
 
 	@OneToOne(mappedBy = "storeOrdersEntity", fetch = FetchType.LAZY)
 	private StorePayEntity payment;

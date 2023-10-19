@@ -24,7 +24,7 @@ public class MemberServiceImpl implements MemberService {
 	private final MemberDAO memberDAO;
 	private final Environment env;
 	private final Long expiredLoginMs = 1000 * 60 * 30l; // 30분
-	private final Long expiredPwdMs = 1000 * 60 * 5l; // 5분
+	private final Long expiredFindPwdMs = 1000 * 60 * 5l; // 5분
 
 	public MemberServiceImpl(MemberDAO memberDAO, JavaMailSender emailSender, Environment env) {
 		this.memberDAO = memberDAO;
@@ -54,7 +54,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public String findPwdMember(String userId, String userEmail) {
 		memberDAO.findPwdMember(userId, userEmail);
-		String token = JWTutil.createJWT(userId, "PWD", secretKey, expiredPwdMs);
+		String token = JWTutil.createJWT(userId, "PWD", secretKey, expiredFindPwdMs);
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setFrom(env.getProperty("spring.mail.username"));
 		message.setTo(userEmail);
@@ -65,18 +65,18 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public String modPwdMember(String userId, String userPwd) {
-		return memberDAO.modPwdMember(userId, userPwd);
+	public String modifyPwdMember(String userId, String userPwd) {
+		return memberDAO.modifyPwdMember(userId, userPwd);
 	}
 
 	@Override
-	public String modInfoMember(String userId, ModifyMemberDTO modifyMemberDTO) {
-		return memberDAO.modInfoMember(userId, modifyMemberDTO);
+	public String modifyInfoMember(String userId, ModifyMemberDTO modifyMemberDTO) {
+		return memberDAO.modifyInfoMember(userId, modifyMemberDTO);
 	}
 
 	@Override
-	public String delMember(String userId, String userPwd) {
-		return memberDAO.delMember(userId, userPwd);
+	public String deleteMember(String userId, String userPwd) {
+		return memberDAO.deleteMember(userId, userPwd);
 	}
 
 	@Override

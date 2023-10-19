@@ -10,6 +10,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 @Configuration
 public class RedisCacheConfig implements CacheConfig {
 
+	
 	@Value("${spring.data.redis.host}")
 	private String host;
 

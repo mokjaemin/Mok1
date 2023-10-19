@@ -9,6 +9,8 @@ import static com.ReservationServer1.data.Entity.store.QStoreTimeInfoMapEntity.s
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import com.ReservationServer1.DAO.StoreInfoDAO;
@@ -20,7 +22,7 @@ import com.ReservationServer1.data.Entity.store.StoreRestDaysMapEntity;
 import com.ReservationServer1.data.Entity.store.StoreTableInfoEntity;
 import com.ReservationServer1.data.Entity.store.StoreTimeInfoEntity;
 import com.ReservationServer1.data.Entity.store.StoreTimeInfoMapEntity;
-import com.ReservationServer1.exception.store.NoInformationException;
+import com.ReservationServer1.exception.NoInformationException;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
@@ -39,129 +41,117 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 	@Override
 	public String registerDayOff(StoreRestDayDTO restDayDTO) {
 
-		// 부모 생성
-		StoreRestDaysEntity parent = new StoreRestDaysEntity(restDayDTO.getStoreId());
+		StoreRestDaysEntity restDays = new StoreRestDaysEntity(restDayDTO.getStoreId());
 
-		// 부모 저장
-		entityManager.persist(parent);
+		entityManager.persist(restDays);
 
-		// 자식 생성
-		Set<StoreRestDaysMapEntity> childs = new HashSet<>();
-		for (String date : restDayDTO.getDate()) {
-			// 자식 생성
-			StoreRestDaysMapEntity child = new StoreRestDaysMapEntity(date, parent);
+		Set<StoreRestDaysMapEntity> restDaysMapList = restDayDTO.getDate().stream().map(date -> {
+			StoreRestDaysMapEntity restDaysMap = new StoreRestDaysMapEntity(date, restDays);
+			entityManager.persist(restDaysMap);
+			return restDaysMap;
+		}).collect(Collectors.toSet());
 
-			// 자식 저장
-			entityManager.persist(child);
-			childs.add(child);
-		}
-
-		// 부모-자식 연결
-		parent.setChildSet(childs);
+		restDays.setRestDaysMap(restDaysMapList);
 		return "success";
 	}
 
 	@Override
 	public List<String> getDayOff(short storeId) {
-		List<String> resultList = queryFactory.selectDistinct(storeRestDaysMapEntity.date).from(storeRestDaysMapEntity)
+
+		List<String> dateList = queryFactory.selectDistinct(storeRestDaysMapEntity.date).from(storeRestDaysMapEntity)
 				.leftJoin(storeRestDaysMapEntity.storeRestDaysEntity, storeRestDaysEntity)
-				.where(storeRestDaysEntity.storeId.eq(storeId)).orderBy(storeRestDaysMapEntity.date.asc()).fetch();
-		// 정보 없음
-		if (resultList == null | resultList.size() == 0) {
+				.where(storeRestDaysEntity.storeId.eq(storeId)).fetch();
+
+		if (dateList == null | dateList.size() == 0) {
 			throw new NoInformationException();
 		}
-		return resultList;
+
+		List<String> result = dateList.stream().sorted().toList();
+		return result;
 	}
 
 	// Cascade로 설정
 	@Override
 	public String deleteDayOff(short storeId) {
-		List<StoreRestDaysEntity> entities = queryFactory.select(storeRestDaysEntity).from(storeRestDaysEntity)
-				.leftJoin(storeRestDaysEntity.childSet, storeRestDaysMapEntity).fetchJoin()
+
+		List<StoreRestDaysEntity> restDaysList = queryFactory.select(storeRestDaysEntity).from(storeRestDaysEntity)
+				.leftJoin(storeRestDaysEntity.restDaysMap, storeRestDaysMapEntity).fetchJoin()
 				.where(storeRestDaysEntity.storeId.eq(storeId)).fetch();
-		for (StoreRestDaysEntity entity : entities) {
-			for (StoreRestDaysMapEntity map : entity.getChildSet()) {
-				queryFactory.delete(storeRestDaysMapEntity).where(storeRestDaysMapEntity.dayId.eq(map.getDayId()))
-						.execute();
-			}
-			queryFactory.delete(storeRestDaysEntity).where(storeRestDaysEntity.daysId.eq(entity.getDaysId())).execute();
-		}
+
+		restDaysList.forEach(restDays -> {
+			restDays.getRestDaysMap().forEach(restDaysMap -> {
+				queryFactory.delete(storeRestDaysMapEntity)
+						.where(storeRestDaysMapEntity.dayId.eq(restDaysMap.getDayId())).execute();
+			});
+
+			queryFactory.delete(storeRestDaysEntity).where(storeRestDaysEntity.daysId.eq(restDays.getDaysId()))
+					.execute();
+		});
+
 		return "success";
 	}
 
 	@Override
 	public String registerTimeInfo(StoreTimeInfoDTO storeTimeInfoDTO) {
 
-		// 부모 객체 생성
-		StoreTimeInfoEntity parent = StoreTimeInfoEntity.builder().startTime(storeTimeInfoDTO.getStartTime())
+		StoreTimeInfoEntity timeInfo = StoreTimeInfoEntity.builder().startTime(storeTimeInfoDTO.getStartTime())
 				.endTime(storeTimeInfoDTO.getEndTime()).intervalTime(storeTimeInfoDTO.getIntervalTime())
 				.storeId(storeTimeInfoDTO.getStoreId()).build();
 
-		// 부모 테이블 저장
-		entityManager.persist(parent);
+		entityManager.persist(timeInfo);
 
-		// 자식들 컬렉션 생성
-		Set<StoreTimeInfoMapEntity> childs = new HashSet<>();
+		Set<StoreTimeInfoMapEntity> timeInfoMapList = storeTimeInfoDTO.getBreakTime().stream().map(breakTime -> {
+			StoreTimeInfoMapEntity timeInfoMap = StoreTimeInfoMapEntity.builder().time(breakTime)
+					.storeTimeInfoEntity(timeInfo).build();
+			entityManager.persist(timeInfoMap);
+			return timeInfoMap;
+		}).collect(Collectors.toSet());
 
-		for (String time : storeTimeInfoDTO.getBreakTime()) {
-			// 자식 객체 생성
-			StoreTimeInfoMapEntity child = StoreTimeInfoMapEntity.builder().time(time).storeTimeInfoEntity(parent)
-					.build();
+		timeInfo.setBreakTime(timeInfoMapList);
 
-			// 자식 테이블 저장
-			entityManager.persist(child);
-			childs.add(child);
-		}
-		// 부모테이블에 자식테이블 저장
-		parent.setBreakTime(childs);
 		return "success";
 	}
 
 	@Override
 	public StoreTimeInfoEntity getTimeInfo(short storeId) {
 
-		// 엔터티 호출
-		StoreTimeInfoEntity result = queryFactory.select(storeTimeInfoEntity).from(storeTimeInfoEntity)
+		StoreTimeInfoEntity timeInfo = queryFactory.select(storeTimeInfoEntity).from(storeTimeInfoEntity)
 				.leftJoin(storeTimeInfoEntity.breakTime, storeTimeInfoMapEntity).fetchJoin()
 				.where(storeTimeInfoMapEntity.storeTimeInfoEntity.storeId.eq(storeId))
 				.orderBy(storeTimeInfoMapEntity.time.asc()).fetchFirst();
 
-		if (result == null) {
+		if (timeInfo == null) {
 			throw new NoInformationException();
 		}
 
-		return result;
+		return timeInfo;
 	}
 
 	@Override
-	public String modTimeInfo(StoreTimeInfoDTO storeTimeInfoDTO) {
+	public String updateTimeInfo(StoreTimeInfoDTO storeTimeInfoDTO) {
 
-		// 부모 엔터티 수정
 		short storeId = storeTimeInfoDTO.getStoreId();
-		StoreTimeInfoEntity p_entity = queryFactory.select(storeTimeInfoEntity).from(storeTimeInfoEntity)
+		StoreTimeInfoEntity timeInfo = queryFactory.select(storeTimeInfoEntity).from(storeTimeInfoEntity)
 				.where(storeTimeInfoEntity.storeId.eq(storeId)).fetchFirst();
 
-		// 정보 없음
-		if (p_entity == null) {
+		if (timeInfo == null) {
 			throw new NoInformationException();
 		}
 
-		// 자식 엔터티 삭제 및 추가
-		queryFactory.delete(storeTimeInfoMapEntity).where(storeTimeInfoMapEntity.storeTimeInfoEntity.eq(p_entity))
+		queryFactory.delete(storeTimeInfoMapEntity).where(storeTimeInfoMapEntity.storeTimeInfoEntity.eq(timeInfo))
 				.execute();
+		
+		Set<StoreTimeInfoMapEntity> timeInfoMapList = storeTimeInfoDTO.getBreakTime().stream().map(breakTime -> {
+			StoreTimeInfoMapEntity timeInfoMap = StoreTimeInfoMapEntity.builder().time(breakTime)
+					.storeTimeInfoEntity(timeInfo).build();
+			entityManager.persist(timeInfoMap);
+			return timeInfoMap;
+		}).collect(Collectors.toSet());
 
-		Set<StoreTimeInfoMapEntity> childs = new HashSet<>();
-		for (String breakTime : storeTimeInfoDTO.getBreakTime()) {
-			StoreTimeInfoMapEntity child = StoreTimeInfoMapEntity.builder().time(breakTime)
-					.storeTimeInfoEntity(p_entity).build();
-			entityManager.persist(child);
-			childs.add(child);
-		}
-
-		p_entity.setStartTime(storeTimeInfoDTO.getStartTime());
-		p_entity.setEndTime(storeTimeInfoDTO.getEndTime());
-		p_entity.setIntervalTime(storeTimeInfoDTO.getIntervalTime());
-		p_entity.setBreakTime(childs);
+		timeInfo.setStartTime(storeTimeInfoDTO.getStartTime());
+		timeInfo.setEndTime(storeTimeInfoDTO.getEndTime());
+		timeInfo.setIntervalTime(storeTimeInfoDTO.getIntervalTime());
+		timeInfo.setBreakTime(timeInfoMapList);
 
 		return "success";
 	}
@@ -169,29 +159,30 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 	// Cascade로 설정
 	@Override
 	public String deleteTimeInfo(short storeId) {
-		// 시간 Id 반환
-		int times_id = queryFactory.select(storeTimeInfoEntity.timesId).from(storeTimeInfoEntity)
+
+		int timesId = queryFactory.select(storeTimeInfoEntity.timesId).from(storeTimeInfoEntity)
 				.where(storeTimeInfoEntity.storeId.eq(storeId)).fetchFirst();
-		// 시간 정보 삭제
+
 		queryFactory.delete(storeTimeInfoMapEntity)
-				.where(storeTimeInfoMapEntity.storeTimeInfoEntity.timesId.eq(times_id)).execute();
-		queryFactory.delete(storeTimeInfoEntity).where(storeTimeInfoEntity.timesId.eq(times_id)).execute();
+				.where(storeTimeInfoMapEntity.storeTimeInfoEntity.timesId.eq(timesId)).execute();
+
+		queryFactory.delete(storeTimeInfoEntity).where(storeTimeInfoEntity.timesId.eq(timesId)).execute();
 		return "success";
 	}
 
 	@Override
-	public String registerTableInfo(StoreTableInfoEntity storeTableInfoEntity) {
-		entityManager.persist(storeTableInfoEntity);
+	public String registerTableInfo(StoreTableInfoEntity tableInfo) {
+		entityManager.persist(tableInfo);
 		return "success";
 	}
 
 	// 서브 쿼리로 설정하자 - (update - select)
 	@Override
-	public String modTableInfo(StoreTableInfoEntity newData) {
-		StoreTableInfoEntity originalTable = queryFactory.select(storeTableInfoEntity).from(storeTableInfoEntity)
-				.where(storeTableInfoEntity.storeId.eq(newData.getStoreId())).fetchFirst();
-		originalTable.setCount(newData.getCount());
-		originalTable.setTableImage(newData.getTableImage());
+	public String updateTableInfo(StoreTableInfoEntity tableInfo) {
+		StoreTableInfoEntity getTableInfo = queryFactory.select(storeTableInfoEntity).from(storeTableInfoEntity)
+				.where(storeTableInfoEntity.storeId.eq(tableInfo.getStoreId())).fetchFirst();
+		getTableInfo.setCount(tableInfo.getCount());
+		getTableInfo.setTableImage(tableInfo.getTableImage());
 		return "success";
 	}
 
@@ -202,38 +193,36 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 	}
 
 	@Override
-	public String registerFoodsInfo(StoreFoodsInfoEntity storeFoodsInfoEntity) {
-		entityManager.persist(storeFoodsInfoEntity);
+	public String registerFoodsInfo(StoreFoodsInfoEntity foodsInfo) {
+		entityManager.persist(foodsInfo);
 		return "success";
 	}
 
 	@Override
 	public List<StoreFoodsInfoEntity> getFoodsInfo(short storeId) {
-		List<StoreFoodsInfoEntity> result = queryFactory.select(storeFoodsInfoEntity).from(storeFoodsInfoEntity)
+
+		List<StoreFoodsInfoEntity> foodsInfo = queryFactory.select(storeFoodsInfoEntity).from(storeFoodsInfoEntity)
 				.where(storeFoodsInfoEntity.storeId.eq(storeId)).fetch();
-		// 음식 데이터 없음
-		if (result == null | result.size() == 0) {
+		if (foodsInfo == null | foodsInfo.size() == 0) {
 			throw new NoInformationException();
 		}
-		return result;
+		return foodsInfo;
 	}
 
 	// 서브 쿼리로 설정하자 - (update - select)
 	@Override
-	public String modFoodsInfo(StoreFoodsInfoEntity new_entity) {
-		StoreFoodsInfoEntity origin_entity = queryFactory
+	public String updateFoodsInfo(StoreFoodsInfoEntity foodsInfo) {
+		StoreFoodsInfoEntity getFoodsInfo = queryFactory
 				.select(storeFoodsInfoEntity).from(storeFoodsInfoEntity).where(storeFoodsInfoEntity.storeId
-						.eq(new_entity.getStoreId()).and(storeFoodsInfoEntity.foodName.eq(new_entity.getFoodName())))
+						.eq(foodsInfo.getStoreId()).and(storeFoodsInfoEntity.foodName.eq(foodsInfo.getFoodName())))
 				.fetchFirst();
-		// 기존 데이터 없음
-		if (origin_entity == null) {
+		if (getFoodsInfo == null) {
 			throw new NoInformationException();
 		}
-		// 데이터 수정
-		origin_entity.setFoodName(new_entity.getFoodName());
-		origin_entity.setFoodDescription(new_entity.getFoodDescription());
-		origin_entity.setFoodPrice(new_entity.getFoodPrice());
-		origin_entity.setFoodImage(new_entity.getFoodImage());
+		getFoodsInfo.setFoodName(foodsInfo.getFoodName());
+		getFoodsInfo.setFoodDescription(foodsInfo.getFoodDescription());
+		getFoodsInfo.setFoodPrice(foodsInfo.getFoodPrice());
+		getFoodsInfo.setFoodImage(foodsInfo.getFoodImage());
 		return "success";
 	}
 

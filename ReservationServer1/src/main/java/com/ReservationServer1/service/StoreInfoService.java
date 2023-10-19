@@ -22,14 +22,14 @@ public interface StoreInfoService {
 
 	StoreTimeInfoEntity getTimeInfo(short storeId);
 
-	String modTimeInfo(StoreTimeInfoDTO timeInfoDTO);
+	String updateTimeInfo(StoreTimeInfoDTO timeInfoDTO);
 
 	String deleteTimeInfo(short storeId);
 
 	// TABLE INFO
 	String registerTableInfo(StoreTableInfoDTO storeTableInfoDTO);
 
-	String modTableInfo(StoreTableInfoDTO storeTableInfoDTO);
+	String updateTableInfo(StoreTableInfoDTO storeTableInfoDTO);
 
 	String deleteTableInfo(short storeId);
 
@@ -38,7 +38,7 @@ public interface StoreInfoService {
 
 	List<StoreFoodsInfoResultDTO> getFoodsInfo(short storeId);
 
-	String modFoodsInfo(StoreFoodsInfoDTO storeFoodsInfoDTO);
+	String updateFoodsInfo(StoreFoodsInfoDTO storeFoodsInfoDTO);
 
 	String deleteFoodsInfo(short storeId, String foodName);
 }

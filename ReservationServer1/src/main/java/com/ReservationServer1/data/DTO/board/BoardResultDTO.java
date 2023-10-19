@@ -34,7 +34,10 @@ public class BoardResultDTO {
 
 	private double rating;
 
+	private int views;
+	
 	private String encoded_boardImage;
+	
 
 	public static BoardResultDTO sample() {
 		return sample;

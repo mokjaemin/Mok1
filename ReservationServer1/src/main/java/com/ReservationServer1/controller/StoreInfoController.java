@@ -21,7 +21,7 @@ import com.ReservationServer1.data.DTO.store.StoreRestDayDTO;
 import com.ReservationServer1.data.DTO.store.StoreTableInfoDTO;
 import com.ReservationServer1.data.DTO.store.StoreTimeInfoDTO;
 import com.ReservationServer1.data.Entity.store.StoreTimeInfoEntity;
-import com.ReservationServer1.exception.store.NoAuthorityException;
+import com.ReservationServer1.exception.NoAuthorityException;
 import com.ReservationServer1.service.StoreInfoService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -111,12 +111,12 @@ public class StoreInfoController {
 			@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
 			@ApiResponse(responseCode = "404", description = "NOT FOUND"),
 			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
-	public ResponseEntity<String> modTimeInfo(@Valid @RequestBody StoreTimeInfoDTO timeInfoDTO,
+	public ResponseEntity<String> updateTimeInfo(@Valid @RequestBody StoreTimeInfoDTO timeInfoDTO,
 			Authentication authentication) {
 		if (!authentication.getName().equals(String.valueOf(timeInfoDTO.getStoreId()))) {
 			throw new NoAuthorityException();
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.modTimeInfo(timeInfoDTO));
+		return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.updateTimeInfo(timeInfoDTO));
 	}
 
 	@DeleteMapping("/time")
@@ -154,12 +154,12 @@ public class StoreInfoController {
 			@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
 			@ApiResponse(responseCode = "404", description = "NOT FOUND"),
 			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
-	public ResponseEntity<String> modTableInfo(@Valid @ModelAttribute StoreTableInfoDTO storeTableInfoDTO,
+	public ResponseEntity<String> updateTableInfo(@Valid @ModelAttribute StoreTableInfoDTO storeTableInfoDTO,
 			Authentication authentication) {
 		if (!authentication.getName().equals(String.valueOf(storeTableInfoDTO.getStoreId()))) {
 			throw new NoAuthorityException();
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.modTableInfo(storeTableInfoDTO));
+		return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.updateTableInfo(storeTableInfoDTO));
 	}
 
 	@DeleteMapping("/table")
@@ -207,12 +207,12 @@ public class StoreInfoController {
 			@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
 			@ApiResponse(responseCode = "404", description = "NOT FOUND"),
 			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
-	public ResponseEntity<String> modFoodsInfo(@Valid @ModelAttribute StoreFoodsInfoDTO storeFoodsInfoDTO,
+	public ResponseEntity<String> updateFoodsInfo(@Valid @ModelAttribute StoreFoodsInfoDTO storeFoodsInfoDTO,
 			Authentication authentication) {
 		if (!authentication.getName().equals(String.valueOf(storeFoodsInfoDTO.getStoreId()))) {
 			throw new NoAuthorityException();
 		}
-		return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.modFoodsInfo(storeFoodsInfoDTO));
+		return ResponseEntity.status(HttpStatus.OK).body(storeInfoService.updateFoodsInfo(storeFoodsInfoDTO));
 	}
 
 	@DeleteMapping("/foods")

@@ -1,11 +1,10 @@
-package com.ReservationServer1.exception.store;
+package com.ReservationServer1.exception;
 
 import org.springframework.http.HttpStatus;
-import com.ReservationServer1.exception.ReservationException;
 
 public class NoAuthorityException extends RuntimeException implements ReservationException {
 
-	private static final long serialVersionUID = 5867172506387382920L;
+	private static final long serialVersionUID = 5867172506387382924L;
 	private static final String code = "400";
 	private static final HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
 	
@@ -20,12 +19,12 @@ public class NoAuthorityException extends RuntimeException implements Reservatio
 
 	@Override
 	public String getCode() {
-		return NoAuthorityException.code;
+		return code;
 	}
 
 	@Override
 	public HttpStatus getHttpStatus() {
-		return NoAuthorityException.httpStatus;
+		return httpStatus;
 	}
 
 }
