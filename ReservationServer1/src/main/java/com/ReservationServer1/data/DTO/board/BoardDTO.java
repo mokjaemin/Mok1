@@ -39,7 +39,7 @@ public class BoardDTO {
 
 	private MultipartFile foodImage;
 
-	public static BoardDTO sample() {
+	public static BoardDTO getSample() {
 		return sample;
 	}
 

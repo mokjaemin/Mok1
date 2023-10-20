@@ -5,17 +5,18 @@ import static com.ReservationServer1.data.Entity.board.QStoreBoardEntity.storeBo
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ReservationServer1.DAO.StoreBoardDAO;
+import com.ReservationServer1.data.DTO.board.BoardCountResultDTO;
 import com.ReservationServer1.data.DTO.board.BoardDTO;
+import com.ReservationServer1.data.DTO.board.BoardListResultDTO;
 import com.ReservationServer1.data.Entity.board.StoreBoardEntity;
 import com.ReservationServer1.exception.NoAuthorityException;
 import com.ReservationServer1.exception.NoInformationException;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import jakarta.persistence.EntityManager;
@@ -87,21 +88,19 @@ public class StoreBoardDAOImpl implements StoreBoardDAO {
 	}
 
 	@Override
-	public Map<String, Integer> getBoardListByStore(short storeId) {
-		List<StoreBoardEntity> boardList = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
-				.where(storeBoardEntity.storeId.eq(storeId)).fetch();
-		Map<String, Integer> result = boardList.stream()
-				.collect(Collectors.toMap(StoreBoardEntity::getTitle, StoreBoardEntity::getBoardId));
-		return result;
+	public List<BoardListResultDTO> getBoardListByStore(short storeId) {
+		List<BoardListResultDTO> boardListResult = queryFactory
+				.select(Projections.fields(BoardListResultDTO.class, storeBoardEntity.title, storeBoardEntity.boardId))
+				.from(storeBoardEntity).where(storeBoardEntity.storeId.eq(storeId)).fetch();
+		return boardListResult;
 	}
 
 	@Override
-	public Map<String, Integer> getBoardListByUser(String userId) {
-		List<StoreBoardEntity> boardList = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
-				.where(storeBoardEntity.userId.eq(userId)).fetch();
-		Map<String, Integer> result = boardList.stream()
-				.collect(Collectors.toMap(StoreBoardEntity::getTitle, StoreBoardEntity::getBoardId));
-		return result;
+	public List<BoardListResultDTO> getBoardListByUser(String userId) {
+		List<BoardListResultDTO> boardListResult = queryFactory
+				.select(Projections.fields(BoardListResultDTO.class, storeBoardEntity.title, storeBoardEntity.boardId))
+				.from(storeBoardEntity).where(storeBoardEntity.userId.eq(userId)).fetch();
+		return boardListResult;
 	}
 
 	@Override
@@ -113,6 +112,17 @@ public class StoreBoardDAOImpl implements StoreBoardDAO {
 		}
 		board.setViews(board.getViews() + 1);
 		return board;
+	}
+
+	@Override
+	public List<BoardCountResultDTO> getBoardCountByUserOfStore(short storeId) {
+		List<BoardCountResultDTO> countResult = queryFactory
+				.select(Projections.fields(BoardCountResultDTO.class, storeBoardEntity.userId,
+						storeBoardEntity.count().as("count")))
+				.from(storeBoardEntity).where(storeBoardEntity.storeId.eq(storeId))
+				.groupBy(storeBoardEntity.userId)
+				.fetch();
+		return countResult;
 	}
 
 	@Override

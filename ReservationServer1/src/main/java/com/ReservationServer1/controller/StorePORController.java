@@ -231,7 +231,7 @@ public class StorePORController {
 				.body(storePORService.getCouponOfClient(storeId, authentication.getName()));
 	}
 
-	@GetMapping("/coupon/owner")
+	@GetMapping("/coupon/store")
 	@Operation(summary = "가게별 전체 회원 쿠폰정보 출력 요청", description = "가게별 전체 회원 쿠폰정보가 출력됩니다.", tags = {
 			"Store Reservation Order Payment Coupon Controller" })
 	@ApiResponses({ @ApiResponse(responseCode = "200", description = "OK"),

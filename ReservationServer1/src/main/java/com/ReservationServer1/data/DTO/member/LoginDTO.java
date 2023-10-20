@@ -29,7 +29,7 @@ public class LoginDTO {
 	@Size(min = 3, max = 20)
 	private String userPwd;
 
-	public static LoginDTO sample() {
+	public static LoginDTO getSample() {
 		return sample;
 	}
 }

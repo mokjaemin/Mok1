@@ -20,8 +20,8 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class ModifyMemberDTO {
 
-	private static final ModifyMemberDTO sample = ModifyMemberDTO.builder().userPwd("testPwd").userName("testName")
-			.userNumber("testNumber").userAddress("testAddress").userEmail("testEmail").build();
+	private static final ModifyMemberDTO sample = ModifyMemberDTO.builder().userPwd("testPwd").userName("name")
+			.userNumber("01234567891").userAddress("testAddress").userEmail("test@Email").build();
 
 	@NotNull
 	@Size(min = 3, max = 20)
@@ -42,7 +42,7 @@ public class ModifyMemberDTO {
 	@Email
 	private String userEmail;
 
-	public static ModifyMemberDTO sample() {
+	public static ModifyMemberDTO getSample() {
 		return sample;
 	}
 }

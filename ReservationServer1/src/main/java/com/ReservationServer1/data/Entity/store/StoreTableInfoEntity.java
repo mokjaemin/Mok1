@@ -52,7 +52,7 @@ public class StoreTableInfoEntity {
 	}
 
 	// Get Sample
-	public static StoreTableInfoEntity sample() {
+	public static StoreTableInfoEntity getSample() {
 		return sample;
 	}
 

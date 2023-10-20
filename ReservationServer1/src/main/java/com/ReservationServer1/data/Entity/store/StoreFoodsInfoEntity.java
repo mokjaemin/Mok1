@@ -69,7 +69,7 @@ public class StoreFoodsInfoEntity extends BaseEntity {
 				.foodDescription(this.foodDescription).foodPrice(this.foodPrice).build();
 	}
 
-	public static StoreFoodsInfoEntity sample() {
+	public static StoreFoodsInfoEntity getSample() {
 		return sample;
 	}
 

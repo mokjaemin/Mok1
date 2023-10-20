@@ -20,7 +20,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class StoreFoodsInfoDTO {
 
-	private static final StoreFoodsInfoDTO sample = StoreFoodsInfoDTO.builder().storeId((short) -1).foodName("foodName")
+	private static final StoreFoodsInfoDTO sample = StoreFoodsInfoDTO.builder().storeId((short) 0).foodName("foodName")
 			.foodDescription("foodDescription").foodPrice(0).build();
 
 	@NotNull

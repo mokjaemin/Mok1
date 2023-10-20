@@ -37,7 +37,7 @@ public class ReservationDTO {
 	@Size(min = 1, max = 4)
 	private String storeTable;
 
-	public static ReservationDTO sample() {
+	public static ReservationDTO getSample() {
 		return sample;
 	}
 

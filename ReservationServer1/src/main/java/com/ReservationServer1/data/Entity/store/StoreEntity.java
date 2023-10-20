@@ -80,7 +80,7 @@ public class StoreEntity extends BaseEntity {
 	}
 
 	// Get Sample
-	public static StoreEntity sample() {
+	public static StoreEntity getSample() {
 		return sample;
 	}
 

@@ -21,7 +21,7 @@ import lombok.ToString;
 public class StoreRestDayDTO {
 
 	private static Set<String> sampleDate = new HashSet<>();
-	private static StoreRestDayDTO sample = new StoreRestDayDTO();
+	private static StoreRestDayDTO sample = StoreRestDayDTO.builder().storeId((short) 0).build();
 
 	@NotNull
 	private short storeId;

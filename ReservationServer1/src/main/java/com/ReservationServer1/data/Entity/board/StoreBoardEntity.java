@@ -62,7 +62,7 @@ public class StoreBoardEntity extends BaseEntity{
 
 	private int views;
 
-	public static StoreBoardEntity sample() {
+	public static StoreBoardEntity getSample() {
 		return sample;
 	}
 

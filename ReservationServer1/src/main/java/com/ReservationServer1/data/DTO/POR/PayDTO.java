@@ -29,7 +29,7 @@ public class PayDTO {
 	@NotNull
 	private int amount;
 
-	public static PayDTO sample() {
+	public static PayDTO getSample() {
 		return sample;
 	}
 

@@ -20,7 +20,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class FindPwdDTO {
 
-	private static final FindPwdDTO sample = FindPwdDTO.builder().userId("testId").userEmail("testEmail").build();
+	private static final FindPwdDTO sample = FindPwdDTO.builder().userId("testId").userEmail("test@Email").build();
 
 	@NotNull
 	@Size(min = 3, max = 20)
@@ -30,7 +30,7 @@ public class FindPwdDTO {
 	@Email
 	private String userEmail;
 
-	public static FindPwdDTO sample() {
+	public static FindPwdDTO getSample() {
 		return sample;
 	}
 }

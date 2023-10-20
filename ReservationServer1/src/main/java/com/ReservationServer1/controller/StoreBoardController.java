@@ -2,7 +2,6 @@ package com.ReservationServer1.controller;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ReservationServer1.data.DTO.board.BoardCountResultDTO;
 import com.ReservationServer1.data.DTO.board.BoardDTO;
+import com.ReservationServer1.data.DTO.board.BoardListResultDTO;
 import com.ReservationServer1.data.DTO.board.BoardResultDTO;
-import com.ReservationServer1.data.Entity.board.StoreBoardEntity;
 import com.ReservationServer1.service.StoreBoardService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -83,7 +83,7 @@ public class StoreBoardController {
 			@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
 			@ApiResponse(responseCode = "404", description = "NOT FOUND"),
 			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
-	public ResponseEntity<Map<String, Integer>> getBoardListByStore(@Valid @RequestParam short storeId) {
+	public ResponseEntity<List<BoardListResultDTO>> getBoardListByStore(@Valid @RequestParam short storeId) {
 		return ResponseEntity.status(HttpStatus.OK).body(storeBoardService.getBoardListByStore(storeId));
 	}
 
@@ -93,7 +93,7 @@ public class StoreBoardController {
 			@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
 			@ApiResponse(responseCode = "404", description = "NOT FOUND"),
 			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
-	public ResponseEntity<Map<String, Integer>> getBoardListByUser(Authentication authentication) {
+	public ResponseEntity<List<BoardListResultDTO>> getBoardListByUser(Authentication authentication) {
 		return ResponseEntity.status(HttpStatus.OK).body(storeBoardService.getBoardListByUser(authentication.getName()));
 	}
 	
@@ -105,6 +105,16 @@ public class StoreBoardController {
 			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
 	public ResponseEntity<BoardResultDTO> getFullBoard(int boardId) {
 		return ResponseEntity.status(HttpStatus.OK).body(storeBoardService.getFullBoard(boardId));
+	}
+	
+	@GetMapping("/article/count")
+	@Operation(summary = "게시글 상세 출력 요청", description = "게시글 상세 출력됩니다.", tags = { "Store Board Controller" })
+	@ApiResponses({ @ApiResponse(responseCode = "200", description = "OK"),
+			@ApiResponse(responseCode = "400", description = "BAD REQUEST"),
+			@ApiResponse(responseCode = "404", description = "NOT FOUND"),
+			@ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR") })
+	public ResponseEntity<List<BoardCountResultDTO>> getBoardCountByUserOfStore(short storeId) {
+		return ResponseEntity.status(HttpStatus.OK).body(storeBoardService.getBoardCountByUserOfStore(storeId));
 	}
 
 	@PostMapping("/comment")

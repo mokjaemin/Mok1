@@ -43,7 +43,7 @@ public class StoreCouponEntity {
 	private int amount;
 
 	// Get Sample
-	public static StoreCouponEntity sample() {
+	public static StoreCouponEntity getSample() {
 		return sample;
 	}
 

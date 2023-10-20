@@ -20,8 +20,8 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class MemberDTO {
 
-	private static final MemberDTO sample = MemberDTO.builder().userId("id").userPwd("pwd").userName("name")
-			.userNumber("number").userAddress("address").userEmail("email").build();
+	private static final MemberDTO sample = MemberDTO.builder().userId("userId").userPwd("userPwd").userName("name")
+			.userNumber("01234567891").userAddress("address").userEmail("test@email").build();
 
 	@NotNull
 	@Size(min = 3, max = 20)
@@ -55,7 +55,7 @@ public class MemberDTO {
 		this.userEmail = other.userEmail;
 	}
 
-	public static MemberDTO sample() {
+	public static MemberDTO getSample() {
 		return sample;
 	}
 

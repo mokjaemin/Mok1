@@ -65,7 +65,7 @@ public class MemberEntity extends BaseEntity {
 	}
 
 	// Get Sample
-	public static MemberEntity sample() {
+	public static MemberEntity getSample() {
 		return sample;
 	}
 

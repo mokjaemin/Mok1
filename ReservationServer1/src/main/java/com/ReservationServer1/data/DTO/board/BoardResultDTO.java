@@ -39,7 +39,7 @@ public class BoardResultDTO {
 	private String encoded_boardImage;
 	
 
-	public static BoardResultDTO sample() {
+	public static BoardResultDTO getSample() {
 		return sample;
 	}
 }

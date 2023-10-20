@@ -22,8 +22,8 @@ import lombok.ToString;
 public class StoreTimeInfoDTO {
 
 	private static List<String> breakTimeSample = new ArrayList<>();
-	private static StoreTimeInfoDTO sample = StoreTimeInfoDTO.builder().startTime("startTime").endTime("endTime")
-			.intervalTime("intervalTime").storeId((short) 1).build();
+	private static StoreTimeInfoDTO sample = StoreTimeInfoDTO.builder().startTime("start").endTime("end")
+			.intervalTime("inter").storeId((short) 1).build();
 
 	@NotNull
 	@Size(min = 1, max = 5)

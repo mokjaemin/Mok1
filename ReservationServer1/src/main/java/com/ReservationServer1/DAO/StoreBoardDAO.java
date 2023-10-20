@@ -1,7 +1,10 @@
 package com.ReservationServer1.DAO;
 
-import java.util.Map;
+import java.util.List;
+
+import com.ReservationServer1.data.DTO.board.BoardCountResultDTO;
 import com.ReservationServer1.data.DTO.board.BoardDTO;
+import com.ReservationServer1.data.DTO.board.BoardListResultDTO;
 import com.ReservationServer1.data.Entity.board.StoreBoardEntity;
 
 public interface StoreBoardDAO {
@@ -12,9 +15,11 @@ public interface StoreBoardDAO {
 
 	String deleteBoard(int boardId, String userId);
 
-	Map<String, Integer> getBoardListByStore(short storeId);
+	List<BoardListResultDTO> getBoardListByStore(short storeId);
 
-	Map<String, Integer> getBoardListByUser(String userId);
+	List<BoardListResultDTO> getBoardListByUser(String userId);
+	
+	List<BoardCountResultDTO> getBoardCountByUserOfStore(short storeId);
 	
 	StoreBoardEntity getFullBoard(int boardId);
 

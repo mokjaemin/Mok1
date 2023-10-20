@@ -29,7 +29,7 @@ public class OrderDTO {
 	@NotNull
 	private HashMap<String, Short> orderInfo;
 
-	public static OrderDTO sample() {
+	public static OrderDTO getSample() {
 		if (testInfo.size() == 0) {
 			testInfo.put("foodName1", (short) 1);
 			testInfo.put("foodName2", (short) 2);

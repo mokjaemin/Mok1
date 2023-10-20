@@ -2,12 +2,14 @@ package com.ReservationServer1.service.Impl;
 
 import java.io.IOException;
 import java.util.Base64;
-import java.util.Map;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.ReservationServer1.DAO.StoreBoardDAO;
+import com.ReservationServer1.data.DTO.board.BoardCountResultDTO;
 import com.ReservationServer1.data.DTO.board.BoardDTO;
+import com.ReservationServer1.data.DTO.board.BoardListResultDTO;
 import com.ReservationServer1.data.DTO.board.BoardResultDTO;
 import com.ReservationServer1.data.Entity.board.StoreBoardEntity;
 import com.ReservationServer1.service.StoreBoardService;
@@ -46,13 +48,13 @@ public class StoreBoardServiceImpl implements StoreBoardService {
 	}
 
 	@Override
-	public Map<String, Integer> getBoardListByStore(short storeId) {
+	public List<BoardListResultDTO> getBoardListByStore(short storeId) {
 		return storeBoardDAO.getBoardListByStore(storeId);
 
 	}
 
 	@Override
-	public Map<String, Integer> getBoardListByUser(String userId) {
+	public List<BoardListResultDTO> getBoardListByUser(String userId) {
 		return storeBoardDAO.getBoardListByUser(userId);
 	}
 
@@ -64,6 +66,11 @@ public class StoreBoardServiceImpl implements StoreBoardService {
 				.comment(boardEntity.getComment()).rating(boardEntity.getRating()).views(boardEntity.getViews())
 				.encoded_boardImage(Base64.getEncoder().encodeToString(boardEntity.getBoardImage())).build();
 		return boardResultDTO;
+	}
+	
+	@Override
+	public List<BoardCountResultDTO> getBoardCountByUserOfStore(short storeId) {
+		return storeBoardDAO.getBoardCountByUserOfStore(storeId);
 	}
 
 	@Override
@@ -80,5 +87,6 @@ public class StoreBoardServiceImpl implements StoreBoardService {
 	public String deleteBoardComment(int boardId, String storeId) {
 		return storeBoardDAO.deleteBoardComment(boardId, storeId);
 	}
+
 
 }
