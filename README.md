@@ -33,15 +33,16 @@
 - DEVOPS : Docker, Amazon EC2, AMAZON RDS
 
 ## TRAITS
-- MVC STRUCTURE, SINGLETON PATTERN를 활용해 구조 체계화 및 인스턴스 최소화
-- JWT, Spring Security를 통한 인증/인가 및 내부 용량 효율화 및 JASYPT을 통한 내부보안
-- QueryDSL의 컴파일 처리로 오류 감소 및 인스턴스 최소화
-- Swagger를 활용한 API 관리문서 간편 제작
-- RestFul API를 활용하여 일련의 규칙을 통해 주소 간소화
-- Mysql의 인덱싱, 조인 등으로 성능 향상
-- Redis를 활용하여 캐시를 통해 속도 향상
-- JUNIT, Mokito를 통한 테스팅 99%
-- AWS, Docker, Amazon EC2로 클라우드 환경 구축
+- 다양한 명세서 (프로토타입, 다이어그램, API 문서, Swagger 등)를 작성하여 사용자에게 종합적인 정보 제공
+- Spring Security를 기반으로 Access 및 Refresh Token 구조를 확립하여 공격자 보안 문제 대응
+- Java 8 기반의 Stream으로 클린 코드 작성하여 가독성을 향상
+- Querydsl 활용으로 코드 가독성 향상 및 JPA 구조 간소화
+- DB 인덱스, 쿼리 최적화로 디스크 I/O 사용량 감소시켜 조회 API 평균 응답시간 53% 단축
+- 데이터베이스 트랜잭션의 전파 및 격리 설정을 통해 데이터 일관성 및 안정성을 보장
+- Redis를 활용한 캐싱으로 자주 요청되는 레코드를 처리하여 응답시간 약 2초 단축하여 사용자 경험 최적화
+- Junit5 및 Mockito를 사용하여 BDD 기반의 단위 및 통합 테스트 작성 및 Jacoco 테스트 커버리지 향상
+- 규모에 따라 변화하는 애플리케이션 규모에 맞게 GitHub Flow 브랜치 전략을 도입하여 협업 구조를 구축
+- Amazon RDS, EC2, Docker를 활용한 클라우드 배포 및 DB 환경 구축
 
 ## STRUCTURE
 <img width="806" alt="스크린샷 2023-10-15 19 52 47" src="https://github.com/mokjaemin/Mok1/assets/95067670/428bbb6c-4141-46eb-91e8-69846d075ecd">
@@ -62,53 +63,3 @@
 ## DATABASE SPECIFICATION
 [DataBase File](https://docs.google.com/document/d/1AKWyWDcy_u3G-zKH0nWjQUifhvrn_jncopUeqKt-gEQ/edit)
 
-## Function
-### Member
-1. 계정 생성
-2. 로그인
-3. 회원 정보 찾기
-4. 회원 정보 수정
-5. 회원 정보 삭제
-### Store Basic
-1. 가게 등록
-2. 가게 지역별 리스트
-3. 가게 관리자 페이지 로그인
-### Store Info
-1. 가게 쉬는날 등록
-2. 가게 쉬는날 수정
-3. 가게 쉬는날 삭제
-4. 가게 쉬는날 출력
-5. 가게 영업시간 정보 등록
-6. 가게 영업시간 정보 수정
-7. 가게 영업시간 정보 삭제
-8. 가게 영업시간 정보 출력
-9. 가게 예약 테이블 정보 출력
-10. 가게 예약 테이블 정보 수정
-11. 가게 예약 테이블 정보 삭제
-12. 가게 메뉴 등록
-13. 가게 메뉴 수정
-14. 가게 메뉴 삭제
-### Reservation & Order & Pay & Coupon
-1. 가게 자리/시간 예약
-2. 가게 자리/시간 수정
-3. 가게 자리/시간 삭제
-4. 음식 주문 등록
-5. 음식 주문 수정
-6. 음식 주문 삭제
-7. 결제 등록
-8. 결제 취소
-9. 쿠폰 조회
-### Recipt & Board
-1. 영수증 출력
-2. 영수증 댓글 등록
-3. 영수증 댓글 수정
-4. 영수증 댓글 삭제
-5. 영수증 대댓글 등록
-6. 영수증 대댓글 수정
-7. 영수증 대댓글 삭제
-8. 공개 게시판 글 등록
-9. 공개 게시판 글 수정
-10. 공개 게시판 글 삭제
-11. 공개 게시판 댓글 등록
-12. 공개 게시판 댓글 수정
-13. 공개 게시판 댓글 삭제
