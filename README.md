@@ -44,7 +44,7 @@
 - AWS, Docker, Amazon EC2로 클라우드 환경 구축
 
 ## STRUCTURE
-![STRUCTURE](<img width="806" alt="스크린샷 2023-10-15 19 52 47" src="https://github.com/mokjaemin/Mok1/assets/95067670/428bbb6c-4141-46eb-91e8-69846d075ecd">)
+<img width="806" alt="스크린샷 2023-10-15 19 52 47" src="https://github.com/mokjaemin/Mok1/assets/95067670/428bbb6c-4141-46eb-91e8-69846d075ecd">
 
 ## DIAGRAM
 <img width="704" alt="스크린샷 2023-10-25 22 58 36" src="https://github.com/mokjaemin/Mok1/assets/95067670/76af113f-d2ad-4219-a36c-5ba96732b034">
