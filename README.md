@@ -2,25 +2,25 @@
 
 ## FILES DESCRIPTION
 - src/main/java/com.ReservationServer1
-- - config : config 파일 패키지
-  - - cache : Cache 관련 Config
-    - JaspytConfig : Jasypt 라이브러리 관련 Config
-    - JPAAuditingConfig : JPA Auditing 관련 Config
-    - JWTFilter : JWT 인증/인가 필터
-    - PasswordEncoderConfig : 회원 비밀번호 암호화 관련 Config
-    - QueryDSLConfig : Querydsl 사용 환경 설정 Config
-    - SwaggerConfig : Swagger Page 관련 Config
-    - WebSecurityConfig : 인증/인가 처리 Config
+  - config : 서버 설정 파일 패키지
+    - cache : Cache 관련 설정
+    - JaspytConfig : Jasypt 라이브러리 관련 설정
+    - JPAAuditingConfig : JPA Auditing 관련 설정
+    - JWTFilter : JWT 인증/인가 필터 설정
+    - PasswordEncoderConfig : 회원 비밀번호 암호화 관련 설정
+    - QueryDSLConfig : Querydsl 사용 환경 설정 설정
+    - SwaggerConfig : Swagger Page 관련 설정
+    - WebSecurityConfig : 인증/인가 처리 설정
   - controller : controller 파일 패키지
-  - - MemberController : 회원 관련 Controller
+    - MemberController : 회원 관련 Controller
     - StoreController : 가게 기본 정보 관련 Controller
     - StoreInfoController : 가게 상세 정보 관련 Controller
     - StorePORController : 예약, 주문, 결제, 쿠폰 관련 Controller
     - StoreBoardControlelr : 가게 게시판 관련 Controller
   - DAO : DB연결 관련 패키지
-  - - Cache : Cache 관련 설정
+    - Cache : Cache 관련 설정
     - Impl : DAO 인터페이스 구현체
-    - - MemberDAOImpl : 회원 정보 처리 DAO
+      - MemberDAOImpl : 회원 정보 처리 DAO
       - StoreDAOImpl : 가게 기본 정보 처리 DAO
       - StoreInfoDAOImpl : 가게 상세 정보 처리 DAO
       - StorePORDAOImpl : 예약, 주문, 결제, 쿠폰 관련 DAO
@@ -32,43 +32,43 @@
     - StorePORDAO : 예약, 주문, 결제, 쿠폰 관련 인터페이스
     - StoreBoardDAO : 가게 게시판 관련 인터페이스
   - data
-  - - DTO : DTO 관련 패키지
-    - - board : 게시판 관련 Request/Response
-      - - BoardCountResultDTO : 게시판 양 Response
+    - DTO : DTO 관련 패키지
+      - board : 게시판 관련 Request/Response
+        - BoardCountResultDTO : 게시판 수 Response
         - BoardDTO : 게시판 등록 Request
         - BoardListResultDTO : 게시판 리스트 Response
         - BoardResutlDTO : 게시판 결과 Response
       - member : 회원 관련 Request/Response
-      - - FindPwdDTO : 비밀번호 찾기 Request
+        - FindPwdDTO : 비밀번호 찾기 Request
         - LoginDTO : 로그인 Request
         - MemberDTO : 회원가입 Request
         - ModifyMemberDTO : 회원수정 Request
         - SearchMemberDTO : 회원검색 Request/Response
       - POR : 예약, 주문, 결제 관련 Request/Response
-      - - OrderDTO : 주문 관련 Request
+        - OrderDTO : 주문 관련 Request
         - PayDTO : 결제 Request
         - ReservationDTO : 예약 Request
       - Store : 가게 기본 정보 관련 Request/Response
-      - - Cache : 가게 리스트 출력 Caching Response
+        - Cache : 가게 리스트 출력 Caching Response
         - StoreDTO : 가게 정보 등록 Request
         - StoreFoodsInfoDTO : 가게 음식 정보 등록 Request
         - StoreLitResultDTO : 가게 검색 결과 Response
         - StoreRestDayDTO : 가게 쉬는날 정보 Request
         - StoreTableInfoDTO : 가게 테이블 정보 Request
         - StoreTImeInfoDTO : 가게 시간 정보 Request
-  - - Entity : Entity 관련 패키지
-    - - board : 게시판 관련 Entity
-      - - StoreBoardEntity : 게시판 테이블
+    - Entity : Entity 관련 패키지
+      - board : 게시판 관련 Entity
+        - StoreBoardEntity : 게시판 테이블
       - member : 회원 관련 Entity
-      - - MemberEntity : 회원 테이블
+        - MemberEntity : 회원 테이블
       - POR : 예약, 주문, 결제, 쿠폰 관련 Entity
-      - - StoreCouponEntity : 쿠폰 테이블
+        - StoreCouponEntity : 쿠폰 테이블
         - StoreOrdersEntity : 주문 테이블
         - StoreOrdersMapEntity : 주문 상세 테이블
         - StorePayEntity : 결제 테이블
         - StoreReservationEntity : 예약 테이블
       - store : 가게 정보 관련 Entity
-      - - StoreEntity : 가게 기본 정보 테이블
+        - StoreEntity : 가게 기본 정보 테이블
         - StoreFoodsInfoEntity : 가게 음식 정보 테이블
         - StoreRestDaysEntity : 가게 쉬는날 정보 테이블
         - StoreRestDaysMapEntity : 가게 쉬는날 상세 정보 테이블
@@ -77,6 +77,62 @@
         - StoreTimeInfoMapEntity : 가게 영업 휴식 시간 정보 테이블
       - BaseEntity : 생성일, 수정일 처리 Entity
     - StoreType : 가게 종류 Enum
-  - - Exception : 예외 처리 패키지
+  - Exception : 예외 처리 패키지
+    - handler : 에외 처리 Handler
+    - ExistIdExcepion : 이미 존재하는 아이디 오류
+    - NoAuthorityException : 권한없음 오류
+    - NoInformationException : 정보 없음 오류
+    - NoCoincideEmailException : 일치하는 이메일 정보 없음 오류
+    - NoCoincidePwdException : 비밀번호 불일치 오류
+    - ReservationException : 서버 Exception 인터페이스
+  - Service : 서비스 계층 패키지
+    - Impl : DAO 인터페이스 구현체
+      - MemberServiceImpl : 회원 정보 처리 Service
+      - StoreServiceImpl : 가게 기본 정보 처리 Service
+      - StoreInfoServiceImpl : 가게 상세 정보 처리 Service
+      - StorePORServiceImpl : 예약, 주문, 결제, 쿠폰 관련 Service
+      - StoreBoardServiceImpl : 가게 게시판 관련 Service
+    - MemberService : 회원 정보 처리 인터페이스
+    - StoreService : 가게 기본 정보 처리 인터페이스
+    - StoreInfoService : 가게 상세 정보 처리 인터페이스
+    - StoreInfoService : 가게 상세 정보 처리 인터페이스
+    - StorePORService : 예약, 주문, 결제, 쿠폰 관련 인터페이스
+    - StoreBoardService : 가게 게시판 관련 인터페이스
+  - Util : static 메서드 패키지
+    - JWTUtil : JWT 검증 클래스
+  - ReservationServer1Application : 프로젝트 실행 파일
+
+- src/test/java/com.ReservationServer1
+  - controller : Controller 계층 테스트
+    - MemberControllerTest : 회원 정보 처리 Test
+    - StoreControllerTest : 가게 기본 정보 처리 Test
+    - StoreInfoControllerTest : 가게 상세 정보 처리 Test
+    - StoreInfoControllerTest : 가게 상세 정보 처리 Test
+    - StorePORControllerTest : 예약, 주문, 결제, 쿠폰 관련 Test
+    - StoreBoardControllerTest : 가게 게시판 처리 Test
+  - dao : DAO 계층 테스트
+    - MemberDAOTest : 회원 정보 처리 Test
+    - StoreDAOTest : 가게 기본 정보 처리 Test
+    - StoreInfoDAOTest : 가게 상세 정보 처리 Test
+    - StoreInfoDAOTest : 가게 상세 정보 처리 Test
+    - StorePORDAOTest : 예약, 주문, 결제, 쿠폰 관련 Test
+    - StoreBoardDAOTest : 가게 게시판 관련 Test
+  - DataBase : 데이터베이스 쿼리 테스트
+    - DBTest : 쿼리문 Test
+  - Integration : API별 통합 테스트
+    - MemberAPITest : 회원 정보 처리 Test
+    - StoreAPITest : 가게 기본 정보 처리 Test
+    - StoreInfoAPITest : 가게 상세 정보 처리 Test
+    - StoreInfoAPITest : 가게 상세 정보 처리 Test
+    - StorePORAPITest : 예약, 주문, 결제, 쿠폰 관련 Test
+    - StoreBoardAPITest : 가게 게시판 관련 Test
+  - service : Service 계층 테스트
+    - MemberServiceTest : 회원 정보 처리 Test
+    - StoreServiceTest : 가게 기본 정보 처리 Test
+    - StoreInfoServiceTest : 가게 상세 정보 처리 Test
+    - StoreInfoServiceTest : 가게 상세 정보 처리 Test
+    - StorePORServiceTest : 예약, 주문, 결제, 쿠폰 관련 Test
+    - StoreBoardServiceTest : 가게 게시판 관련 Test
+- pom.xml : 의존성 설정 파일
 
 
