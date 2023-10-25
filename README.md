@@ -1,4 +1,4 @@
-# PROJECT : Make a restaurant reservation
+# PROJECT : 음식점 예약 웹
 
 
 ## DESCRIPTION
@@ -6,105 +6,105 @@
 - 음식점이 닫았거나 만석인 상황을 마주친 경우가 많을 것입니다.
 - 이를 해결하기 위해 미리 좌석이 있는지 확인하고 시간, 장소, 테이블 등 예약이 가능합니다.
 
-
-## FOR
-- 음식점을 갔다가 음식점이 닫거나 만석이라 불편을 겪으신 분
-- 중요한 약속이 있어 음식점 예약을 간편하게 하고 싶은 분
-- 음식점 고객들을 편리하게 관리하고 싶은 모든 가게 사장님들
-
-
-## USER INTERFACE ( CLICK BELOW )
-[![Video Label](http://img.youtube.com/vi/4kFZOOxNqD0/0.jpg)](https://youtu.be/4kFZOOxNqD0)
+## FILES DESCRIPTION
+- src/main/java/com.ReservationServer1
+- - config : config 파일 패키지
+  - - cache : Cache 관련 Config
+    - JaspytConfig : Jasypt 라이브러리 관련 Config
+    - JPAAuditingConfig : JPA Auditing 관련 Config
+    - JWTFilter : JWT 인증/인가 필터
+    - PasswordEncoderConfig : 회원 비밀번호 암호화 관련 Config
+    - QueryDSLConfig : Querydsl 사용 환경 설정 Config
+    - SwaggerConfig : Swagger Page 관련 Config
+    - WebSecurityConfig : 인증/인가 처리 Config
+  - controller : controller 파일 패키지
+  - - MemberController : 회원 관련 Controller
+    - StoreController : 가게 기본 정보 관련 Controller
+    - StoreInfoController : 가게 상세 정보 관련 Controller
+    - StorePORController : 예약, 주문, 결제, 쿠폰 관련 Controller
+    - StoreBoardControlelr : 가게 게시판 관련 Controller
+  - DAO : DB연결 관련 패키지
+  - - Cache : Cache 관련 설정
+    - Impl : DAO 인터페이스 구현체
+    - - MemberDAOImpl : 회원 정보 처리 DAO
+      - StoreDAOImpl : 가게 기본 정보 처리 DAO
+      - StoreInfoDAOImpl : 가게 상세 정보 처리 DAO
+      - StorePORDAOImpl : 예약, 주문, 결제, 쿠폰 관련 DAO
+      - StoreBoardDAOImpl : 가게 게시판 관련 DAO
+    - MemberDAO : 회원 정보 처리 인터페이스
+    - StoreDAO : 가게 기본 정보 처리 인터페이스
+    - StoreInfoDAO : 가게 상세 정보 처리 인터페이스
+    - StoreInfoDAO : 가게 상세 정보 처리 인터페이스
+    - StorePORDAO : 예약, 주문, 결제, 쿠폰 관련 인터페이스
+    - StoreBoardDAO : 가게 게시판 관련 인터페이스
+  - data
+  - - DTO : DTO 관련 패키지
+    - - board : 게시판 관련 Request/Response
+      - - BoardCountResultDTO : 게시판 양 Response
+        - BoardDTO : 게시판 등록 Request
+        - BoardListResultDTO : 게시판 리스트 Response
+        - BoardResutlDTO : 게시판 결과 Response
+      - member : 회원 관련 Request/Response
+      - - FindPwdDTO : 비밀번호 찾기 Request
+        - LoginDTO : 로그인 Request
+        - MemberDTO : 회원가입 Request
+        - ModifyMemberDTO : 회원수정 Request
+        - SearchMemberDTO : 회원검색 Request/Response
+      - POR : 예약, 주문, 결제 관련 Request/Response
+      - - OrderDTO : 주문 관련 Request
+        - PayDTO : 결제 Request
+        - ReservationDTO : 예약 Request
+      - Store : 가게 기본 정보 관련 Request/Response
+      - - Cache : 가게 리스트 출력 Caching Response
+        - StoreDTO : 가게 정보 등록 Request
+        - StoreFoodsInfoDTO : 가게 음식 정보 등록 Request
+        - StoreLitResultDTO : 가게 검색 결과 Response
+        - StoreRestDayDTO : 가게 쉬는날 정보 Request
+        - StoreTableInfoDTO : 가게 테이블 정보 Request
+        - StoreTImeInfoDTO : 가게 시간 정보 Request
+  - - Entity : Entity 관련 패키지
+    - - board : 게시판 관련 Entity
+      - - StoreBoardEntity : 게시판 테이블
+        - 
 
 
 ## ENV
 - IDE : STS4
 - BUILD TOOLS : MAVEN
 - FRAMEWORK : SPRING BOOT 3.0.5
-- SERVER : TOMCAT
+- SERVER : APACHE TOMCAT
 - LANGUAGE : JAVA 17
 - CLIENT : HTTP Requests/Response
 - CLIENT API : Restful API
-- SEQURITY : JASYPT Library, Spring Security, JWT
+- SEQURITY : JASYPT, Spring Security, JWT
 - DATA API : Query DSL, Hibernate
-- DATABASE : MYSQL with AWS(Main DB), Redis(Cache), H2(Testing)
+- DATABASE : MYSQL 8.0(Main DB), Redis 7.0.10(Cache), H2(Testing)
 - TESTING : JUNIT5, Mockito
 - TEST COVERAGE : JACOCO
-- DEPLOYMENT : Docker, Amazon EC2
+- DEVOPS : Docker, Amazon EC2, AMAZON RDS
 
-## TRAITS
-- MVC STRUCTURE, SINGLETON PATTERN를 활용해 구조 체계화 및 인스턴스 최소화
-- JWT, Spring Security를 통한 인증/인가 및 내부 용량 효율화 및 JASYPT을 통한 내부보안
-- QueryDSL의 컴파일 처리로 오류 감소 및 인스턴스 최소화
-- Swagger를 활용한 API 관리문서 간편 제작
-- RestFul API를 활용하여 일련의 규칙을 통해 주소 간소화
-- Mysql의 인덱싱, 조인 등으로 성능 향상
-- Redis를 활용하여 캐시를 통해 속도 향상
-- JUNIT, Mokito를 통한 테스팅 99%
-- AWS, Docker, Amazon EC2로 클라우드 환경 구축
+## MAIN TRAITS
+- 다양한 명세서 (프로토타입, 다이어그램, API 문서, Swagger 등)를 작성하여 사용자에게 종합적인 정보 제공
+- Spring Security를 기반으로 Access 및 Refresh Token 구조를 확립하여 공격자 보안 문제 대응
+- Java 8 기반의 Stream으로 클린 코드 작성하여 가독성을 향상
+- Querydsl 활용으로 코드 가독성 향상 및 JPA 구조 간소화
+- DB 인덱스, 쿼리 최적화로 디스크 I/O 사용량 감소시켜 조회 API 평균 응답시간 53% 단축
+- 데이터베이스 트랜잭션의 전파 및 격리 설정을 통해 데이터 일관성 및 안정성을 보장
+- Redis를 활용한 캐싱으로 자주 요청되는 레코드를 처리하여 응답시간 약 2초 단축하여 사용자 경험 최적화
+- Junit5 및 Mockito를 사용하여 BDD 기반의 단위 및 통합 테스트 작성 및 Jacoco 테스트 커버리지 향상
+- 규모에 따라 변화하는 애플리케이션 규모에 맞게 GitHub Flow 브랜치 전략을 도입하여 협업 구조를 구축
+- Amazon RDS, EC2, Docker를 활용한 클라우드 배포 및 DB 환경 구축
 
-## Test Coverage
-[Test Coverage File](https://docs.google.com/spreadsheets/d/1OKFicrW9nmyS5sHzxdf49Tp4WqHmk1qrBU6Q3lpNXAg/edit?usp=sharing)
+ 
 
-## PROTOTYPE
-[ProtoType File](https://www.figma.com/proto/p667iVrA2n38Qvr8l64xaQ/Graduation-Project?node-id=6-49&scaling=scale-down&page-id=0%3A1&starting-point-node-id=6%3A15)
+## SERVER STRUCTURE
+<img width="706" alt="스크린샷 2023-10-15 19 52 47" src="https://github.com/mokjaemin/Mok1/assets/95067670/428bbb6c-4141-46eb-91e8-69846d075ecd">
 
-## API SPECIFICATION
-[API Specification File](https://docs.google.com/document/d/13W18PYfz040IY35pNc1uI9T5nt0C9nzI4S5q_MH0USw/edit)
+## CLASS DIAGRAM
+<img width="704" alt="스크린샷 2023-10-25 22 58 36" src="https://github.com/mokjaemin/Mok1/assets/95067670/76af113f-d2ad-4219-a36c-5ba96732b034">
 
-## DATABASE SPECIFICATION
-[DataBase File](https://docs.google.com/document/d/1AKWyWDcy_u3G-zKH0nWjQUifhvrn_jncopUeqKt-gEQ/edit)
+## USER INTERFACE 
+#### -> CLICK BELOW
+[![Video Label](http://img.youtube.com/vi/4kFZOOxNqD0/0.jpg)](https://youtu.be/4kFZOOxNqD0)
 
-## Trouble Shooting
-[Trouble Shooting With Blog](https://mokjaemin88.tistory.com/category/Trouble%20Shooting)
 
-## Function
-### Member
-1. 계정 생성
-2. 로그인
-3. 회원 정보 찾기
-4. 회원 정보 수정
-5. 회원 정보 삭제
-### Store Basic
-1. 가게 등록
-2. 가게 지역별 리스트
-3. 가게 관리자 페이지 로그인
-### Store Info
-1. 가게 쉬는날 등록
-2. 가게 쉬는날 수정
-3. 가게 쉬는날 삭제
-4. 가게 쉬는날 출력
-5. 가게 영업시간 정보 등록
-6. 가게 영업시간 정보 수정
-7. 가게 영업시간 정보 삭제
-8. 가게 영업시간 정보 출력
-9. 가게 예약 테이블 정보 출력
-10. 가게 예약 테이블 정보 수정
-11. 가게 예약 테이블 정보 삭제
-12. 가게 메뉴 등록
-13. 가게 메뉴 수정
-14. 가게 메뉴 삭제
-### Reservation & Order & Pay & Coupon
-1. 가게 자리/시간 예약
-2. 가게 자리/시간 수정
-3. 가게 자리/시간 삭제
-4. 음식 주문 등록
-5. 음식 주문 수정
-6. 음식 주문 삭제
-7. 결제 등록
-8. 결제 취소
-9. 쿠폰 조회
-### Recipt & Board
-1. 영수증 출력
-2. 영수증 댓글 등록
-3. 영수증 댓글 수정
-4. 영수증 댓글 삭제
-5. 영수증 대댓글 등록
-6. 영수증 대댓글 수정
-7. 영수증 대댓글 삭제
-8. 공개 게시판 글 등록
-9. 공개 게시판 글 수정
-10. 공개 게시판 글 삭제
-11. 공개 게시판 댓글 등록
-12. 공개 게시판 댓글 수정
-13. 공개 게시판 댓글 삭제
