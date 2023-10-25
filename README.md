@@ -1,4 +1,4 @@
-# PROJECT : Make a restaurant reservation
+# PROJECT : 음식점 예약 웹
 
 
 ## DESCRIPTION
@@ -21,16 +21,16 @@
 - IDE : STS4
 - BUILD TOOLS : MAVEN
 - FRAMEWORK : SPRING BOOT 3.0.5
-- SERVER : TOMCAT
+- SERVER : APACHE TOMCAT
 - LANGUAGE : JAVA 17
 - CLIENT : HTTP Requests/Response
 - CLIENT API : Restful API
-- SEQURITY : JASYPT Library, Spring Security, JWT
+- SEQURITY : JASYPT, Spring Security, JWT
 - DATA API : Query DSL, Hibernate
-- DATABASE : MYSQL with AWS(Main DB), Redis(Cache), H2(Testing)
+- DATABASE : MYSQL 8.0(Main DB), Redis 7.0.10(Cache), H2(Testing)
 - TESTING : JUNIT5, Mockito
 - TEST COVERAGE : JACOCO
-- DEPLOYMENT : Docker, Amazon EC2
+- DEVOPS : Docker, Amazon EC2, AMAZON RDS
 
 ## TRAITS
 - MVC STRUCTURE, SINGLETON PATTERN를 활용해 구조 체계화 및 인스턴스 최소화
@@ -43,20 +43,23 @@
 - JUNIT, Mokito를 통한 테스팅 99%
 - AWS, Docker, Amazon EC2로 클라우드 환경 구축
 
-## Test Coverage
-[Test Coverage File](https://docs.google.com/spreadsheets/d/1OKFicrW9nmyS5sHzxdf49Tp4WqHmk1qrBU6Q3lpNXAg/edit?usp=sharing)
+## STRUCTURE
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/c81b5d5a-e3af-465a-bd8a-725df14dcd20/34192033-f189-43b8-9e55-46b9af3bf6c4/Untitled.png)
+
+## DIAGRAM
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/c81b5d5a-e3af-465a-bd8a-725df14dcd20/75214bd1-2ad5-4d4c-b726-1bb9f47ba81a/Untitled.png)
 
 ## PROTOTYPE
 [ProtoType File](https://www.figma.com/proto/p667iVrA2n38Qvr8l64xaQ/Graduation-Project?node-id=6-49&scaling=scale-down&page-id=0%3A1&starting-point-node-id=6%3A15)
+
+## Test Coverage
+[Test Coverage File](https://docs.google.com/spreadsheets/d/1OKFicrW9nmyS5sHzxdf49Tp4WqHmk1qrBU6Q3lpNXAg/edit?usp=sharing)
 
 ## API SPECIFICATION
 [API Specification File](https://docs.google.com/document/d/13W18PYfz040IY35pNc1uI9T5nt0C9nzI4S5q_MH0USw/edit)
 
 ## DATABASE SPECIFICATION
 [DataBase File](https://docs.google.com/document/d/1AKWyWDcy_u3G-zKH0nWjQUifhvrn_jncopUeqKt-gEQ/edit)
-
-## Trouble Shooting
-[Trouble Shooting With Blog](https://mokjaemin88.tistory.com/category/Trouble%20Shooting)
 
 ## Function
 ### Member
