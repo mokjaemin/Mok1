@@ -65,7 +65,25 @@
   - - Entity : Entity 관련 패키지
     - - board : 게시판 관련 Entity
       - - StoreBoardEntity : 게시판 테이블
-        - 
+      - member : 회원 관련 Entity
+      - - MemberEntity : 회원 테이블
+      - POR : 예약, 주문, 결제, 쿠폰 관련 Entity
+      - - StoreCouponEntity : 쿠폰 테이블
+        - StoreOrdersEntity : 주문 테이블
+        - StoreOrdersMapEntity : 주문 상세 테이블
+        - StorePayEntity : 결제 테이블
+        - StoreReservationEntity : 예약 테이블
+      - store : 가게 정보 관련 Entity
+      - - StoreEntity : 가게 기본 정보 테이블
+        - StoreFoodsInfoEntity : 가게 음식 정보 테이블
+        - StoreRestDaysEntity : 가게 쉬는날 정보 테이블
+        - StoreRestDaysMapEntity : 가게 쉬는날 상세 정보 테이블
+        - StoreTableInfoEntity : 가게 테이블 정보 테이블
+        - StoreTimeInfoEntity : 가게 영업 시간 정보 테이블
+        - StoreTimeInfoMapEntity : 가게 영업 휴식 시간 정보 테이블
+      - BaseEntity : 생성일, 수정일 처리 Entity
+    - StoreType : 가게 종류 Enum
+  - - Exception : 예외 처리 패키지
 
 
 ## ENV
