@@ -1,11 +1,5 @@
 # PROJECT : 음식점 예약 웹
 
-
-## DESCRIPTION
-- 해당 프로젝트는 음식점 예약 서버 프로젝트입니다.
-- 음식점이 닫았거나 만석인 상황을 마주친 경우가 많을 것입니다.
-- 이를 해결하기 위해 미리 좌석이 있는지 확인하고 시간, 장소, 테이블 등 예약이 가능합니다.
-
 ## FILES DESCRIPTION
 - src/main/java/com.ReservationServer1
 - - config : config 파일 패키지
