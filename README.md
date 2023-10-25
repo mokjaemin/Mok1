@@ -44,10 +44,11 @@
 - AWS, Docker, Amazon EC2로 클라우드 환경 구축
 
 ## STRUCTURE
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/c81b5d5a-e3af-465a-bd8a-725df14dcd20/34192033-f189-43b8-9e55-46b9af3bf6c4/Untitled.png)
+![STRUCTURE](<img width="806" alt="스크린샷 2023-10-15 19 52 47" src="https://github.com/mokjaemin/Mok1/assets/95067670/428bbb6c-4141-46eb-91e8-69846d075ecd">)
 
 ## DIAGRAM
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/c81b5d5a-e3af-465a-bd8a-725df14dcd20/75214bd1-2ad5-4d4c-b726-1bb9f47ba81a/Untitled.png)
+<img width="704" alt="스크린샷 2023-10-25 22 58 36" src="https://github.com/mokjaemin/Mok1/assets/95067670/76af113f-d2ad-4219-a36c-5ba96732b034">
+
 
 ## PROTOTYPE
 [ProtoType File](https://www.figma.com/proto/p667iVrA2n38Qvr8l64xaQ/Graduation-Project?node-id=6-49&scaling=scale-down&page-id=0%3A1&starting-point-node-id=6%3A15)
