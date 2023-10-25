@@ -103,7 +103,7 @@
 ## CLASS DIAGRAM
 <img width="704" alt="스크린샷 2023-10-25 22 58 36" src="https://github.com/mokjaemin/Mok1/assets/95067670/76af113f-d2ad-4219-a36c-5ba96732b034">
 
-## USER INTERFACE 
+## UI VIDEO
 #### -> CLICK BELOW
 [![Video Label](http://img.youtube.com/vi/4kFZOOxNqD0/0.jpg)](https://youtu.be/4kFZOOxNqD0)
 
