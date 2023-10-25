@@ -45,12 +45,13 @@ public class StoreDAOImpl implements StoreDAO {
 
 		List<StoreListResultDTO> storeList = queryFactory
 				.select(Projections.fields(StoreListResultDTO.class, storeEntity.storeId, storeEntity.storeName))
-				.from(storeEntity).where(eqCountry(country), eqCity(city), eqDong(dong), eqType(type)).limit(size)
-				.offset(page * size).fetch();
+				.from(storeEntity)
+				.where(eqCountry(country).and(eqCity(city)).and(eqDong(dong)).and(eqType(type))
+						.and(storeEntity.storeId.gt(page * size)))
+				.orderBy(storeEntity.storeId.asc()).limit(size).offset(page * size).fetch();
 
-		return storeList.stream().sorted(Comparator.comparing((StoreListResultDTO dto) -> dto.getStoreName()))
-				.collect(Collectors.toMap(StoreListResultDTO::getStoreName, StoreListResultDTO::getStoreId,
-						(existing, replacement) -> existing, HashMap::new));
+		return storeList.stream().collect(Collectors.toMap(StoreListResultDTO::getStoreName,
+				StoreListResultDTO::getStoreId, (existing, replacement) -> existing, HashMap::new));
 
 	}
 
