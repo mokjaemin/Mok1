@@ -1,7 +1,7 @@
 # PROJECT : 음식점 예약 웹
 
 ## FILES DESCRIPTION
-- src/main/java/com.ReservationServer1
+- ReservationServer1/src/main/java/com.ReservationServer1
   - config : 서버 설정 파일 패키지
     - cache : Cache 관련 설정
     - JaspytConfig : Jasypt 라이브러리 관련 설정
@@ -102,7 +102,7 @@
     - JWTUtil : JWT 검증 클래스
   - ReservationServer1Application : 프로젝트 실행 파일
 
-- src/test/java/com.ReservationServer1
+- ReservationServer1/src/test/java/com.ReservationServer1
   - controller : Controller 계층 테스트
     - MemberControllerTest : 회원 정보 처리 Test
     - StoreControllerTest : 가게 기본 정보 처리 Test
