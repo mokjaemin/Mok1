@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ReservationServer1.DAO.MemberDAO;
@@ -29,7 +30,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
 @Repository("MemberDAO")
-@Transactional
 public class MemberDAOImpl implements MemberDAO {
 
 	private final BCryptPasswordEncoder passwordEncoder;
@@ -45,6 +45,7 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
+	@Transactional(isolation = Isolation.SERIALIZABLE, timeout = 10, rollbackFor = Exception.class)
 	public String registerMember(MemberEntity member) {
 		
 		String userId = member.getUserId();
@@ -58,6 +59,8 @@ public class MemberDAOImpl implements MemberDAO {
 		return "success";
 	}
 
+	@Override
+	@Transactional(timeout = 10, readOnly = true, rollbackFor = Exception.class)
 	public void loginMember(LoginDTO loginDTO) {
 		
 		String getPwd = queryFactory.select(memberEntity.userPwd).from(memberEntity)
@@ -70,6 +73,8 @@ public class MemberDAOImpl implements MemberDAO {
 		}
 	}
 
+	@Override
+	@Transactional(timeout = 10, readOnly = true, rollbackFor = Exception.class)
 	public void findPwdMember(String userId, String userEmail) {
 		
 		String getEmail = queryFactory.select(memberEntity.userEmail).from(memberEntity)
@@ -83,8 +88,9 @@ public class MemberDAOImpl implements MemberDAO {
 		}
 	}
 
-	// 비밀번호 수정
+	
 	@Override
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED, timeout = 10, rollbackFor = Exception.class)
 	public String modifyPwdMember(String userId, String userPwd) {
 
 		Integer existId = queryFactory.selectOne().from(memberEntity).where(memberEntity.userId.eq(userId))
@@ -98,7 +104,9 @@ public class MemberDAOImpl implements MemberDAO {
 		return "success";
 	}
 
+	
 	@Override
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED, timeout = 10, rollbackFor = Exception.class)
 	public String modifyInfoMember(String userId, ModifyMemberDTO modifyMemberDTO) {
 		
 		Integer existId = queryFactory.selectOne().from(memberEntity).where(memberEntity.userId.eq(userId))
@@ -119,6 +127,7 @@ public class MemberDAOImpl implements MemberDAO {
 
 	
 	@Override
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED, timeout = 10, rollbackFor = Exception.class)
 	public String deleteMember(String userId, String userPwd) {
 
 		String getPwd = queryFactory.select(memberEntity.userPwd).from(memberEntity)
@@ -137,6 +146,7 @@ public class MemberDAOImpl implements MemberDAO {
 	}
 
 	@Override
+	@Transactional(timeout = 10, readOnly = true, rollbackFor = Exception.class)
 	public List<SearchMemberDTO> searchMember(SearchMemberDTO member) {
 
 		if (member.getUserId() != null) {

@@ -6,13 +6,15 @@ import static com.ReservationServer1.data.Entity.store.QStoreRestDaysMapEntity.s
 import static com.ReservationServer1.data.Entity.store.QStoreTableInfoEntity.storeTableInfoEntity;
 import static com.ReservationServer1.data.Entity.store.QStoreTimeInfoEntity.storeTimeInfoEntity;
 import static com.ReservationServer1.data.Entity.store.QStoreTimeInfoMapEntity.storeTimeInfoMapEntity;
-import java.util.HashSet;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.ReservationServer1.DAO.StoreInfoDAO;
 import com.ReservationServer1.data.DTO.store.StoreRestDayDTO;
 import com.ReservationServer1.data.DTO.store.StoreTimeInfoDTO;
@@ -24,10 +26,10 @@ import com.ReservationServer1.data.Entity.store.StoreTimeInfoEntity;
 import com.ReservationServer1.data.Entity.store.StoreTimeInfoMapEntity;
 import com.ReservationServer1.exception.NoInformationException;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import jakarta.persistence.EntityManager;
 
 @Repository("StoreInfoDAO")
-@Transactional
 public class StoreInfoDAOImpl implements StoreInfoDAO {
 
 	private final JPAQueryFactory queryFactory;
@@ -39,6 +41,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 	}
 
 	@Override
+	@Transactional(timeout = 10, rollbackFor = Exception.class)
 	public String registerDayOff(StoreRestDayDTO restDayDTO) {
 
 		StoreRestDaysEntity restDays = new StoreRestDaysEntity(restDayDTO.getStoreId());
@@ -56,6 +59,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 	}
 
 	@Override
+	@Transactional(timeout = 10, readOnly = true, rollbackFor = Exception.class)
 	public List<String> getDayOff(short storeId) {
 
 		List<String> dateList = queryFactory.selectDistinct(storeRestDaysMapEntity.date).from(storeRestDaysMapEntity)
@@ -72,6 +76,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 
 	// Cascade로 설정
 	@Override
+	@Transactional(timeout = 10, rollbackFor = Exception.class)
 	public String deleteDayOff(short storeId) {
 
 		List<StoreRestDaysEntity> restDaysList = queryFactory.select(storeRestDaysEntity).from(storeRestDaysEntity)
@@ -92,6 +97,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 	}
 
 	@Override
+	@Transactional(timeout = 10, rollbackFor = Exception.class)
 	public String registerTimeInfo(StoreTimeInfoDTO storeTimeInfoDTO) {
 
 		StoreTimeInfoEntity timeInfo = StoreTimeInfoEntity.builder().startTime(storeTimeInfoDTO.getStartTime())
@@ -113,6 +119,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 	}
 
 	@Override
+	@Transactional(timeout = 10, readOnly = true, rollbackFor = Exception.class)
 	public StoreTimeInfoEntity getTimeInfo(short storeId) {
 
 		StoreTimeInfoEntity timeInfo = queryFactory.select(storeTimeInfoEntity).from(storeTimeInfoEntity)
@@ -128,6 +135,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 	}
 
 	@Override
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED, timeout = 10, rollbackFor = Exception.class)
 	public String updateTimeInfo(StoreTimeInfoDTO storeTimeInfoDTO) {
 
 		short storeId = storeTimeInfoDTO.getStoreId();
@@ -140,7 +148,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 
 		queryFactory.delete(storeTimeInfoMapEntity).where(storeTimeInfoMapEntity.storeTimeInfoEntity.eq(timeInfo))
 				.execute();
-		
+
 		Set<StoreTimeInfoMapEntity> timeInfoMapList = storeTimeInfoDTO.getBreakTime().stream().map(breakTime -> {
 			StoreTimeInfoMapEntity timeInfoMap = StoreTimeInfoMapEntity.builder().time(breakTime)
 					.storeTimeInfoEntity(timeInfo).build();
@@ -158,6 +166,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 
 	// Cascade로 설정
 	@Override
+	@Transactional(timeout = 10, rollbackFor = Exception.class)
 	public String deleteTimeInfo(short storeId) {
 
 		int timesId = queryFactory.select(storeTimeInfoEntity.timesId).from(storeTimeInfoEntity)
@@ -171,6 +180,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 	}
 
 	@Override
+	@Transactional(timeout = 10, rollbackFor = Exception.class)
 	public String registerTableInfo(StoreTableInfoEntity tableInfo) {
 		entityManager.persist(tableInfo);
 		return "success";
@@ -178,6 +188,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 
 	// 서브 쿼리로 설정하자 - (update - select)
 	@Override
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED, timeout = 10, rollbackFor = Exception.class)
 	public String updateTableInfo(StoreTableInfoEntity tableInfo) {
 		StoreTableInfoEntity getTableInfo = queryFactory.select(storeTableInfoEntity).from(storeTableInfoEntity)
 				.where(storeTableInfoEntity.storeId.eq(tableInfo.getStoreId())).fetchFirst();
@@ -187,18 +198,21 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 	}
 
 	@Override
+	@Transactional(timeout = 10, rollbackFor = Exception.class)
 	public String deleteTableInfo(short storeId) {
 		queryFactory.delete(storeTableInfoEntity).where(storeTableInfoEntity.storeId.eq(storeId)).execute();
 		return "success";
 	}
 
 	@Override
+	@Transactional(timeout = 10, rollbackFor = Exception.class)
 	public String registerFoodsInfo(StoreFoodsInfoEntity foodsInfo) {
 		entityManager.persist(foodsInfo);
 		return "success";
 	}
 
 	@Override
+	@Transactional(timeout = 10, readOnly = true, rollbackFor = Exception.class)
 	public List<StoreFoodsInfoEntity> getFoodsInfo(short storeId) {
 
 		List<StoreFoodsInfoEntity> foodsInfo = queryFactory.select(storeFoodsInfoEntity).from(storeFoodsInfoEntity)
@@ -211,6 +225,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 
 	// 서브 쿼리로 설정하자 - (update - select)
 	@Override
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED, timeout = 10, rollbackFor = Exception.class)
 	public String updateFoodsInfo(StoreFoodsInfoEntity foodsInfo) {
 		StoreFoodsInfoEntity getFoodsInfo = queryFactory
 				.select(storeFoodsInfoEntity).from(storeFoodsInfoEntity).where(storeFoodsInfoEntity.storeId
@@ -227,6 +242,7 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 	}
 
 	@Override
+	@Transactional(timeout = 10, rollbackFor = Exception.class)
 	public String deleteFoodsInfo(short storeId, String foodName) {
 		queryFactory.delete(storeFoodsInfoEntity)
 				.where(storeFoodsInfoEntity.storeId.eq(storeId).and(storeFoodsInfoEntity.foodName.eq(foodName)))

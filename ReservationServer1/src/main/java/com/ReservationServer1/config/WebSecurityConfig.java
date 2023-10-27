@@ -28,6 +28,7 @@ public class WebSecurityConfig {
 				// test
 				.requestMatchers(HttpMethod.GET, "/member").permitAll()
 				// member
+				.requestMatchers(HttpMethod.GET, "/member/reLogin").hasAuthority("ROLE_USER_REFRESH")
 				.requestMatchers(HttpMethod.PUT, "/member/info").hasAuthority("ROLE_USER")
 				.requestMatchers(HttpMethod.DELETE, "/member").hasAnyAuthority("ROLE_USER")
 				.requestMatchers(HttpMethod.PUT, "/member/pwd").hasAuthority("ROLE_PWD")

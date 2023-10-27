@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ReservationServer1.DAO.StorePORDAO;
 import com.ReservationServer1.data.DTO.POR.OrderDTO;
@@ -26,10 +28,8 @@ import com.ReservationServer1.exception.NoInformationException;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 
 @Repository("ReservationAndOrderDAO")
-@Transactional
 public class StorePORDAOImpl implements StorePORDAO {
 	private final JPAQueryFactory queryFactory;
 	private final EntityManager entityManager;
@@ -40,6 +40,7 @@ public class StorePORDAOImpl implements StorePORDAO {
 	}
 
 	@Override
+	@Transactional(timeout = 10, rollbackFor = Exception.class)
 	public String registerReservation(ReservationDTO reservationDTO, String userId) {
 
 		StoreReservationEntity reservation = new StoreReservationEntity(reservationDTO);
@@ -49,6 +50,7 @@ public class StorePORDAOImpl implements StorePORDAO {
 	}
 
 	@Override
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED, timeout = 10, rollbackFor = Exception.class)
 	public String updateReservation(ReservationDTO reservationDTO, String userId) {
 
 		StoreReservationEntity reservation = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
@@ -62,6 +64,7 @@ public class StorePORDAOImpl implements StorePORDAO {
 	}
 
 	@Override
+	@Transactional(timeout = 10, readOnly = true, rollbackFor = Exception.class)
 	public StoreReservationEntity getReservation(short storeId, String userId) {
 
 		StoreReservationEntity reservation = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
@@ -78,6 +81,7 @@ public class StorePORDAOImpl implements StorePORDAO {
 	}
 
 	@Override
+	@Transactional(timeout = 10, rollbackFor = Exception.class)
 	public String deleteReservation(short storeId, String userId) {
 
 		queryFactory.delete(storeReservationEntity)
@@ -87,6 +91,7 @@ public class StorePORDAOImpl implements StorePORDAO {
 	}
 
 	@Override
+	@Transactional(timeout = 10, rollbackFor = Exception.class)
 	public String registerOrder(OrderDTO orderDTO, String userId) {
 
 		Integer reservationId = queryFactory.select(storeReservationEntity.reservationId).from(storeReservationEntity)
@@ -115,6 +120,7 @@ public class StorePORDAOImpl implements StorePORDAO {
 	}
 
 	@Override
+	@Transactional(timeout = 10, rollbackFor = Exception.class)
 	public String updateOrder(OrderDTO orderDTO, String userId) {
 
 		StoreReservationEntity reservation = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
@@ -139,6 +145,7 @@ public class StorePORDAOImpl implements StorePORDAO {
 	}
 
 	@Override
+	@Transactional(timeout = 10, rollbackFor = Exception.class)
 	public String deleteOrder(short storeId, String foodName, String userId) {
 
 		StoreReservationEntity reservation = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
@@ -160,6 +167,7 @@ public class StorePORDAOImpl implements StorePORDAO {
 
 	// -- DTO로 받기 --
 	@Override
+	@Transactional(timeout = 10, rollbackFor = Exception.class)
 	public String registerPay(PayDTO payDTO) {
 
 		short storeId = payDTO.getStoreId();
@@ -192,6 +200,7 @@ public class StorePORDAOImpl implements StorePORDAO {
 	}
 
 	@Override
+	@Transactional(timeout = 10, rollbackFor = Exception.class)
 	public String deletePay(int reservationId) {
 
 		StoreReservationEntity reservation = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
@@ -211,6 +220,7 @@ public class StorePORDAOImpl implements StorePORDAO {
 	}
 
 	@Override
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED, timeout = 10, rollbackFor = Exception.class)
 	public String registerComment(int reservationId, String comment, String userId) {
 
 		StoreReservationEntity reservation = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
@@ -229,6 +239,7 @@ public class StorePORDAOImpl implements StorePORDAO {
 	}
 
 	@Override
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED, timeout = 10, rollbackFor = Exception.class)
 	public String deleteComment(int reservationId, String userId) {
 
 		StoreReservationEntity reservation = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
@@ -247,6 +258,7 @@ public class StorePORDAOImpl implements StorePORDAO {
 	}
 
 	@Override
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED, timeout = 10, rollbackFor = Exception.class)
 	public String registerBigComment(int reservationId, String bigcomment, short storeId) {
 
 		StoreReservationEntity reservation = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
@@ -265,6 +277,7 @@ public class StorePORDAOImpl implements StorePORDAO {
 	}
 
 	@Override
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED, timeout = 10, rollbackFor = Exception.class)
 	public String deleteBigComment(int reservationId, short storeId) {
 
 		StoreReservationEntity reservation = queryFactory.select(storeReservationEntity).from(storeReservationEntity)
@@ -283,6 +296,7 @@ public class StorePORDAOImpl implements StorePORDAO {
 	}
 
 	@Override
+	@Transactional(timeout = 10, readOnly = true, rollbackFor = Exception.class)
 	public int getCouponOfClient(short storeId, String userId) {
 
 		int couponAmount = queryFactory.select(storeCouponEntity.amount).from(storeCouponEntity)
@@ -292,6 +306,7 @@ public class StorePORDAOImpl implements StorePORDAO {
 	}
 
 	@Override
+	@Transactional(timeout = 10, readOnly = true, rollbackFor = Exception.class)
 	public HashMap<String, Integer> getCouponOfStore(short storeId) {
 
 		List<StoreCouponEntity> couponList = queryFactory.select(storeCouponEntity).from(storeCouponEntity)

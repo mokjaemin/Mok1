@@ -2,7 +2,6 @@ package com.ReservationServer1.DAO.Impl;
 
 import static com.ReservationServer1.data.Entity.store.QStoreEntity.storeEntity;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +21,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
 @Repository("StoreDAO")
-@Transactional
 public class StoreDAOImpl implements StoreDAO {
 
 	private final JPAQueryFactory queryFactory;
@@ -34,12 +32,14 @@ public class StoreDAOImpl implements StoreDAO {
 	}
 
 	@Override
+	@Transactional(timeout = 10, rollbackFor = Exception.class)
 	public String registerStore(StoreEntity storeEntity) {
 		entityManager.persist(storeEntity);
 		return "success";
 	}
 
 	@Override
+	@Transactional(timeout = 10, readOnly = true, rollbackFor = Exception.class)
 	public HashMap<String, Short> getStoreList(String country, String city, String dong, StoreType type, int page,
 			int size) {
 
@@ -56,6 +56,7 @@ public class StoreDAOImpl implements StoreDAO {
 	}
 
 	@Override
+	@Transactional(timeout = 10, readOnly = true, rollbackFor = Exception.class)
 	public String loginStore(short storeId) {
 		String ownerId = queryFactory.select(storeEntity.ownerId).from(storeEntity)
 				.where(storeEntity.storeId.eq(storeId)).fetchFirst();

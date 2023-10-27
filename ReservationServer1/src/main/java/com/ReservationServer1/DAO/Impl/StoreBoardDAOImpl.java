@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ReservationServer1.DAO.StoreBoardDAO;
@@ -22,7 +23,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 
 @Repository("StoreBoardDAO")
-@Transactional
 public class StoreBoardDAOImpl implements StoreBoardDAO {
 
 	private final JPAQueryFactory queryFactory;
@@ -34,6 +34,7 @@ public class StoreBoardDAOImpl implements StoreBoardDAO {
 	}
 
 	@Override
+	@Transactional(timeout = 10, rollbackFor = Exception.class)
 	public String registerBoard(StoreBoardEntity board) {
 
 		Integer reservationId = queryFactory.select(storeReservationEntity.reservationId).from(storeReservationEntity)
@@ -49,6 +50,7 @@ public class StoreBoardDAOImpl implements StoreBoardDAO {
 	}
 
 	@Override
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED, timeout = 10, rollbackFor = Exception.class)
 	public String updateBoard(int boardId, BoardDTO boardDTO, String userId) {
 		try {
 			StoreBoardEntity board = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
@@ -74,6 +76,7 @@ public class StoreBoardDAOImpl implements StoreBoardDAO {
 	}
 
 	@Override
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED, timeout = 10, rollbackFor = Exception.class)
 	public String deleteBoard(int boardId, String userId) {
 
 		StoreBoardEntity board = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
@@ -88,6 +91,7 @@ public class StoreBoardDAOImpl implements StoreBoardDAO {
 	}
 
 	@Override
+	@Transactional(timeout = 10, readOnly = true, rollbackFor = Exception.class)
 	public List<BoardListResultDTO> getBoardListByStore(short storeId) {
 		List<BoardListResultDTO> boardListResult = queryFactory
 				.select(Projections.fields(BoardListResultDTO.class, storeBoardEntity.title, storeBoardEntity.boardId))
@@ -95,7 +99,9 @@ public class StoreBoardDAOImpl implements StoreBoardDAO {
 		return boardListResult;
 	}
 
+	
 	@Override
+	@Transactional(timeout = 10, readOnly = true, rollbackFor = Exception.class)
 	public List<BoardListResultDTO> getBoardListByUser(String userId) {
 		List<BoardListResultDTO> boardListResult = queryFactory
 				.select(Projections.fields(BoardListResultDTO.class, storeBoardEntity.title, storeBoardEntity.boardId))
@@ -103,7 +109,9 @@ public class StoreBoardDAOImpl implements StoreBoardDAO {
 		return boardListResult;
 	}
 
+	
 	@Override
+	@Transactional(isolation = Isolation.SERIALIZABLE, timeout = 10, rollbackFor = Exception.class)
 	public StoreBoardEntity getFullBoard(int boardId) {
 		StoreBoardEntity board = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
 				.where(storeBoardEntity.boardId.eq(boardId)).fetchFirst();
@@ -115,6 +123,7 @@ public class StoreBoardDAOImpl implements StoreBoardDAO {
 	}
 
 	@Override
+	@Transactional(timeout = 10, readOnly = true, rollbackFor = Exception.class)
 	public List<BoardCountResultDTO> getBoardCountByUserOfStore(short storeId) {
 		List<BoardCountResultDTO> countResult = queryFactory
 				.select(Projections.fields(BoardCountResultDTO.class, storeBoardEntity.userId,
@@ -126,6 +135,7 @@ public class StoreBoardDAOImpl implements StoreBoardDAO {
 	}
 
 	@Override
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED, timeout = 10, rollbackFor = Exception.class)
 	public String registerBoardComment(int boardId, String comment, String storeId) {
 		StoreBoardEntity board = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
 				.where(storeBoardEntity.boardId.eq(boardId)).fetchFirst();
@@ -137,6 +147,7 @@ public class StoreBoardDAOImpl implements StoreBoardDAO {
 	}
 
 	@Override
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED, timeout = 10, rollbackFor = Exception.class)
 	public String updateBoardComment(int boardId, String comment, String storeId) {
 		StoreBoardEntity board = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
 				.where(storeBoardEntity.boardId.eq(boardId)).fetchFirst();
@@ -148,6 +159,7 @@ public class StoreBoardDAOImpl implements StoreBoardDAO {
 	}
 
 	@Override
+	@Transactional(isolation = Isolation.READ_UNCOMMITTED, timeout = 10, rollbackFor = Exception.class)
 	public String deleteBoardComment(int boardId, String storeId) {
 		StoreBoardEntity board = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
 				.where(storeBoardEntity.boardId.eq(boardId)).fetchFirst();
