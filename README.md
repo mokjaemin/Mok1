@@ -39,11 +39,13 @@
         - BoardListResultDTO : 게시판 리스트 Response
         - BoardResutlDTO : 게시판 결과 Response
       - member : 회원 관련 Request/Response
+        - cache : Refresh-Access Token 관련 캐시 클래스
         - FindPwdDTO : 비밀번호 찾기 Request
         - LoginDTO : 로그인 Request
         - MemberDTO : 회원가입 Request
         - ModifyMemberDTO : 회원수정 Request
         - SearchMemberDTO : 회원검색 Request/Response
+        - MemberTokenResultDTO : 토큰정보 Request/Response
       - POR : 예약, 주문, 결제 관련 Request/Response
         - OrderDTO : 주문 관련 Request
         - PayDTO : 결제 Request
