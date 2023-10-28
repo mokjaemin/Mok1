@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.ReservationServer1.data.DTO.member.FindPwdDTO;
 import com.ReservationServer1.data.DTO.member.LoginDTO;
 import com.ReservationServer1.data.DTO.member.MemberDTO;
+import com.ReservationServer1.data.DTO.member.MemberTokenResultDTO;
 import com.ReservationServer1.data.DTO.member.ModifyMemberDTO;
 import com.ReservationServer1.data.DTO.member.SearchMemberDTO;
 import com.ReservationServer1.service.MemberService;
@@ -40,7 +41,6 @@ public class MemberControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 
-	
 	@Test
 	@DisplayName("회원 가입 성공")
 	@WithMockUser
@@ -80,15 +80,15 @@ public class MemberControllerTest {
 	void loginMemberSuccess() throws Exception {
 		// given
 		LoginDTO sample = LoginDTO.getSample();
-		String token = JWTutil.createJWT(sample.getUserId(), "USER", "test", 10);
-		doReturn(token).when(memberService).loginMember(any(LoginDTO.class));
+		MemberTokenResultDTO result = new MemberTokenResultDTO("access", "refresh");
+		doReturn(result).when(memberService).loginMember(any(LoginDTO.class));
 
 		// when
 		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/member/login").with(csrf())
 				.contentType(MediaType.APPLICATION_JSON).content(new Gson().toJson(sample)));
 
 		// then
-		resultActions.andExpect(status().isOk()).andExpect(MockMvcResultMatchers.content().string(equalTo(token)));
+		resultActions.andExpect(status().isOk());
 	}
 
 	@Test

@@ -41,6 +41,8 @@ public class StoreBoardController {
 		this.storeBoardService = storeBoardService;
 	}
 
+	
+	
 	@PostMapping
 	@Operation(summary = "가게 후기 등록 요청", description = "가게 후기가 등록됩니다.", tags = { "Store Board Controller" })
 	@ApiResponses({

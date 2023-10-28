@@ -82,7 +82,7 @@ public class StoreBoardDAOImpl implements StoreBoardDAO {
 		StoreBoardEntity board = queryFactory.select(storeBoardEntity).from(storeBoardEntity)
 				.where(storeBoardEntity.boardId.eq(boardId)).fetchFirst();
 
-		if (board.getUserId().equals(userId)) {
+		if (board == null | !board.getUserId().equals(userId)) {
 			throw new NoAuthorityException();
 		}
 

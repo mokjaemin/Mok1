@@ -83,7 +83,7 @@ public class MemberDAOImpl implements MemberDAO {
 			throw new NoInformationException();
 		}
 		// 이메일 정보 불일치
-		if (!getEmail.equals(getEmail)) {
+		if (!userEmail.equals(getEmail)) {
 			throw new NotCoincideEmailException();
 		}
 	}

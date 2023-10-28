@@ -42,12 +42,6 @@ public class MemberServiceImpl implements MemberService {
 		this.memberLoginListCache = memberLoginListCache;
 	}
 
-	public void setTestSecretKey(String secretKey) {
-		if (secretKey != null) {
-			return;
-		}
-		this.secretKey = secretKey;
-	}
 
 	@Override
 	public String registerMember(MemberDTO member) {

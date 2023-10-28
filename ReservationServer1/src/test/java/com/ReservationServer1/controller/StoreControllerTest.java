@@ -24,7 +24,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import com.ReservationServer1.data.StoreType;
 import com.ReservationServer1.data.DTO.store.StoreDTO;
 import com.ReservationServer1.service.StoreService;
 import com.google.gson.Gson;
@@ -83,8 +82,8 @@ public class StoreControllerTest {
 		response.put("store3", (short) 3);
 		response.put("store4", (short) 4);
 		response.put("store5", (short) 5);
-		doReturn(response).when(storeService).getStoreList(anyString(), anyString(), anyString(), any(),
-				anyInt(), anyInt());
+		doReturn(response).when(storeService).getStoreList(anyString(), anyString(), anyString(), any(), anyInt(),
+				anyInt());
 
 		// when
 		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/store/list").with(csrf())
