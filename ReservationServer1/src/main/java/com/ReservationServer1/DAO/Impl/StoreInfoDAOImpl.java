@@ -164,7 +164,6 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 		return "success";
 	}
 
-	// Cascade로 설정
 	@Override
 	@Transactional(timeout = 10, rollbackFor = Exception.class)
 	public String deleteTimeInfo(short storeId) {
@@ -186,7 +185,6 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 		return "success";
 	}
 
-	// 서브 쿼리로 설정하자 - (update - select)
 	@Override
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED, timeout = 10, rollbackFor = Exception.class)
 	public String updateTableInfo(StoreTableInfoEntity tableInfo) {
@@ -223,7 +221,6 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 		return foodsInfo;
 	}
 
-	// 서브 쿼리로 설정하자 - (update - select)
 	@Override
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED, timeout = 10, rollbackFor = Exception.class)
 	public String updateFoodsInfo(StoreFoodsInfoEntity foodsInfo) {

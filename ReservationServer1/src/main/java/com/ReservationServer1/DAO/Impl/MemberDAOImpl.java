@@ -36,7 +36,6 @@ public class MemberDAOImpl implements MemberDAO {
 	private final JPAQueryFactory queryFactory;
 	private final EntityManager entityManager;
 
-	
 	public MemberDAOImpl(BCryptPasswordEncoder passwordEncoder, JPAQueryFactory queryFactory,
 			EntityManager entityManager) {
 		this.passwordEncoder = passwordEncoder;
@@ -47,9 +46,7 @@ public class MemberDAOImpl implements MemberDAO {
 	@Override
 	@Transactional(isolation = Isolation.SERIALIZABLE, timeout = 10, rollbackFor = Exception.class)
 	public String registerMember(MemberEntity member) {
-		
-		String userId = member.getUserId();
-		Integer existId = queryFactory.selectOne().from(memberEntity).where(memberEntity.userId.eq(userId))
+		Integer existId = queryFactory.selectOne().from(memberEntity).where(memberEntity.userId.eq(member.getUserId()))
 				.fetchFirst();
 		if (existId != null) {
 			throw new ExistIDException();
@@ -62,7 +59,7 @@ public class MemberDAOImpl implements MemberDAO {
 	@Override
 	@Transactional(timeout = 10, readOnly = true, rollbackFor = Exception.class)
 	public void loginMember(LoginDTO loginDTO) {
-		
+
 		String getPwd = queryFactory.select(memberEntity.userPwd).from(memberEntity)
 				.where(memberEntity.userId.eq(loginDTO.getUserId())).fetchFirst();
 		if (getPwd == null) {
@@ -76,23 +73,20 @@ public class MemberDAOImpl implements MemberDAO {
 	@Override
 	@Transactional(timeout = 10, readOnly = true, rollbackFor = Exception.class)
 	public void findPwdMember(String userId, String userEmail) {
-		
+
 		String getEmail = queryFactory.select(memberEntity.userEmail).from(memberEntity)
 				.where(memberEntity.userId.eq(userId)).fetchFirst();
 		if (getEmail == null) {
 			throw new NoInformationException();
 		}
-		// 이메일 정보 불일치
 		if (!userEmail.equals(getEmail)) {
 			throw new NotCoincideEmailException();
 		}
 	}
 
-	
 	@Override
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED, timeout = 10, rollbackFor = Exception.class)
 	public String modifyPwdMember(String userId, String userPwd) {
-
 		Integer existId = queryFactory.selectOne().from(memberEntity).where(memberEntity.userId.eq(userId))
 				.fetchFirst();
 		if (existId == null) {
@@ -104,11 +98,9 @@ public class MemberDAOImpl implements MemberDAO {
 		return "success";
 	}
 
-	
 	@Override
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED, timeout = 10, rollbackFor = Exception.class)
 	public String modifyInfoMember(String userId, ModifyMemberDTO modifyMemberDTO) {
-		
 		Integer existId = queryFactory.selectOne().from(memberEntity).where(memberEntity.userId.eq(userId))
 				.fetchFirst();
 		if (existId == null) {
@@ -125,22 +117,17 @@ public class MemberDAOImpl implements MemberDAO {
 		return "success";
 	}
 
-	
 	@Override
 	@Transactional(isolation = Isolation.READ_UNCOMMITTED, timeout = 10, rollbackFor = Exception.class)
 	public String deleteMember(String userId, String userPwd) {
-
 		String getPwd = queryFactory.select(memberEntity.userPwd).from(memberEntity)
 				.where(memberEntity.userId.eq(userId)).fetchFirst();
-		
 		if (getPwd == null) {
 			throw new NoInformationException();
 		}
-		
 		if (!passwordEncoder.matches(userPwd, getPwd)) {
 			throw new NotCoincidePwdException();
 		}
-
 		queryFactory.delete(memberEntity).where(memberEntity.userId.eq(userId)).execute();
 		return "success";
 	}
@@ -148,7 +135,8 @@ public class MemberDAOImpl implements MemberDAO {
 	@Override
 	@Transactional(timeout = 10, readOnly = true, rollbackFor = Exception.class)
 	public List<SearchMemberDTO> searchMember(SearchMemberDTO member) {
-
+		
+		// 검색 조건에 ID가 포함된 경우
 		if (member.getUserId() != null) {
 			SearchMemberDTO dto = queryFactory
 					.select(Projections.fields(SearchMemberDTO.class,
@@ -159,7 +147,8 @@ public class MemberDAOImpl implements MemberDAO {
 			result.add(dto);
 			return result;
 		}
-
+		
+		
 		List<SearchMemberDTO> memberList = queryFactory
 				.select(Projections.fields(SearchMemberDTO.class, memberEntity.userId, memberEntity.userName,
 						memberEntity.userNumber, memberEntity.userAddress, memberEntity.userEmail))
@@ -168,7 +157,6 @@ public class MemberDAOImpl implements MemberDAO {
 						eqUserNumber(member.getUserNumber()), eqUserAddress(member.getUserAddress()),
 						eqUserEmail(member.getUserEmail()))
 				.fetch();
-
 		
 		return memberList.stream().sorted(
 				Comparator.comparing((SearchMemberDTO dto) -> dto.getUserId()).thenComparing(dto -> dto.getUserName()))
