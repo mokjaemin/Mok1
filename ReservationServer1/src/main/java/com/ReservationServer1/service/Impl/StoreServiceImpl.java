@@ -21,19 +21,10 @@ public class StoreServiceImpl implements StoreService {
 	@Value("${jwt.secret}")
 	private String secretKey;
 	private final StoreDAO storeDAO;
-	private final StoreListCache storeListCache;
 	private final Long expiredLoginMs = 1000 * 60 * 30l; // 30분
 
-	public StoreServiceImpl(StoreDAO storeDAO, StoreListCache storeListCache) {
+	public StoreServiceImpl(StoreDAO storeDAO) {
 		this.storeDAO = storeDAO;
-		this.storeListCache = storeListCache;
-	}
-
-	public void setTestSecretKey(String secretKey) {
-		if(secretKey != null) {
-			return;
-		}
-		this.secretKey = secretKey;
 	}
 
 	@Override
@@ -45,18 +36,7 @@ public class StoreServiceImpl implements StoreService {
 	public HashMap<String, Short> getStoreList(String country, String city, String dong, StoreType type, int page,
 			int size) {
 
-		String cacheKey = country + city + dong + type + page + size;
-
-		Optional<StoreListDTO> storeList = storeListCache.findById(cacheKey);
-
-		if (storeList.isEmpty() == true) {
-			HashMap<String, Short> new_storeList = storeDAO.getStoreList(country, city, dong, type, page, size);
-			StoreListDTO storeListDTO = new StoreListDTO(cacheKey, new_storeList);
-			storeListCache.save(storeListDTO);
-			return new_storeList;
-		}
-		
-		return storeList.get().getStoreList();
+		return storeDAO.getStoreList(country, city, dong, type, page, size);
 	}
 
 	@Override
