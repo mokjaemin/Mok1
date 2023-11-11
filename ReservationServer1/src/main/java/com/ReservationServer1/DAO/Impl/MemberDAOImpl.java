@@ -106,7 +106,6 @@ public class MemberDAOImpl implements MemberDAO {
 		if (existId == null) {
 			throw new NoInformationException();
 		}
-		// 정보 수정
 		String encoded_pwd = passwordEncoder.encode(modifyMemberDTO.getUserPwd());
 		queryFactory.update(memberEntity).set(memberEntity.userPwd, encoded_pwd)
 				.set(memberEntity.userName, modifyMemberDTO.getUserName())

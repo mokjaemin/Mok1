@@ -17,6 +17,7 @@ import com.ReservationServer1.data.DTO.board.BoardListResultDTO;
 import com.ReservationServer1.data.Entity.board.StoreBoardEntity;
 import com.ReservationServer1.exception.NoAuthorityException;
 import com.ReservationServer1.exception.NoInformationException;
+import com.ReservationServer1.exception.UploadPhotoException;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -70,7 +71,7 @@ public class StoreBoardDAOImpl implements StoreBoardDAO {
 			board.setBoardImage(boardDTO.getFoodImage().getBytes());
 
 		} catch (IOException e) {
-			return null;
+			throw new UploadPhotoException();
 		}
 		return "success";
 	}

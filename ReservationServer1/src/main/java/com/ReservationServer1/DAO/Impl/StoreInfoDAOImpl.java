@@ -74,7 +74,6 @@ public class StoreInfoDAOImpl implements StoreInfoDAO {
 		return result;
 	}
 
-	// Cascade로 설정
 	@Override
 	@Transactional(timeout = 10, rollbackFor = Exception.class)
 	public String deleteDayOff(short storeId) {
